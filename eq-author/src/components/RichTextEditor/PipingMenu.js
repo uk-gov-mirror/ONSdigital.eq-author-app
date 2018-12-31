@@ -14,7 +14,8 @@ import ToolbarButton from "components/RichTextEditor/ToolbarButton";
 
 import {
   ANSWER,
-  METADATA
+  METADATA,
+  VARIABLES
 } from "components/ContentPickerSelect/content-types";
 
 const PipingIconButton = props => (
@@ -71,7 +72,13 @@ export class Menu extends React.Component {
   };
 
   render() {
-    const { answerData, metadataData, disabled, loading } = this.props;
+    const {
+      answerData,
+      metadataData,
+      variableData,
+      disabled,
+      loading
+    } = this.props;
 
     const buttonProps = {
       title: "Pipe value"
@@ -95,10 +102,11 @@ export class Menu extends React.Component {
           isOpen={this.state.isPickerOpen}
           answerData={answerData}
           metadataData={metadataData}
+          variableData={variableData}
           onClose={this.handlePickerClose}
           onSubmit={this.handlePickerSubmit}
           data-test="picker"
-          contentTypes={[ANSWER, METADATA]}
+          contentTypes={[ANSWER, METADATA, VARIABLES]}
         />
       </React.Fragment>
     );
@@ -128,6 +136,7 @@ export const UnwrappedPipingMenu = props => (
         <Menu
           answerData={shapeTree(entity.availablePipingAnswers)}
           metadataData={entity.availablePipingMetadata}
+          variableData={props.variableData}
           {...props}
           {...innerProps}
         />

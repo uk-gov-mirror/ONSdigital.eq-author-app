@@ -10,6 +10,7 @@ const StyledScrollPane = styled(ScrollPane)`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  justify-content: flex-start;
 `;
 
 const PanelWrapper = styled.div`

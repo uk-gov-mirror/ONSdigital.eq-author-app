@@ -1,4 +1,4 @@
-import { Input } from "components/Forms";
+import Input from "components/Forms/Input";
 import styled from "styled-components";
 
 const ValidationInput = styled(Input)`

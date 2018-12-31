@@ -8,6 +8,7 @@ import gql from "graphql-tag";
 import { buildQuestionnairePath } from "utils/UrlUtils";
 import NavLink from "./NavLink";
 import PageIcon from "./icon-questionpage.svg?inline";
+import SummaryPageIcon from "./icon-summarypage.svg?inline";
 
 const StyledPageItem = styled.li`
   padding: 0;
@@ -23,8 +24,10 @@ export const UnwrappedPageNavItem = ({
   page,
   match,
   ...otherProps
-}) => (
-  <StyledPageItem data-test="page-item" {...otherProps}>
+}) => {
+    const Icon = page.__typename === "QuestionPage" ? PageIcon : SummaryPageIcon;
+
+    return (<StyledPageItem data-test="page-item" {...otherProps}>
     <NavLink
       to={buildQuestionnairePath({
         questionnaireId,
@@ -33,13 +36,13 @@ export const UnwrappedPageNavItem = ({
         tab: match.params.tab
       })}
       title={page.displayName}
-      icon={PageIcon}
+      icon={Icon}
       data-test="nav-page-link"
     >
       {page.displayName}
     </NavLink>
-  </StyledPageItem>
-);
+  </StyledPageItem>)
+}
 
 UnwrappedPageNavItem.fragments = {
   PageNavItem: gql`

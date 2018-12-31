@@ -27,18 +27,15 @@ import {
 } from "./";
 
 import { CURRENCY, DATE, DATE_RANGE, NUMBER } from "constants/answer-types";
-import { colors } from "constants/theme";
 
 const Container = styled.div`
-  margin-top: 1em;
-  border-top: 1px solid ${colors.lightGrey};
-  padding: 1em 0;
+  padding: 0;
 `;
 
 const validationTypes = [
   {
     id: "minValue",
-    title: "Min Value",
+    title: "Min value",
     render: () => (
       <MinValue>{props => <MinValueValidation {...props} />}</MinValue>
     ),
@@ -47,7 +44,7 @@ const validationTypes = [
   },
   {
     id: "maxValue",
-    title: "Max Value",
+    title: "Max value",
     render: () => (
       <MaxValue>{props => <MaxValueValidation {...props} />}</MaxValue>
     ),
@@ -57,7 +54,7 @@ const validationTypes = [
   },
   {
     id: "earliestDate",
-    title: "Earliest Date",
+    title: "Earliest date",
     render: () => (
       <EarliestDate>{props => <DateValidation {...props} />}</EarliestDate>
     ),
@@ -66,7 +63,7 @@ const validationTypes = [
   },
   {
     id: "latestDate",
-    title: "Latest Date",
+    title: "Latest date",
     render: () => (
       <LatestDate>{props => <DateValidation {...props} />}</LatestDate>
     ),
@@ -75,7 +72,7 @@ const validationTypes = [
   },
   {
     id: "minDuration",
-    title: "Min Duration",
+    title: "Min duration",
     render: () => (
       <MinDuration>{props => <DurationValidation {...props} />}</MinDuration>
     ),
@@ -84,7 +81,7 @@ const validationTypes = [
   },
   {
     id: "maxDuration",
-    title: "Max Duration",
+    title: "Max duration",
     render: () => (
       <MaxDuration>{props => <DurationValidation {...props} />}</MaxDuration>
     ),

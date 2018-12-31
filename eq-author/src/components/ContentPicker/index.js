@@ -92,3 +92,14 @@ const routingDestinationConfig = [
 export const RoutingDestinationContentPicker = props => (
   <GroupContentPicker {...props} config={routingDestinationConfig} />
 );
+
+const variableConfig = [
+  {
+    id: "variables",
+    title: "Variables"
+  }
+];
+
+export const VariableContentPicker = props => (
+  <ContentPicker {...props} config={variableConfig} />
+);

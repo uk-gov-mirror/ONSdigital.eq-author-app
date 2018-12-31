@@ -3,15 +3,55 @@ import CustomPropTypes from "custom-prop-types";
 import styled from "styled-components";
 import { colors } from "constants/theme";
 import ScrollPane from "components/ScrollPane";
-import { get, noop, filter, findIndex, flow, toUpper } from "lodash/fp";
-import getIdForObject from "utils/getIdForObject";
+
 import AnswerValidation from "App/questionPage/Design/Validation/AnswerValidation";
 import { flowRight } from "lodash";
 
 import withUpdateAnswer from "App/questionPage/Design/answers/withUpdateAnswer";
 import AnswerProperties from "App/questionPage/Design/AnswerProperties";
 
+import {
+  noop,
+  filter,
+  findIndex,
+  flow,
+  toUpper,
+  first,
+  map,
+  groupBy,
+  contains,
+  get
+} from "lodash/fp";
+import getIdForObject from "utils/getIdForObject";
+
+import TotalValidation from "App/questionPage/Design/Validation/TotalValidation";
+import QuestionProperties from "App/questionPage/Design/QuestionProperties";
+import Accordion from "./Accordion";
+import { NUMBER, CURRENCY } from "constants/answer-types";
+
 const Properties = flowRight(withUpdateAnswer)(AnswerProperties);
+
+const AccordionTitle = styled.h3`
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  position: relative;
+  color: #666666;
+`;
+
+const Answer = styled.div`
+  &:not(:only-of-type) {
+    border-bottom: 1px solid #e4e8eb;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+  }
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+`;
 
 const PropertiesPane = styled.div`
   background: ${colors.white};
@@ -25,27 +65,22 @@ const PropertiesPane = styled.div`
   font-size: 1em;
 `;
 
-const PropertiesPanelTitle = styled.h2`
-  font-size: 0.8em;
-  letter-spacing: 0.05em;
-  vertical-align: middle;
-  color: ${colors.darkGrey};
-  text-align: center;
-`;
-
 const PropertiesPaneBody = styled.div`
   background: ${colors.white};
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
 `;
 
-const AnswerPropertiesContainer = styled.div`
-  padding: 1em;
-  border-top: ${props =>
-    props.hasBorder ? `8px solid ${colors.lighterGrey}` : "none"};
+const ValidationContainer = styled.div`
+  padding: 0 0 0.5em;
+`;
+
+const Padding = styled.div`
+  padding: 0 0.5em;
 `;
 
 const filterByType = type => filter({ type });
@@ -70,33 +105,86 @@ class PropertiesPanel extends React.Component {
 
   render() {
     const { page } = this.props;
+
+    const groupedAnswers = page && groupBy(answer => answer.type, page.answers);
+
+    const answerTypesWithTotals = [NUMBER, CURRENCY];
+
     return (
       <PropertiesPane>
         <PropertiesPaneBody>
           <ScrollPane>
-            {get("answers.length", page) > 0 && (
-              <div>
-                {page.answers.map((answer, index) => (
-                  <AnswerPropertiesContainer
-                    key={getIdForObject(answer)}
-                    data-test={`properties-${index}`}
-                    hasBorder={index > 0}
-                  >
-                    <PropertiesPanelTitle
-                      data-test={`properties-title-${index}`}
-                    >
-                      {getTitle({ answer })(page.answers)}
-                    </PropertiesPanelTitle>
-                    <Properties
-                      id={getIdForObject(answer)}
-                      answer={{ ...answer, index }}
-                      onSubmit={this.handleSubmit}
-                    />
-                    <AnswerValidation answer={answer} />
-                  </AnswerPropertiesContainer>
-                ))}
-              </div>
+            {page && page.__typename === "QuestionPage" && (
+              <Accordion title="Optional fields">
+                <Padding>
+                  <QuestionProperties
+                    page={page}
+                    onHelpClick={() => this.setState({ showModal: true })}
+                  />
+                </Padding>
+              </Accordion>
             )}
+
+            {page &&
+              page.__typename === "QuestionPage" &&
+              map((answerGroup, index) => {
+                const firstAnswer = first(answerGroup);
+
+                return (
+                  <Accordion
+                    title={`${firstAnswer.type} properties`}
+                    key={getIdForObject(answerGroup)}
+                  >
+                    <Padding>
+                      <div style={{ padding: "0.5em 0" }}>
+                        <Properties
+                          id={getIdForObject(firstAnswer)}
+                          answer={firstAnswer}
+                          onSubmit={this.handleSubmit}
+                          required={false}
+                        />
+                      </div>
+                    </Padding>
+                    <ValidationContainer>
+                      {map(
+                        answer => (
+                          <Answer key={getIdForObject(answer)}>
+                            <Padding>
+                              <AccordionTitle>
+                                {answer.label || answer.type}
+                              </AccordionTitle>
+                              <Properties
+                                id={getIdForObject(answer)}
+                                answer={answer}
+                                onSubmit={this.handleSubmit}
+                                decimals={false}
+                              />
+                              <AnswerValidation
+                                answer={answer}
+                                key={answer.id}
+                              />
+                            </Padding>
+                          </Answer>
+                        ),
+                        answerGroup
+                      )}
+
+                      {contains(firstAnswer.type, answerTypesWithTotals) &&
+                        answerGroup.length > 1 && (
+                          <Answer>
+                            <Padding>
+                              <TotalValidation
+                                pageId={page.id}
+                                answers={answerGroup}
+                                onSubmit={this.handleSubmit}
+                              />
+                            </Padding>
+                          </Answer>
+                        )}
+                    </ValidationContainer>
+                  </Accordion>
+                );
+              }, groupedAnswers)}
           </ScrollPane>
         </PropertiesPaneBody>
       </PropertiesPane>

@@ -6,6 +6,7 @@ query GetQuestionnaire($id: ID!) {
     sections {
       id
       displayName
+      
       position
       pages {
         id
@@ -13,6 +14,11 @@ query GetQuestionnaire($id: ID!) {
         position
         ... on QuestionPage {
           displayName
+          answers {
+            id
+            type
+            label
+          }
         }
       }
       questionnaire {

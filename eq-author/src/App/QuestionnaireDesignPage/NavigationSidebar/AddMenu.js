@@ -55,6 +55,7 @@ const AddMenu = ({
   onAddSection,
   onAddQuestionConfirmation,
   canAddQuestionConfirmation,
+  onAddSummaryPage,
   ...otherProps
 }) => {
   const addBtn = (
@@ -81,6 +82,9 @@ const AddMenu = ({
             data-test="btn-add-question-page"
           >
             Question page
+          </AddMenuButton>
+          <AddMenuButton primary onClick={onAddSummaryPage}>
+            Calculated summary page
           </AddMenuButton>
           <AddMenuButton
             primary

@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { Switch } from "react-router-dom";
 import { Titled } from "react-titled";
 import { Route, Redirect } from "react-router";
-import { find, flatMap, flowRight } from "lodash";
+import { find, flatMap, flowRight, filter, map } from "lodash";
 
 import BaseLayout from "components/BaseLayout";
 import { Grid, Column } from "components/Grid";
@@ -19,7 +19,7 @@ import { Routes, buildSectionPath } from "utils/UrlUtils";
 import Loading from "components/Loading";
 import RoutingPageRoute from "App/questionPage/Routing";
 import QuestionConfirmationRoute from "App/questionConfirmation/Design";
-
+import SummaryPageRoute from "App/calculatedSummary/Design";
 import withCreatePage from "enhancers/withCreatePage";
 import withCreateSection from "enhancers/withCreateSection";
 import withCreateQuestionConfirmation from "./withCreateQuestionConfirmation";
@@ -44,11 +44,7 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
   state = { showDeleteConfirmDialog: false, showMovePageDialog: false };
 
   handleAddPage = () => {
-    const {
-      onAddPage,
-      match,
-      data: { questionnaire }
-    } = this.props;
+    const { questionnaire, match, onAddPage } = this.props;
     const { pageId, sectionId } = match.params;
 
     const pages = flatMap(questionnaire.sections, "pages");
@@ -93,11 +89,12 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
 
   canAddQuestionConfirmation() {
     const {
-      data: { questionnaire },
+      loading,
+      questionnaire,
+
       match: {
         params: { sectionId, pageId, confirmationId }
-      },
-      loading
+      }
     } = this.props;
 
     if (loading || !questionnaire) {
@@ -127,11 +124,7 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
   };
 
   render() {
-    const {
-      loading,
-      data: { questionnaire },
-      location
-    } = this.props;
+    const { loading, questionnaire, location, match } = this.props;
 
     return (
       <BaseLayout questionnaire={questionnaire}>
@@ -151,7 +144,15 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
             <Column>
               <Switch location={location}>
                 <Route path={Routes.SECTION} component={SectionRoute} exact />
-                <Route path={Routes.PAGE} component={QuestionPageRoute} exact />
+                <Route
+                  path={Routes.PAGE}
+                  component={
+                    match.params.pageId > 99999
+                      ? SummaryPageRoute
+                      : QuestionPageRoute
+                  }
+                  exact
+                />
                 <Route
                   path={Routes.ROUTING}
                   component={RoutingPageRoute}
@@ -201,13 +202,51 @@ const QUESTIONNAIRE_QUERY = gql`
   ${NavigationSidebar.fragments.NavigationSidebar}
 `;
 
+const mapState = (state, ownProps) => {
+  const questionnaire = { ...ownProps.data.questionnaire };
+
+  const mergedSections = map(questionnaire.sections, section => {
+    const summaryPages = filter(state.summary.pages, {
+      questionnaireId: ownProps.match.params.questionnaireId,
+      sectionId: section.id
+    });
+
+    let sectionPages = [...section.pages];
+
+    if (summaryPages) {
+      summaryPages.forEach(summaryPage => {
+        if (summaryPage.sectionId === section.id) {
+          sectionPages.splice(summaryPage.position, 0, summaryPage);
+        }
+      });
+    }
+
+    sectionPages = map(sectionPages, (page, position) => ({
+      ...page,
+      position
+    }));
+
+    return {
+      ...section,
+      pages: sectionPages
+    };
+  });
+
+  return {
+    questionnaire: {
+      ...questionnaire,
+      sections: mergedSections
+    }
+  };
+};
+
+const QDP = connect(mapState)(UnwrappedQuestionnaireDesignPage);
+
 export default withMutations(props => (
   <Query
     query={QUESTIONNAIRE_QUERY}
     variables={{ id: props.match.params.questionnaireId }}
   >
-    {innerProps => (
-      <UnwrappedQuestionnaireDesignPage {...innerProps} {...props} />
-    )}
+    {innerProps => <QDP {...innerProps} {...props} />}
   </Query>
 ));

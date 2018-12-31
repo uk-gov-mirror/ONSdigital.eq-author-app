@@ -4,14 +4,17 @@ import PropTypes from "prop-types";
 import CustomPropTypes from "custom-prop-types";
 import { colors } from "constants/theme";
 import ScrollPane from "components/ScrollPane";
-import { flowRight } from "lodash";
+import { flowRight, map, find, get, slice } from "lodash";
 import { withRouter } from "react-router";
 import gql from "graphql-tag";
-
+import { connect } from "react-redux";
 import withUpdateQuestionnaire from "./withUpdateQuestionnaire";
 
 import SectionNav from "./SectionNav";
 import NavigationHeader from "./NavigationHeader";
+
+import { addSummaryPage } from "redux/summary";
+import { buildPagePath } from "utils/UrlUtils";
 
 const Container = styled.div`
   background: ${colors.darkBlue};
@@ -28,6 +31,12 @@ const NavigationScrollPane = styled(ScrollPane)`
     }
   }
 `;
+
+let pageId = 9999999;
+const getNewPageId = () => {
+  pageId--;
+  return pageId.toString();
+};
 
 export class UnwrappedNavigationSidebar extends Component {
   static propTypes = {
@@ -46,12 +55,14 @@ export class UnwrappedNavigationSidebar extends Component {
 
   render() {
     const {
-      questionnaire,
-      onUpdateQuestionnaire,
-      onAddPage,
-      onAddQuestionConfirmation,
-      canAddQuestionConfirmation,
-      loading
+        questionnaire,
+        onUpdateQuestionnaire,
+        onAddPage,
+        onAddSummaryPage,
+        onAddQuestionConfirmation,
+        canAddQuestionConfirmation,
+        
+        loading,
     } = this.props;
 
     return (
@@ -63,6 +74,7 @@ export class UnwrappedNavigationSidebar extends Component {
               onUpdateQuestionnaire={onUpdateQuestionnaire}
               onAddSection={this.handleAddSection}
               onAddPage={onAddPage}
+              onAddSummaryPage={onAddSummaryPage}
               onAddQuestionConfirmation={onAddQuestionConfirmation}
               canAddQuestionConfirmation={canAddQuestionConfirmation}
               data-test="nav-section-header"
@@ -90,7 +102,48 @@ UnwrappedNavigationSidebar.fragments = {
   `
 };
 
-export default flowRight(
-  withRouter,
-  withUpdateQuestionnaire
-)(UnwrappedNavigationSidebar);
+const mapDispatch = (dispatch, ownProps) => {
+    const { questionnaire, match, loading } = ownProps;
+    const { pageId, sectionId, questionnaireId } = match.params;
+  
+    let position = 0;
+  
+    if (questionnaire && pageId && !loading) {
+      const section = find(questionnaire.sections, { id: sectionId });
+      const page = find(section.pages, { id: pageId });
+      if (page) {
+        position = page.position + 1;
+      }
+    }
+  
+    return {
+      onAddSummaryPage: () => {
+        const newPageId = getNewPageId();
+        dispatch(
+          addSummaryPage({
+            questionnaireId,
+            sectionId,
+            pageId: newPageId,
+            position,
+          })
+        );
+  
+        ownProps.history.push(
+          buildPagePath({
+            questionnaireId,
+            sectionId,
+            pageId: newPageId,
+          })
+        );
+      },
+    };
+  };
+  
+  export default flowRight(
+    withRouter,
+    withUpdateQuestionnaire,   
+    connect(
+      null,
+      mapDispatch
+    )
+  )(UnwrappedNavigationSidebar);

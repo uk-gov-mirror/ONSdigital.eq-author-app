@@ -10,6 +10,7 @@ const openStyle = css`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  min-height: 0;
 `;
 
 export const PickerWrapper = styled.div`
@@ -58,7 +59,18 @@ const ContentPickerSingle = ({
               disabled={childKey && (option[childKey] || []).length === 0}
               data-test="picker-option"
             >
-              {option.displayName}
+              {option.displayName === "Total" ? (
+                <div>
+                  Calculated total
+                  <div>
+                    <small>
+                      The sum of selected &lsquo;answers to calculate&rsquo;.
+                    </small>
+                  </div>
+                </div>
+              ) : (
+                option.displayName || option.label
+              )}
             </PickerOption>
           );
         })}

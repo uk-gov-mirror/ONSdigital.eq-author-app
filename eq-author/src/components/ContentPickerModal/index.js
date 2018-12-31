@@ -10,7 +10,8 @@ import {
   AnswerContentPicker,
   QuestionContentPicker,
   MetadataContentPicker,
-  RoutingDestinationContentPicker
+  RoutingDestinationContentPicker,
+  VariableContentPicker
 } from "components/ContentPicker";
 
 import { colors } from "constants/theme";
@@ -18,7 +19,8 @@ import {
   ANSWER,
   QUESTION,
   METADATA,
-  DESTINATION
+  DESTINATION,
+  VARIABLES
 } from "components/ContentPickerSelect/content-types";
 
 import LogicalDestination from "graphql/fragments/logical-destination.graphql";
@@ -94,6 +96,7 @@ const ContentWrapper = styled.div`
   flex: 1 1 auto;
   flex-direction: column;
   justify-content: center;
+  min-height: 0;
 `;
 
 const ErrorText = styled.span`
@@ -133,6 +136,11 @@ class ContentPickerModal extends React.Component {
         id: PropTypes.string.isRequired
       })
     ),
+    variableData: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired
+      })
+    ),
     destinationData: PropTypes.shape({
       logicalDestinations: PropTypes.arrayOf(propType(LogicalDestination)),
       questionPages: PropTypes.arrayOf(propType(QuestionPageDestination)),
@@ -145,12 +153,24 @@ class ContentPickerModal extends React.Component {
   };
 
   getSelectedTab() {
+    if (this.props.variableData) {
+      return "variables";
+    }
+
     const { answerData = [] } = this.props;
     return answerData.length > 0 ? "answers" : "metadata";
   }
 
   handleTabChange = selectedTab => {
     this.setState({ selectedTab });
+  };
+
+  handleVariableSubmit = ({ id, displayName }) => {
+    this.props.onSubmit({
+      id,
+      displayName,
+      pipingType: "variable"
+    });
   };
 
   handleAnswerSubmit = ({ id, displayName, type }) => {
@@ -246,6 +266,33 @@ class ContentPickerModal extends React.Component {
     }
   };
 
+  variableTab = {
+    id: "variables",
+    title: "Variables",
+    showTabButton: true,
+    render: () => {
+      if (!this.props.variableData || this.props.variableData.length === 0) {
+        return (
+          <ErrorText>
+            There are no configured variables to choose from
+          </ErrorText>
+        );
+      }
+      return (
+        <React.Fragment>
+          <HeaderSegment>
+            <Title>Select variable</Title>
+          </HeaderSegment>
+          <VariableContentPicker
+            data={this.props.variableData}
+            onSubmit={this.handleVariableSubmit}
+            onClose={this.props.onClose}
+          />
+        </React.Fragment>
+      );
+    }
+  };
+
   destinationTab = {
     id: "destination",
     title: "Destination",
@@ -273,6 +320,7 @@ class ContentPickerModal extends React.Component {
     this.props.contentTypes.indexOf(ANSWER) !== -1 ? this.answerTab : null,
     this.props.contentTypes.indexOf(QUESTION) !== -1 ? this.questionTab : null,
     this.props.contentTypes.indexOf(METADATA) !== -1 ? this.metadataTab : null,
+    this.props.contentTypes.indexOf(VARIABLES) !== -1 ? this.variableTab : null,
     this.props.contentTypes.indexOf(DESTINATION) !== -1
       ? this.destinationTab
       : null

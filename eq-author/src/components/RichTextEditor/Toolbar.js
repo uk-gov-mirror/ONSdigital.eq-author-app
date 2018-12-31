@@ -115,6 +115,7 @@ class ToolBar extends React.Component {
       visible,
       onPiping,
       selectionIsCollapsed,
+      variableData,
       controls: { piping }
     } = this.props;
 
@@ -133,6 +134,7 @@ class ToolBar extends React.Component {
                 <PipingMenu
                   disabled={isPipingDisabled}
                   onItemChosen={onPiping}
+                  variableData={variableData}
                 />
               </ButtonGroup>
             </FadeTransition>
