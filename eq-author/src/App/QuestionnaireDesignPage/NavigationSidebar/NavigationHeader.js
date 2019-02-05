@@ -82,6 +82,13 @@ class NavigationHeader extends React.Component {
     this.handleAddMenuToggle();
   };
 
+  handleAddSummaryPage = () => {
+    console.log("addSummaryPage");
+
+    this.props.onAddSummaryPage();
+    this.handleAddMenuToggle();
+  };
+
   handleAddSection = () => {
     this.props.onAddSection();
     this.handleAddMenuToggle();
@@ -150,6 +157,7 @@ class NavigationHeader extends React.Component {
             addMenuOpen={this.state.addMenuOpen}
             onAddMenuToggle={this.handleAddMenuToggle}
             onAddPage={this.handleAddPage}
+            onAddSummaryPage={this.handleAddSummaryPage}
             onAddSection={this.handleAddSection}
             onAddQuestionConfirmation={this.handleAddQuestionConfirmation}
             canAddQuestionConfirmation={this.props.canAddQuestionConfirmation}

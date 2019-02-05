@@ -14,6 +14,8 @@ export const Routes = {
   SIGN_IN: "/sign-in",
   QUESTIONNAIRE: `/questionnaire/:questionnaireId/:sectionId(\\d+)?/:pageId(\\d+)?/:confirmationId(\\d+)?/:tab?`,
   SECTION: `/questionnaire/:questionnaireId/:sectionId(\\d+)/design`,
+  SUMMARY: `/questionnaire/:questionnaireId/:sectionId(\\d+)/summary/:pageId(\\d+)/design`,
+  SUMMARY_PREVIEW: `/questionnaire/:questionnaireId/:sectionId(\\d+)/summary/:pageId(\\d+)/preview`,
   PAGE: `/questionnaire/:questionnaireId/:sectionId(\\d+)/:pageId(\\d+)/design`,
   PAGE_PREVIEW: `/questionnaire/:questionnaireId/:sectionId(\\d+)/:pageId(\\d+)?/preview`,
   CONFIRMATION: `/questionnaire/:questionnaireId/:sectionId(\\d+)/:pageId(\\d+)/:confirmationId(\\d+)/design`,

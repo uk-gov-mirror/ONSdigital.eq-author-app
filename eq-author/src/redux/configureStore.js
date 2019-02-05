@@ -8,6 +8,7 @@ import {
 import toasts from "redux/toast/reducer";
 import saving from "redux/saving/reducer";
 import tabs from "redux/tabs/reducer";
+import summary from "redux/summary/";
 import authReducer from "redux/auth/reducer";
 import auth from "components/Auth";
 
@@ -18,6 +19,7 @@ const configureStore = (history, client, preloadedState) =>
       saving,
       tabs,
       toasts,
+      summary,
       auth: authReducer,
     }),
     preloadedState,

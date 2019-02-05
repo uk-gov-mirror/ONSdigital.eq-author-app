@@ -4,14 +4,16 @@ import PropTypes from "prop-types";
 import CustomPropTypes from "custom-prop-types";
 import { colors } from "constants/theme";
 import ScrollPane from "components/ScrollPane";
-import { flowRight } from "lodash";
+import { flowRight, map, find, get, slice } from "lodash";
 import { withRouter } from "react-router";
 import gql from "graphql-tag";
-
+import { connect } from "react-redux";
 import withUpdateQuestionnaire from "./withUpdateQuestionnaire";
 
 import SectionNav from "./SectionNav";
 import NavigationHeader from "./NavigationHeader";
+
+import { addSummaryPage } from "redux/summary";
 
 const Container = styled.div`
   background: ${colors.darkBlue};
@@ -49,8 +51,10 @@ export class UnwrappedNavigationSidebar extends Component {
       questionnaire,
       onUpdateQuestionnaire,
       onAddPage,
+      onAddSummaryPage,
       onAddQuestionConfirmation,
       canAddQuestionConfirmation,
+      summary,
       loading,
     } = this.props;
 
@@ -63,6 +67,7 @@ export class UnwrappedNavigationSidebar extends Component {
               onUpdateQuestionnaire={onUpdateQuestionnaire}
               onAddSection={this.handleAddSection}
               onAddPage={onAddPage}
+              onAddSummaryPage={onAddSummaryPage}
               onAddQuestionConfirmation={onAddQuestionConfirmation}
               canAddQuestionConfirmation={canAddQuestionConfirmation}
               data-test="nav-section-header"
@@ -90,7 +95,51 @@ UnwrappedNavigationSidebar.fragments = {
   `,
 };
 
+const mapState = (state, ownProps) => {
+  const questionnaire = { ...ownProps.questionnaire };
+  const summary = find(state.summary.questionnaires, {
+    id: ownProps.match.params.questionnaireId,
+  });
+
+  const mergedSections = map(questionnaire.sections, (section, index) => {
+    const summarySection = get(summary.sections, index);
+    let mergedSectionPages = [...section.pages];
+
+    if (summarySection) {
+      summarySection.pages.forEach(summaryPage => {
+        mergedSectionPages = slice(
+          section.pages,
+          summaryPage.position,
+          0,
+          summaryPage
+        );
+      });
+    }
+
+    console.log(mergedSectionPages);
+
+    return { ...section, pages: mergedSectionPages };
+  });
+
+  return { questionnaire };
+
+  return {
+    questionnaire: {
+      ...questionnaire,
+      sections: mergedSections,
+    },
+  };
+};
+
+const mapDispatch = (dispatch, ownProps) => ({
+  onAddSummaryPage: () => dispatch(addSummaryPage()),
+});
+
 export default flowRight(
   withRouter,
-  withUpdateQuestionnaire
+  withUpdateQuestionnaire,
+  connect(
+    mapState,
+    mapDispatch
+  )
 )(UnwrappedNavigationSidebar);

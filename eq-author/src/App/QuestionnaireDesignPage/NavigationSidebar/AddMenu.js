@@ -53,6 +53,7 @@ const AddMenu = ({
   onAddMenuToggle,
   onAddPage,
   onAddSection,
+  onAddSummaryPage,
   onAddQuestionConfirmation,
   canAddQuestionConfirmation,
   ...otherProps
@@ -89,6 +90,9 @@ const AddMenu = ({
             disabled={!canAddQuestionConfirmation}
           >
             Confirmation question
+          </AddMenuButton>
+          <AddMenuButton primary onClick={onAddSummaryPage}>
+            Calculated summary page
           </AddMenuButton>
           <AddMenuButton
             primary

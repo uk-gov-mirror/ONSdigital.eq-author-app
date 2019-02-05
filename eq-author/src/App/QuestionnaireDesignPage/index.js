@@ -13,6 +13,7 @@ import BaseLayout from "components/BaseLayout";
 import { Grid, Column } from "components/Grid";
 import NavigationSidebar from "./NavigationSidebar";
 import QuestionPageRoute from "App/questionPage/Design";
+import SummaryPageRoute from "App/calculatedSummary/Design";
 import PreviewRoute from "components/PreviewRoute";
 import SectionRoute from "App/section/Design";
 import { Routes, buildSectionPath } from "utils/UrlUtils";
@@ -151,6 +152,16 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
             <Column>
               <Switch location={location}>
                 <Route path={Routes.SECTION} component={SectionRoute} exact />
+                <Route
+                  path={Routes.SUMMARY}
+                  component={SummaryPageRoute}
+                  exact
+                />
+                <Route
+                  path={Routes.SUMMARY_PREVIEW}
+                  component={PreviewRoute}
+                  exact
+                />
                 <Route path={Routes.PAGE} component={QuestionPageRoute} exact />
                 <Route
                   path={Routes.ROUTING}
