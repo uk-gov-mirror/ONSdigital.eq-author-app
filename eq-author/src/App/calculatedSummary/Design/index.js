@@ -1,5 +1,5 @@
 import React from "react";
-import { noop, isEmpty, flowRight, get } from "lodash";
+import { noop, isEmpty, flowRight, get, find } from "lodash";
 import { Titled } from "react-titled";
 
 import { withRouter } from "react-router";
@@ -130,10 +130,16 @@ export class CalculatedSummaryDesign extends React.Component {
 }
 
 const mapState = (state, ownProps) => {
-  console.log(ownProps);
+  const { questionnaireId, sectionId, pageId } = ownProps.match.params;
+
+  const questionnaire = find(state.summary.questionnaires, {
+    id: questionnaireId,
+  });
+  const section = find(questionnaire.sections, { id: sectionId });
+  const page = find(section.pages, { id: pageId });
 
   return {
-    page: state.summary[ownProps.match.params.pageId],
+    page,
   };
 };
 

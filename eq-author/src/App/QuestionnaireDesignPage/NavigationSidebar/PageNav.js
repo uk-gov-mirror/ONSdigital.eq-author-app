@@ -43,6 +43,7 @@ const PageNav = ({ section, questionnaire }) => {
           );
         }
         const page = pageOrConfirmation;
+
         return (
           <NavItemTransition key={page.id} onEntered={scrollIntoView}>
             <PageNavItem

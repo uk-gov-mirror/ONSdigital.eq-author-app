@@ -2,6 +2,28 @@ export const ADD_PAGE = "ADD_PAGE";
 export const ADD_ANSWER = "ADD_ANSWER";
 export const REMOVE_ANSWER = "REMOVE_ANSWER";
 
+let pageId = 9999999;
+
+const getNewPageId = () => {
+  pageId--;
+  return pageId.toString();
+};
+
+const getPage = position => {
+  const id = getNewPageId();
+  return {
+    id: getNewPageId(),
+    confirmation: null,
+    position,
+    __typename: "SummaryPage",
+    displayName: `Summary ${id}`,
+    title:
+      "We calculate the total of unit values entered to be %(total)s. Is this correct?",
+    answers: [],
+    totalTitle: "Grand total of previous values",
+  };
+};
+
 const initialState = {
   questionnaires: [
     {
@@ -9,28 +31,11 @@ const initialState = {
       sections: [
         {
           id: "2",
-          pages: [
-            {
-              position: 0,
-              id: "9999",
-              type: "__Summary",
-              title:
-                "We calculate the total of unit values entered to be %(total)s. Is this correct?",
-              answers: [],
-              totalTitle: "Grand total of previous values",
-            },
-          ],
+          pages: [getPage(0), getPage(1), getPage(3)],
         },
       ],
     },
   ],
-};
-
-let pageIds = 0;
-
-const getNewPageId = () => {
-  pageIds++;
-  return pageIds;
 };
 
 export default (state = initialState, { type, payload }) => {
@@ -38,8 +43,25 @@ export default (state = initialState, { type, payload }) => {
     case ADD_ANSWER:
       return { ...state, ...payload };
 
-    case ADD_PAGE:
-      return { ...state, ...payload };
+    case ADD_PAGE: {
+        const { questionnaireId, sectionId, position } = payload;
+
+
+        return { 
+            ...state, 
+            questionnaires: [
+              ...state.questionnaires[questionnaireId],
+              sections: [
+                  ...state.questionnaires[questionnaireId].sections[sectionId],
+                  pages: [
+                      
+                  ]
+  
+              ]
+          ]  
+      }
+    }
+      
 
     case REMOVE_ANSWER:
       return { ...state, ...payload };

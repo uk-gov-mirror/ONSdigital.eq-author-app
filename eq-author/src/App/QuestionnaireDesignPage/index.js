@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { Switch } from "react-router-dom";
 import { Titled } from "react-titled";
 import { Route, Redirect } from "react-router";
-import { find, flatMap, flowRight } from "lodash";
+import { find, flatMap, flowRight, get, map } from "lodash";
 
 import BaseLayout from "components/BaseLayout";
 import { Grid, Column } from "components/Grid";
@@ -128,11 +128,7 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
   };
 
   render() {
-    const {
-      loading,
-      data: { questionnaire },
-      location,
-    } = this.props;
+    const { loading, questionnaire, location } = this.props;
 
     return (
       <BaseLayout questionnaire={questionnaire}>
@@ -212,13 +208,48 @@ const QUESTIONNAIRE_QUERY = gql`
   ${NavigationSidebar.fragments.NavigationSidebar}
 `;
 
+const mapState = (state, ownProps) => {
+  const questionnaire = { ...ownProps.data.questionnaire };
+  const summary = find(state.summary.questionnaires, {
+    id: ownProps.match.params.questionnaireId,
+  });
+
+  const mergedSections = map(questionnaire.sections, (section, index) => {
+    const summarySection = get(summary.sections, index);
+    let sectionPages = [...section.pages];
+
+    if (summarySection) {
+      summarySection.pages.forEach(summaryPage => {
+        sectionPages.splice(summaryPage.position, 0, summaryPage);
+      });
+    }
+
+    sectionPages = map(sectionPages, (page, position) => ({
+      ...page,
+      position,
+    }));
+
+    return {
+      ...section,
+      pages: sectionPages,
+    };
+  });
+
+  return {
+    questionnaire: {
+      ...questionnaire,
+      sections: mergedSections,
+    },
+  };
+};
+
+const QDP = connect(mapState)(UnwrappedQuestionnaireDesignPage);
+
 export default withMutations(props => (
   <Query
     query={QUESTIONNAIRE_QUERY}
     variables={{ id: props.match.params.questionnaireId }}
   >
-    {innerProps => (
-      <UnwrappedQuestionnaireDesignPage {...innerProps} {...props} />
-    )}
+    {innerProps => <QDP {...innerProps} {...props} />}
   </Query>
 ));

@@ -12,7 +12,7 @@ export const generatePath = curry((path, params) => compile(path)(params));
 export const Routes = {
   HOME: "/",
   SIGN_IN: "/sign-in",
-  QUESTIONNAIRE: `/questionnaire/:questionnaireId/:sectionId(\\d+)?/:pageId(\\d+)?/:confirmationId(\\d+)?/:tab?`,
+  QUESTIONNAIRE: `/questionnaire/:questionnaireId/:sectionId(\\d+)?/:summary?/:pageId(\\d+)?/:confirmationId(\\d+)?/:tab?`,
   SECTION: `/questionnaire/:questionnaireId/:sectionId(\\d+)/design`,
   SUMMARY: `/questionnaire/:questionnaireId/:sectionId(\\d+)/summary/:pageId(\\d+)/design`,
   SUMMARY_PREVIEW: `/questionnaire/:questionnaireId/:sectionId(\\d+)/summary/:pageId(\\d+)/preview`,
@@ -26,6 +26,7 @@ export const Routes = {
 export const buildSectionPath = generatePath(Routes.SECTION);
 export const buildPagePath = generatePath(Routes.PAGE);
 export const buildQuestionnairePath = generatePath(Routes.QUESTIONNAIRE);
+export const buildSummaryPath = generatePath(Routes.SUMMARY);
 export const buildConfirmationPath = generatePath(Routes.CONFIRMATION);
 
 const rewriteTab = tab => params => buildQuestionnairePath({ ...params, tab });

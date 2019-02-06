@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import CustomPropTypes from "custom-prop-types";
 import gql from "graphql-tag";
 
-import { buildQuestionnairePath } from "utils/UrlUtils";
+import { buildQuestionnairePath, buildSummaryPath } from "utils/UrlUtils";
 import NavLink from "./NavLink";
 import PageIcon from "./icon-questionpage.svg?inline";
 
@@ -23,23 +23,30 @@ export const UnwrappedPageNavItem = ({
   page,
   match,
   ...otherProps
-}) => (
-  <StyledPageItem data-test="page-item" {...otherProps}>
-    <NavLink
-      to={buildQuestionnairePath({
-        questionnaireId,
-        sectionId,
-        pageId: page.id,
-        tab: match.params.tab,
-      })}
-      title={page.displayName}
-      icon={PageIcon}
-      data-test="nav-page-link"
-    >
-      {page.displayName}
-    </NavLink>
-  </StyledPageItem>
-);
+}) => {
+  const buildPath =
+    page.__typename === "QuestionPage"
+      ? buildQuestionnairePath
+      : buildSummaryPath;
+
+  return (
+    <StyledPageItem data-test="page-item" {...otherProps}>
+      <NavLink
+        to={buildPath({
+          questionnaireId,
+          sectionId,
+          pageId: page.id,
+          tab: match.params.tab,
+        })}
+        title={page.displayName}
+        icon={PageIcon}
+        data-test="nav-page-link"
+      >
+        {page.displayName}
+      </NavLink>
+    </StyledPageItem>
+  );
+};
 
 UnwrappedPageNavItem.fragments = {
   PageNavItem: gql`

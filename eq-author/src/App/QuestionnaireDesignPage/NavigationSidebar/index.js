@@ -103,25 +103,24 @@ const mapState = (state, ownProps) => {
 
   const mergedSections = map(questionnaire.sections, (section, index) => {
     const summarySection = get(summary.sections, index);
-    let mergedSectionPages = [...section.pages];
+    let sectionPages = [...section.pages];
 
     if (summarySection) {
       summarySection.pages.forEach(summaryPage => {
-        mergedSectionPages = slice(
-          section.pages,
-          summaryPage.position,
-          0,
-          summaryPage
-        );
+        sectionPages.splice(summaryPage.position, 0, summaryPage);
       });
     }
 
-    console.log(mergedSectionPages);
+    sectionPages = map(sectionPages, (page, position) => ({
+      ...page,
+      position,
+    }));
 
-    return { ...section, pages: mergedSectionPages };
+    return {
+      ...section,
+      pages: sectionPages,
+    };
   });
-
-  return { questionnaire };
 
   return {
     questionnaire: {
@@ -131,15 +130,37 @@ const mapState = (state, ownProps) => {
   };
 };
 
-const mapDispatch = (dispatch, ownProps) => ({
-  onAddSummaryPage: () => dispatch(addSummaryPage()),
-});
+const mapDispatch = (dispatch, ownProps) => {
+  const { questionnaire, match } = ownProps;
+  const { pageId, sectionId, questionnaireId } = match.params;
+
+  let position = 0;
+
+  if (questionnaire) {
+    if (pageId) {
+      const section = find(questionnaire.sections, { id: sectionId });
+      const page = find(section.pages, { id: pageId });
+      position = page.position + 1;
+    }
+  }
+
+  return {
+    onAddSummaryPage: () =>
+      dispatch(
+        addSummaryPage({
+          questionnaireId,
+          sectionId,
+          position,
+        })
+      ),
+  };
+};
 
 export default flowRight(
   withRouter,
   withUpdateQuestionnaire,
   connect(
-    mapState,
+    null,
     mapDispatch
   )
 )(UnwrappedNavigationSidebar);
