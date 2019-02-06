@@ -116,7 +116,6 @@ UnwrappedTabs.propTypes = {
   design: PropTypes.bool,
   preview: PropTypes.bool,
   routing: PropTypes.bool,
-
   match: CustomPropTypes.match,
   children: PropTypes.node.isRequired,
 };
