@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { Switch } from "react-router-dom";
 import { Titled } from "react-titled";
 import { Route, Redirect } from "react-router";
-import { find, flatMap, flowRight, get, map } from "lodash";
+import { find, flatMap, flowRight, filter, map } from "lodash";
 
 import BaseLayout from "components/BaseLayout";
 import { Grid, Column } from "components/Grid";
@@ -210,16 +210,17 @@ const QUESTIONNAIRE_QUERY = gql`
 
 const mapState = (state, ownProps) => {
   const questionnaire = { ...ownProps.data.questionnaire };
-  const summary = find(state.summary.questionnaires, {
-    id: ownProps.match.params.questionnaireId,
-  });
 
   const mergedSections = map(questionnaire.sections, (section, index) => {
-    const summarySection = get(summary.sections, index);
+    const summaryPages = filter(state.summary.pages, {
+      questionnaireId: ownProps.match.params.questionnaireId,
+      sectionId: ownProps.match.params.sectionId,
+    });
+
     let sectionPages = [...section.pages];
 
-    if (summarySection) {
-      summarySection.pages.forEach(summaryPage => {
+    if (summaryPages) {
+      summaryPages.forEach(summaryPage => {
         sectionPages.splice(summaryPage.position, 0, summaryPage);
       });
     }

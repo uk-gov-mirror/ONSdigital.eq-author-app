@@ -1,4 +1,6 @@
 export const ADD_PAGE = "ADD_PAGE";
+export const REMOVE_PAGE = "REMOVE_PAGE";
+
 export const ADD_ANSWER = "ADD_ANSWER";
 export const REMOVE_ANSWER = "REMOVE_ANSWER";
 
@@ -9,10 +11,12 @@ const getNewPageId = () => {
   return pageId.toString();
 };
 
-const getPage = position => {
+const createPage = ({ questionnaireId, sectionId, position }) => {
   const id = getNewPageId();
   return {
     id: getNewPageId(),
+    questionnaireId: "1",
+    sectionId: "1",
     confirmation: null,
     position,
     __typename: "SummaryPage",
@@ -25,43 +29,31 @@ const getPage = position => {
 };
 
 const initialState = {
-  questionnaires: [
-    {
-      id: "2",
-      sections: [
-        {
-          id: "2",
-          pages: [getPage(0), getPage(1), getPage(3)],
-        },
-      ],
-    },
+  pages: [
+    createPage({ questionnaireId: "1", sectionId: "1", position: 1 }),
+    createPage({ questionnaireId: "1", sectionId: "1", position: 2 }),
+    createPage({ questionnaireId: "1", sectionId: "1", position: 3 }),
   ],
 };
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case ADD_PAGE: {
+      return {
+        ...state,
+        pages: state.pages.concat(createPage(payload)),
+      };
+    }
+
+    case REMOVE_PAGE: {
+      return {
+        ...state,
+        pages: state.pages.concat(createPage(payload)),
+      };
+    }
+
     case ADD_ANSWER:
       return { ...state, ...payload };
-
-    case ADD_PAGE: {
-        const { questionnaireId, sectionId, position } = payload;
-
-
-        return { 
-            ...state, 
-            questionnaires: [
-              ...state.questionnaires[questionnaireId],
-              sections: [
-                  ...state.questionnaires[questionnaireId].sections[sectionId],
-                  pages: [
-                      
-                  ]
-  
-              ]
-          ]  
-      }
-    }
-      
 
     case REMOVE_ANSWER:
       return { ...state, ...payload };

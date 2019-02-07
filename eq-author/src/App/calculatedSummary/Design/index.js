@@ -130,13 +130,11 @@ export class CalculatedSummaryDesign extends React.Component {
 }
 
 const mapState = (state, ownProps) => {
-  const { questionnaireId, sectionId, pageId } = ownProps.match.params;
+  const { pageId } = ownProps.match.params;
 
-  const questionnaire = find(state.summary.questionnaires, {
-    id: questionnaireId,
+  const page = find(state.summary.pages, {
+    id: pageId,
   });
-  const section = find(questionnaire.sections, { id: sectionId });
-  const page = find(section.pages, { id: pageId });
 
   return {
     page,

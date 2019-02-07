@@ -95,51 +95,18 @@ UnwrappedNavigationSidebar.fragments = {
   `,
 };
 
-const mapState = (state, ownProps) => {
-  const questionnaire = { ...ownProps.questionnaire };
-  const summary = find(state.summary.questionnaires, {
-    id: ownProps.match.params.questionnaireId,
-  });
-
-  const mergedSections = map(questionnaire.sections, (section, index) => {
-    const summarySection = get(summary.sections, index);
-    let sectionPages = [...section.pages];
-
-    if (summarySection) {
-      summarySection.pages.forEach(summaryPage => {
-        sectionPages.splice(summaryPage.position, 0, summaryPage);
-      });
-    }
-
-    sectionPages = map(sectionPages, (page, position) => ({
-      ...page,
-      position,
-    }));
-
-    return {
-      ...section,
-      pages: sectionPages,
-    };
-  });
-
-  return {
-    questionnaire: {
-      ...questionnaire,
-      sections: mergedSections,
-    },
-  };
-};
-
 const mapDispatch = (dispatch, ownProps) => {
-  const { questionnaire, match } = ownProps;
+  const { questionnaire, match, loading } = ownProps;
   const { pageId, sectionId, questionnaireId } = match.params;
+
+  console.log(ownProps);
 
   let position = 0;
 
-  if (questionnaire) {
-    if (pageId) {
-      const section = find(questionnaire.sections, { id: sectionId });
-      const page = find(section.pages, { id: pageId });
+  if (questionnaire && pageId && !loading) {
+    const section = find(questionnaire.sections, { id: sectionId });
+    const page = find(section.pages, { id: pageId });
+    if (page) {
       position = page.position + 1;
     }
   }

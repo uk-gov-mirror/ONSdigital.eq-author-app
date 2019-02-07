@@ -131,7 +131,7 @@
     "jsonwebtoken": "latest",
     "lodash": "latest",
     "normalize.css": "^7.0.0",
-    "normalizr": "latest",
+    "normalizr": "^3.3.0",
     "omit-deep-lodash": "^1.1.4",
     "polished": "latest",
     "raven-js": "latest",
