@@ -1,6 +1,7 @@
 import React from "react";
 import { noop, isEmpty, flowRight, get, find } from "lodash";
 import { Titled } from "react-titled";
+import gql from "graphql-tag";
 
 import { withRouter } from "react-router";
 
@@ -9,7 +10,7 @@ import IconButtonDelete from "components/buttons/IconButtonDelete";
 import Button from "components/buttons/Button";
 import IconText from "components/IconText";
 import DuplicateButton from "components/buttons/DuplicateButton";
-
+import withPropRenamed from "enhancers/withPropRenamed";
 import Loading from "components/Loading";
 import Error from "components/Error";
 
@@ -27,7 +28,7 @@ import styled from "styled-components";
 
 import AnswerSelector from "./AnswerSelector";
 import withQuestionnaire from "App/QuestionnairesPage/withQuestionnaire";
-import { deleteSummaryPage } from "redux/summary";
+import { deleteSummaryPage, updateSummaryPage } from "redux/summary";
 
 const titleControls = {
   emphasis: true,
@@ -69,17 +70,26 @@ export class CalculatedSummaryDesign extends React.Component {
           <VisuallyHidden>
             <Label htmlFor="alias">Question short code (optional)</Label>
           </VisuallyHidden>
-          <AliasEditor alias={""} onUpdate={noop} onChange={noop} />
+          <AliasEditor
+            alias={page.alias}
+            onUpdate={onUpdate}
+            onChange={onChange}
+          />
           <Buttons>
             <Button
               onClick={noop}
               data-test="btn-move"
               variant="tertiary"
               small
+              disabled
             >
               <IconText icon={IconMove}>Move</IconText>
             </Button>
-            <DuplicateButton onClick={noop} data-test="btn-duplicate-page">
+            <DuplicateButton
+              onClick={noop}
+              data-test="btn-duplicate-page"
+              disabled
+            >
               Duplicate
             </DuplicateButton>
             <IconButtonDelete
@@ -98,7 +108,7 @@ export class CalculatedSummaryDesign extends React.Component {
               label="Page title"
               placeholder="Title"
               value={page.title}
-              onUpdate={noop}
+              onUpdate={onUpdate}
               controls={titleControls}
               size="large"
               fetchAnswers={noop}
@@ -111,11 +121,11 @@ export class CalculatedSummaryDesign extends React.Component {
             </div>
             <RichTextEditor
               id="total-title"
-              name="title"
+              name="totalTitle"
               label="Total title"
               placeholder="Title"
               value={page.totalTitle}
-              onUpdate={noop}
+              onUpdate={onUpdate}
               controls={titleControls}
               size="large"
               fetchAnswers={noop}
@@ -150,13 +160,21 @@ const mapState = (state, ownProps) => {
 
 const mapDispatch = (dispatch, ownProps) => ({
   deletePage: id => dispatch(deleteSummaryPage({ id })),
+  onChange: ({ name, value }) =>
+    dispatch(
+      updateSummaryPage({ id: ownProps.match.params.pageId, [name]: value })
+    ),
+  onUpdate: ({ name, value }) =>
+    dispatch(
+      updateSummaryPage({ id: ownProps.match.params.pageId, [name]: value })
+    ),
 });
 
 export default flowRight(
-  withRouter,
-  withQuestionnaire,
   connect(
     mapState,
     mapDispatch
-  )
+  ),
+  withRouter,
+  withQuestionnaire
 )(CalculatedSummaryDesign);

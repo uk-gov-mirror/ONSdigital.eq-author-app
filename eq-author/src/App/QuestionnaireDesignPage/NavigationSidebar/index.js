@@ -14,6 +14,7 @@ import SectionNav from "./SectionNav";
 import NavigationHeader from "./NavigationHeader";
 
 import { addSummaryPage } from "redux/summary";
+import { buildSummaryPath } from "utils/UrlUtils";
 
 const Container = styled.div`
   background: ${colors.darkBlue};
@@ -30,6 +31,12 @@ const NavigationScrollPane = styled(ScrollPane)`
     }
   }
 `;
+
+let pageId = 9999999;
+const getNewPageId = () => {
+  pageId--;
+  return pageId.toString();
+};
 
 export class UnwrappedNavigationSidebar extends Component {
   static propTypes = {
@@ -99,8 +106,6 @@ const mapDispatch = (dispatch, ownProps) => {
   const { questionnaire, match, loading } = ownProps;
   const { pageId, sectionId, questionnaireId } = match.params;
 
-  console.log(ownProps);
-
   let position = 0;
 
   if (questionnaire && pageId && !loading) {
@@ -112,14 +117,25 @@ const mapDispatch = (dispatch, ownProps) => {
   }
 
   return {
-    onAddSummaryPage: () =>
+    onAddSummaryPage: () => {
+      const newPageId = getNewPageId();
       dispatch(
         addSummaryPage({
           questionnaireId,
           sectionId,
+          pageId: newPageId,
           position,
         })
-      ),
+      );
+
+      ownProps.history.push(
+        buildSummaryPath({
+          questionnaireId,
+          sectionId,
+          pageId: newPageId,
+        })
+      );
+    },
   };
 };
 

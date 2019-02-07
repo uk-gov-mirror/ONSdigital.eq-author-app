@@ -12,6 +12,8 @@ import summary from "redux/summary/";
 import authReducer from "redux/auth/reducer";
 import auth from "components/Auth";
 
+import persistState from "redux-localstorage";
+
 const configureStore = (history, client, preloadedState) =>
   createStore(
     combineReducers({
@@ -27,7 +29,8 @@ const configureStore = (history, client, preloadedState) =>
       applyMiddleware(
         createRouterMiddleware(history),
         thunk.withExtraArgument({ auth, client })
-      )
+      ),
+      persistState("summary")
     )
   );
 

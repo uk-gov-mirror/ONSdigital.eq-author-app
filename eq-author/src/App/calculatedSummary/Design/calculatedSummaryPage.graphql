@@ -1,0 +1,13 @@
+fragment CalculatedSummaryPage on QuestionPage {
+  __typename
+  id
+  questionnaireId
+  sectionId
+  confirmation
+  position
+  displayName
+  alias
+  title
+  answers
+  totalTitle
+}

@@ -16,6 +16,7 @@ import gql from "graphql-tag";
 
 import pipeP from "utils/pipeP";
 import AddMenu from "./AddMenu";
+import { buildSummaryPath } from "utils/UrlUtils";
 
 const IconList = styled.ul`
   display: flex;
@@ -83,8 +84,6 @@ class NavigationHeader extends React.Component {
   };
 
   handleAddSummaryPage = () => {
-    console.log("addSummaryPage");
-
     this.props.onAddSummaryPage();
     this.handleAddMenuToggle();
   };

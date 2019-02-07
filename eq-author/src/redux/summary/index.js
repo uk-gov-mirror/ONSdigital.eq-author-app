@@ -1,41 +1,30 @@
-import { remove } from "lodash";
+import { remove, map } from "lodash";
 
 export const ADD_PAGE = "ADD_PAGE";
 export const DELETE_PAGE = "DELETE_PAGE";
+export const UPDATE_PAGE = "UPDATE_PAGE";
 
 export const ADD_ANSWER = "ADD_ANSWER";
 export const REMOVE_ANSWER = "REMOVE_ANSWER";
 
-let pageId = 9999999;
-
-const getNewPageId = () => {
-  pageId--;
-  return pageId.toString();
-};
-
-const createPage = ({ questionnaireId, sectionId, position }) => {
-  const id = getNewPageId();
+const createPage = ({ questionnaireId, sectionId, pageId, position }) => {
   return {
-    id: getNewPageId(),
-    questionnaireId: "1",
-    sectionId: "1",
+    __typename: "SummaryPage",
+    alias: "",
+    id: pageId,
+    questionnaireId,
+    sectionId,
     confirmation: null,
     position,
-    __typename: "SummaryPage",
-    displayName: `Summary ${id}`,
-    title:
-      "We calculate the total of unit values entered to be %(total)s. Is this correct?",
+    displayName: "Untitled Summary Page",
+    title: "",
     answers: [],
-    totalTitle: "Grand total of previous values",
+    totalTitle: "",
   };
 };
 
 const initialState = {
-  pages: [
-    createPage({ questionnaireId: "1", sectionId: "1", position: 1 }),
-    createPage({ questionnaireId: "1", sectionId: "1", position: 2 }),
-    createPage({ questionnaireId: "1", sectionId: "1", position: 3 }),
-  ],
+  pages: [],
 };
 
 export default (state = initialState, { type, payload }) => {
@@ -51,6 +40,29 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         pages: remove(state.pages, ({ id }) => id !== payload.id),
+      };
+    }
+
+    case UPDATE_PAGE: {
+      return {
+        ...state,
+        pages: map(state.pages, page => {
+          if (page.id === payload.id) {
+            const newState = {
+              ...page,
+              ...payload,
+            };
+
+            const displayName = newState.alias || "Untitled Summary Page ";
+
+            return {
+              ...newState,
+              displayName,
+            };
+          } else {
+            return page;
+          }
+        }),
       };
     }
 
@@ -72,6 +84,11 @@ export const addSummaryPage = payload => ({
 
 export const deleteSummaryPage = payload => ({
   type: DELETE_PAGE,
+  payload,
+});
+
+export const updateSummaryPage = payload => ({
+  type: UPDATE_PAGE,
   payload,
 });
 
