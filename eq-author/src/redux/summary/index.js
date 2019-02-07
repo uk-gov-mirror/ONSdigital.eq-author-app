@@ -1,5 +1,7 @@
+import { remove } from "lodash";
+
 export const ADD_PAGE = "ADD_PAGE";
-export const REMOVE_PAGE = "REMOVE_PAGE";
+export const DELETE_PAGE = "DELETE_PAGE";
 
 export const ADD_ANSWER = "ADD_ANSWER";
 export const REMOVE_ANSWER = "REMOVE_ANSWER";
@@ -45,10 +47,10 @@ export default (state = initialState, { type, payload }) => {
       };
     }
 
-    case REMOVE_PAGE: {
+    case DELETE_PAGE: {
       return {
         ...state,
-        pages: state.pages.concat(createPage(payload)),
+        pages: remove(state.pages, ({ id }) => id !== payload.id),
       };
     }
 
@@ -65,6 +67,11 @@ export default (state = initialState, { type, payload }) => {
 
 export const addSummaryPage = payload => ({
   type: ADD_PAGE,
+  payload,
+});
+
+export const deleteSummaryPage = payload => ({
+  type: DELETE_PAGE,
   payload,
 });
 

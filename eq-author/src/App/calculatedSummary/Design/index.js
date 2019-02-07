@@ -27,6 +27,7 @@ import styled from "styled-components";
 
 import AnswerSelector from "./AnswerSelector";
 import withQuestionnaire from "App/QuestionnairesPage/withQuestionnaire";
+import { deleteSummaryPage } from "redux/summary";
 
 const titleControls = {
   emphasis: true,
@@ -41,6 +42,10 @@ export class CalculatedSummaryDesign extends React.Component {
   getPageTitle = page => title => {
     const pageTitle = page.displayName;
     return `${pageTitle} - ${title}`;
+  };
+
+  handleDelete = () => {
+    this.props.deletePage(this.props.page.id);
   };
 
   renderContent = () => {
@@ -77,7 +82,10 @@ export class CalculatedSummaryDesign extends React.Component {
             <DuplicateButton onClick={noop} data-test="btn-duplicate-page">
               Duplicate
             </DuplicateButton>
-            <IconButtonDelete onClick={noop} data-test="btn-delete">
+            <IconButtonDelete
+              onClick={this.handleDelete}
+              data-test="btn-delete"
+            >
               Delete
             </IconButtonDelete>
           </Buttons>
@@ -99,7 +107,6 @@ export class CalculatedSummaryDesign extends React.Component {
             />
             <div>
               <Label>Answers to calculate</Label>
-
               <AnswerSelector answers={page.answers} />
             </div>
             <RichTextEditor
@@ -141,7 +148,9 @@ const mapState = (state, ownProps) => {
   };
 };
 
-const mapDispatch = () => ({});
+const mapDispatch = (dispatch, ownProps) => ({
+  deletePage: id => dispatch(deleteSummaryPage({ id })),
+});
 
 export default flowRight(
   withRouter,
