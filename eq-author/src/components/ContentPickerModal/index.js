@@ -10,6 +10,7 @@ import {
   AnswerContentPicker,
   QuestionContentPicker,
   MetadataContentPicker,
+  VariableContentPicker,
   RoutingDestinationContentPicker,
 } from "components/ContentPicker";
 
@@ -18,6 +19,7 @@ import {
   ANSWER,
   QUESTION,
   METADATA,
+  VARIABLES,
   DESTINATION,
 } from "components/ContentPickerSelect/content-types";
 
@@ -128,6 +130,11 @@ class ContentPickerModal extends React.Component {
         id: PropTypes.string.isRequired,
       })
     ),
+    variableData: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+      })
+    ),
     questionData: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,
@@ -167,6 +174,14 @@ class ContentPickerModal extends React.Component {
       id,
       displayName,
       pipingType: "metadata",
+    });
+  };
+
+  handleVariableSubmit = ({ id, displayName }) => {
+    this.props.onSubmit({
+      id,
+      displayName,
+      pipingType: "variable",
     });
   };
 
@@ -226,6 +241,7 @@ class ContentPickerModal extends React.Component {
     title: "Metadata",
     showTabButton: true,
     render: () => {
+      console.log(this.props.metadataData);
       if (!this.props.metadataData || this.props.metadataData.length === 0) {
         return (
           <ErrorText>There is no configured metadata to pick from</ErrorText>
@@ -239,6 +255,34 @@ class ContentPickerModal extends React.Component {
           <MetadataContentPicker
             data={this.props.metadataData}
             onSubmit={this.handleMetadataSubmit}
+            onClose={this.props.onClose}
+          />
+        </React.Fragment>
+      );
+    },
+  };
+
+  variableTab = {
+    id: "variables",
+    title: "Variables",
+    showTabButton: true,
+    render: () => {
+      console.log(this.props.variableData);
+      if (!this.props.variableData || this.props.variableData.length === 0) {
+        return (
+          <ErrorText>
+            There are no configured variables to choose from
+          </ErrorText>
+        );
+      }
+      return (
+        <React.Fragment>
+          <HeaderSegment>
+            <Title>Select variable</Title>
+          </HeaderSegment>
+          <VariableContentPicker
+            data={this.props.variableData}
+            onSubmit={this.handleVariableSubmit}
             onClose={this.props.onClose}
           />
         </React.Fragment>
@@ -273,6 +317,7 @@ class ContentPickerModal extends React.Component {
     this.props.contentTypes.indexOf(ANSWER) !== -1 ? this.answerTab : null,
     this.props.contentTypes.indexOf(QUESTION) !== -1 ? this.questionTab : null,
     this.props.contentTypes.indexOf(METADATA) !== -1 ? this.metadataTab : null,
+    this.props.contentTypes.indexOf(VARIABLES) !== -1 ? this.variableTab : null,
     this.props.contentTypes.indexOf(DESTINATION) !== -1
       ? this.destinationTab
       : null,

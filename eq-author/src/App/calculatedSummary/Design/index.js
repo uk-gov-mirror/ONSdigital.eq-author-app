@@ -29,6 +29,7 @@ import styled from "styled-components";
 import AnswerSelector from "./AnswerSelector";
 import withQuestionnaire from "App/QuestionnairesPage/withQuestionnaire";
 import { deleteSummaryPage, updateSummaryPage } from "redux/summary";
+import withFetchAnswers from "App/questionPage/Design/QuestionPageEditor/withFetchAnswers";
 
 const titleControls = {
   emphasis: true,
@@ -68,7 +69,7 @@ export class CalculatedSummaryDesign extends React.Component {
       <Titled title={this.getPageTitle(page)}>
         <Toolbar>
           <VisuallyHidden>
-            <Label htmlFor="alias">Question short code (optional)</Label>
+            <Label htmlFor="alias">Short code (optional)</Label>
           </VisuallyHidden>
           <AliasEditor
             alias={page.alias}
@@ -111,7 +112,7 @@ export class CalculatedSummaryDesign extends React.Component {
               onUpdate={onUpdate}
               controls={titleControls}
               size="large"
-              fetchAnswers={noop}
+              fetchAnswers={withFetchAnswers}
               metadata={get(page, "section.questionnaire.metadata", [])}
               autoFocus={!page.title}
             />
@@ -128,7 +129,7 @@ export class CalculatedSummaryDesign extends React.Component {
               onUpdate={onUpdate}
               controls={titleControls}
               size="large"
-              fetchAnswers={noop}
+              fetchAnswers={withFetchAnswers}
               metadata={get(page, "section.questionnaire.metadata", [])}
             />
           </Padding>
@@ -176,5 +177,6 @@ export default flowRight(
     mapDispatch
   ),
   withRouter,
-  withQuestionnaire
+  withQuestionnaire,
+  withFetchAnswers
 )(CalculatedSummaryDesign);

@@ -478,7 +478,6 @@ class RichTextEditor extends React.Component {
               visible={focused}
               {...otherProps}
             />
-
             <Editor
               ariaLabel={label}
               ariaLabelledBy={`label-${id}`}
