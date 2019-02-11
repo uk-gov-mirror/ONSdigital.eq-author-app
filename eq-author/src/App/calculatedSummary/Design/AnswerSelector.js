@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { colors } from "constants/theme";
+import AnswerChip from "./AnswerChip";
+import { TransitionGroup } from "react-transition-group";
+import FadeTransition from "components/transitions/FadeTransition";
 
 const Box = styled.div`
   border: 1px solid ${colors.borders};
@@ -62,44 +65,56 @@ const SuggestionSubtitle = styled.div`
   font-size: 0.9em;
 `;
 
-const suggestions = [
-  {
-    title: "Currency answers in this section",
-    subTitle: "in Machinery and Equipment",
-  },
-  {
-    title: "All currency answers",
-    subTitle: "previous currency answers in this questionnaire",
-  },
-];
-
-const answers = [
-  { title: "Lorem ipsum" },
-  { title: "Vestibulum Nullam Justo" },
-];
-
 const Answers = styled.div``;
 const AnswerList = styled.ul`
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.5em;
   display: flex;
+  flex-wrap: wrap;
 `;
 
 const AnswerListItem = styled.li`
   margin: 0;
-  padding: 0.5em;
-`;
-
-const AnswerChip = styled.div`
-  background: ${colors.primary};
-  color: white;
-  border-radius: 3px;
-  padding: 0.2em 0.5em;
+  padding: 0.2em;
 `;
 
 export default class AnswerSelector extends Component {
+  state = {
+    answers: [],
+  };
+
+  constructor(props) {
+    super(props);
+
+    const {
+      currentSection,
+      currencyAnswersinCurrentSection,
+      previousSection,
+      currencyAnswersinPreviousSection,
+    } = props.suggestions;
+
+    this.suggestions = [
+      {
+        title: "Currency answers in this section",
+        subTitle: `in ${currentSection.displayName}`,
+        answers: currencyAnswersinCurrentSection,
+      },
+      {
+        title: "Currency answers in previous section",
+        subTitle: `in ${previousSection.displayName}`,
+        answers: currencyAnswersinPreviousSection,
+      },
+    ];
+  }
+
+  handleSuggestionClick = e => {
+    this.props.addAnswers(this.suggestions[e.currentTarget.id].answers);
+  };
+
   render() {
+    const { answers, removeAnswer } = this.props;
+
     return (
       <div>
         <Box>
@@ -109,9 +124,12 @@ export default class AnswerSelector extends Component {
             </SuggestionsHeader>
             <SuggestionsBody>
               <SuggestionsList>
-                {suggestions.map((suggestion, index) => (
+                {this.suggestions.map((suggestion, index) => (
                   <SuggestionsListItem suggestion={suggestion} key={index}>
-                    <SuggestionButton>
+                    <SuggestionButton
+                      onClick={this.handleSuggestionClick}
+                      id={index}
+                    >
                       <SuggestionTitle>{suggestion.title}</SuggestionTitle>
                       <SuggestionSubtitle>
                         {suggestion.subTitle}
@@ -123,13 +141,17 @@ export default class AnswerSelector extends Component {
             </SuggestionsBody>
           </Suggestions>
           <Answers>
-            <AnswerList>
+            <TransitionGroup component={AnswerList}>
               {answers.map((answer, index) => (
-                <AnswerListItem key={index}>
-                  <AnswerChip>{answer.title}</AnswerChip>
-                </AnswerListItem>
+                <FadeTransition key={answer.id}>
+                  <AnswerListItem>
+                    <AnswerChip onRemove={() => removeAnswer(answer)}>
+                      {answer.label}
+                    </AnswerChip>
+                  </AnswerListItem>
+                </FadeTransition>
               ))}
-            </AnswerList>
+            </TransitionGroup>
           </Answers>
         </Box>
       </div>

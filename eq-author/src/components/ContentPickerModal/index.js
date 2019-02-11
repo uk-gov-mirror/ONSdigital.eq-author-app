@@ -153,7 +153,7 @@ class ContentPickerModal extends React.Component {
 
   getSelectedTab() {
     const { answerData = [] } = this.props;
-    return answerData.length > 0 ? "answers" : "metadata";
+    return "variables";
   }
 
   handleTabChange = selectedTab => {

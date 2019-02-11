@@ -214,14 +214,16 @@ const mapState = (state, ownProps) => {
   const mergedSections = map(questionnaire.sections, (section, index) => {
     const summaryPages = filter(state.summary.pages, {
       questionnaireId: ownProps.match.params.questionnaireId,
-      sectionId: ownProps.match.params.sectionId,
+      sectionId: section.id,
     });
 
     let sectionPages = [...section.pages];
 
     if (summaryPages) {
       summaryPages.forEach(summaryPage => {
-        sectionPages.splice(summaryPage.position, 0, summaryPage);
+        if (summaryPage.sectionId === section.id) {
+          sectionPages.splice(summaryPage.position, 0, summaryPage);
+        }
       });
     }
 

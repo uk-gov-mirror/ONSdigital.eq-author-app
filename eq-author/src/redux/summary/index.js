@@ -1,10 +1,11 @@
-import { remove, map } from "lodash";
+import { remove, map, unionWith, without, isEqual } from "lodash";
 
 export const ADD_PAGE = "ADD_PAGE";
 export const DELETE_PAGE = "DELETE_PAGE";
 export const UPDATE_PAGE = "UPDATE_PAGE";
 
 export const ADD_ANSWER = "ADD_ANSWER";
+export const ADD_ANSWERS = "ADD_ANSWERS";
 export const REMOVE_ANSWER = "REMOVE_ANSWER";
 
 const createPage = ({ questionnaireId, sectionId, pageId, position }) => {
@@ -67,11 +68,42 @@ export default (state = initialState, { type, payload }) => {
     }
 
     case ADD_ANSWER:
-      return { ...state, ...payload };
+      return {
+        ...state,
+        pages: state.pages.map(page => {
+          if (page.id === payload.pageId) {
+            page.answers = unionWith(page.answers, [payload.answer], isEqual);
+          }
 
-    case REMOVE_ANSWER:
-      return { ...state, ...payload };
+          return page;
+        }),
+      };
 
+    case ADD_ANSWERS: {
+      return {
+        ...state,
+        pages: state.pages.map(page => {
+          if (page.id === payload.pageId) {
+            page.answers = unionWith(page.answers, payload.answers, isEqual);
+          }
+
+          return page;
+        }),
+      };
+    }
+
+    case REMOVE_ANSWER: {
+      return {
+        ...state,
+        pages: state.pages.map(page => {
+          if (page.id === payload.pageId) {
+            page.answers = without(page.answers, payload.answer);
+          }
+
+          return page;
+        }),
+      };
+    }
     default:
       return state;
   }
@@ -94,6 +126,11 @@ export const updateSummaryPage = payload => ({
 
 export const addAnswer = payload => ({
   type: ADD_ANSWER,
+  payload,
+});
+
+export const addAnswers = payload => ({
+  type: ADD_ANSWERS,
   payload,
 });
 

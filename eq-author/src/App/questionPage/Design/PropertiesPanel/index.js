@@ -74,7 +74,7 @@ class PropertiesPanel extends React.Component {
       <PropertiesPane>
         <PropertiesPaneBody>
           <ScrollPane>
-            {get("answers.length", page) > 0 && (
+            {page.type === "QuestionPage" && get("answers.length", page) > 0 && (
               <div>
                 {page.answers.map((answer, index) => (
                   <AnswerPropertiesContainer

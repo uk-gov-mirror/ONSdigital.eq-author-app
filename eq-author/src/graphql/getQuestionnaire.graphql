@@ -13,6 +13,11 @@ query GetQuestionnaire($id: ID!) {
         position
         ... on QuestionPage {
           displayName
+          answers {
+            id
+            type
+            label
+          }
         }
       }
       questionnaire {

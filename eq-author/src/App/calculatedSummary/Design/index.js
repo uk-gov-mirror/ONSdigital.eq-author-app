@@ -1,7 +1,16 @@
 import React from "react";
-import { noop, isEmpty, flowRight, get, find } from "lodash";
+import {
+  noop,
+  isEmpty,
+  flowRight,
+  get,
+  find,
+  filter,
+  flatMap,
+  map,
+  reduce,
+} from "lodash";
 import { Titled } from "react-titled";
-import gql from "graphql-tag";
 
 import { withRouter } from "react-router";
 
@@ -10,7 +19,7 @@ import IconButtonDelete from "components/buttons/IconButtonDelete";
 import Button from "components/buttons/Button";
 import IconText from "components/IconText";
 import DuplicateButton from "components/buttons/DuplicateButton";
-import withPropRenamed from "enhancers/withPropRenamed";
+
 import Loading from "components/Loading";
 import Error from "components/Error";
 
@@ -28,7 +37,13 @@ import styled from "styled-components";
 
 import AnswerSelector from "./AnswerSelector";
 import withQuestionnaire from "App/QuestionnairesPage/withQuestionnaire";
-import { deleteSummaryPage, updateSummaryPage } from "redux/summary";
+import {
+  deleteSummaryPage,
+  updateSummaryPage,
+  addAnswer,
+  addAnswers,
+  removeAnswer,
+} from "redux/summary";
 import withFetchAnswers from "App/questionPage/Design/QuestionPageEditor/withFetchAnswers";
 
 const titleControls = {
@@ -51,7 +66,17 @@ export class CalculatedSummaryDesign extends React.Component {
   };
 
   renderContent = () => {
-    const { loading, error, page, onChange, onUpdate } = this.props;
+    const {
+      loading,
+      error,
+      page,
+      onChange,
+      onUpdate,
+      suggestions,
+      addAnswer,
+      addAnswers,
+      removeAnswer,
+    } = this.props;
 
     if (loading) {
       return <Loading height="38rem">Page loading…</Loading>;
@@ -118,7 +143,13 @@ export class CalculatedSummaryDesign extends React.Component {
             />
             <div>
               <Label>Answers to calculate</Label>
-              <AnswerSelector answers={page.answers} />
+              <AnswerSelector
+                suggestions={suggestions}
+                addAnswer={addAnswer}
+                addAnswers={addAnswers}
+                removeAnswer={removeAnswer}
+                answers={page.answers}
+              />
             </div>
             <RichTextEditor
               id="total-title"
@@ -148,12 +179,68 @@ export class CalculatedSummaryDesign extends React.Component {
 }
 
 const mapState = (state, ownProps) => {
-  const { pageId } = ownProps.match.params;
+  const { questionnaire } = ownProps;
+  const { pageId, sectionId } = ownProps.match.params;
 
   const page = find(state.summary.pages, {
     id: pageId,
   });
 
+  if (questionnaire) {
+    const currentSection = find(questionnaire.sections, { id: sectionId });
+
+    const currencyAnswersinCurrentSection = flatMap(
+      map(currentSection.pages, page =>
+        filter(page.answers, {
+          type: "Currency",
+        })
+      )
+    );
+
+    const previousSection = reduce(
+      questionnaire.sections,
+      (previous, current, idx, sections) => {
+        if (current.id === sectionId) {
+          return previous;
+        } else {
+          return current;
+        }
+      }
+    );
+
+    const currencyAnswersinPreviousSection = flatMap(
+      map(previousSection.pages, page =>
+        filter(page.answers, {
+          type: "Currency",
+        })
+      )
+    );
+
+    console.log(currencyAnswersinCurrentSection);
+    console.log(currencyAnswersinPreviousSection);
+
+    return {
+      page,
+      suggestions: {
+        currentSection,
+        currencyAnswersinCurrentSection,
+        previousSection,
+        currencyAnswersinPreviousSection,
+      },
+    };
+  }
+
+  // number answers in current section
+  // currency answers in current section
+  // percentage answers in current section
+
+  // number answers in previous section
+  // currency answers in previous section
+  // percentage answers in previous section
+
+  // all previous number answers
+  // all previous currency answers
+  // all previous percentage answers
   return {
     page,
   };
@@ -169,14 +256,20 @@ const mapDispatch = (dispatch, ownProps) => ({
     dispatch(
       updateSummaryPage({ id: ownProps.match.params.pageId, [name]: value })
     ),
+
+  addAnswer: ({}) => {},
+  addAnswers: answers =>
+    dispatch(addAnswers({ pageId: ownProps.match.params.pageId, answers })),
+  removeAnswer: answer =>
+    dispatch(removeAnswer({ pageId: ownProps.match.params.pageId, answer })),
 });
 
 export default flowRight(
+  withQuestionnaire,
   connect(
     mapState,
     mapDispatch
   ),
   withRouter,
-  withQuestionnaire,
   withFetchAnswers
 )(CalculatedSummaryDesign);

@@ -130,6 +130,7 @@
     "graphql-tools": "latest",
     "jsonwebtoken": "latest",
     "lodash": "latest",
+    "lodash-deep": "^2.0.0",
     "normalize.css": "^7.0.0",
     "normalizr": "^3.3.0",
     "omit-deep-lodash": "^1.1.4",

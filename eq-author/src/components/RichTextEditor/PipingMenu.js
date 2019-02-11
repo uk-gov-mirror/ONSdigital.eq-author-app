@@ -137,7 +137,7 @@ export const UnwrappedPipingMenu = props => (
           answerData={shapeTree(entity.availablePipingAnswers)}
           metadataData={entity.availablePipingMetadata}
           variableData={[
-            { id: "1", displayName: "AnswTotal", __typename: "Variable" },
+            { id: "1", displayName: "Total", __typename: "Variable" },
           ]}
           {...props}
           {...innerProps}
