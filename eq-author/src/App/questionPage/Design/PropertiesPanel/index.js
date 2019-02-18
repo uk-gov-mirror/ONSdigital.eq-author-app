@@ -74,29 +74,31 @@ class PropertiesPanel extends React.Component {
       <PropertiesPane>
         <PropertiesPaneBody>
           <ScrollPane>
-            {page.type === "QuestionPage" && get("answers.length", page) > 0 && (
-              <div>
-                {page.answers.map((answer, index) => (
-                  <AnswerPropertiesContainer
-                    key={getIdForObject(answer)}
-                    data-test={`properties-${index}`}
-                    hasBorder={index > 0}
-                  >
-                    <PropertiesPanelTitle
-                      data-test={`properties-title-${index}`}
+            {page &&
+              page.__typename === "QuestionPage" &&
+              get("answers.length", page) > 0 && (
+                <div>
+                  {page.answers.map((answer, index) => (
+                    <AnswerPropertiesContainer
+                      key={getIdForObject(answer)}
+                      data-test={`properties-${index}`}
+                      hasBorder={index > 0}
                     >
-                      {getTitle({ answer })(page.answers)}
-                    </PropertiesPanelTitle>
-                    <Properties
-                      id={getIdForObject(answer)}
-                      answer={{ ...answer, index }}
-                      onSubmit={this.handleSubmit}
-                    />
-                    <AnswerValidation answer={answer} />
-                  </AnswerPropertiesContainer>
-                ))}
-              </div>
-            )}
+                      <PropertiesPanelTitle
+                        data-test={`properties-title-${index}`}
+                      >
+                        {getTitle({ answer })(page.answers)}
+                      </PropertiesPanelTitle>
+                      <Properties
+                        id={getIdForObject(answer)}
+                        answer={{ ...answer, index }}
+                        onSubmit={this.handleSubmit}
+                      />
+                      <AnswerValidation answer={answer} />
+                    </AnswerPropertiesContainer>
+                  ))}
+                </div>
+              )}
           </ScrollPane>
         </PropertiesPaneBody>
       </PropertiesPane>

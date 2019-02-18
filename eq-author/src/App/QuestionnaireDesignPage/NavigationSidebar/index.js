@@ -14,7 +14,7 @@ import SectionNav from "./SectionNav";
 import NavigationHeader from "./NavigationHeader";
 
 import { addSummaryPage } from "redux/summary";
-import { buildSummaryPath } from "utils/UrlUtils";
+// import { buildSummaryPath } from "utils/UrlUtils";
 
 const Container = styled.div`
   background: ${colors.darkBlue};
@@ -128,13 +128,13 @@ const mapDispatch = (dispatch, ownProps) => {
         })
       );
 
-      ownProps.history.push(
-        buildSummaryPath({
-          questionnaireId,
-          sectionId,
-          pageId: newPageId,
-        })
-      );
+      //   ownProps.history.push(
+      //     buildSummaryPath({
+      //       questionnaireId,
+      //       sectionId,
+      //       pageId: newPageId,
+      //     })
+      //   );
     },
   };
 };

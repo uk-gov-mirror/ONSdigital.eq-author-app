@@ -12,10 +12,8 @@ export const generatePath = curry((path, params) => compile(path)(params));
 export const Routes = {
   HOME: "/",
   SIGN_IN: "/sign-in",
-  QUESTIONNAIRE: `/questionnaire/:questionnaireId/:sectionId(\\d+)?/:summary(summary)?/:pageId(\\d+)?/:confirmationId(\\d+)?/:tab?`,
+  QUESTIONNAIRE: `/questionnaire/:questionnaireId/:sectionId(\\d+)?/:pageId(\\d+)?/:confirmationId(\\d+)?/:tab?`,
   SECTION: `/questionnaire/:questionnaireId/:sectionId(\\d+)/design`,
-  SUMMARY: `/questionnaire/:questionnaireId/:sectionId(\\d+)/summary/:pageId(\\d+)/design`,
-  SUMMARY_PREVIEW: `/questionnaire/:questionnaireId/:sectionId(\\d+)/summary/:pageId(\\d+)/preview`,
   PAGE: `/questionnaire/:questionnaireId/:sectionId(\\d+)/:pageId(\\d+)/design`,
   PAGE_PREVIEW: `/questionnaire/:questionnaireId/:sectionId(\\d+)/:pageId(\\d+)?/preview`,
   CONFIRMATION: `/questionnaire/:questionnaireId/:sectionId(\\d+)/:pageId(\\d+)/:confirmationId(\\d+)/design`,
@@ -26,7 +24,6 @@ export const Routes = {
 export const buildSectionPath = generatePath(Routes.SECTION);
 export const buildPagePath = generatePath(Routes.PAGE);
 export const buildQuestionnairePath = generatePath(Routes.QUESTIONNAIRE);
-export const buildSummaryPath = generatePath(Routes.SUMMARY);
 export const buildConfirmationPath = generatePath(Routes.CONFIRMATION);
 
 const rewriteTab = tab => params => buildQuestionnairePath({ ...params, tab });
@@ -36,8 +33,10 @@ export const buildRoutingPath = rewriteTab("routing");
 export const buildPreviewPath = rewriteTab("preview");
 
 export const isOnConfirmation = match => Boolean(match.params.confirmationId);
+
 export const isOnPage = match =>
   Boolean(match.params.pageId) && !isOnConfirmation(match);
+
 export const isOnSection = match =>
   Boolean(match.params.sectionId) &&
   !isOnPage(match) &&

@@ -7,6 +7,7 @@ export const UPDATE_PAGE = "UPDATE_PAGE";
 export const ADD_ANSWER = "ADD_ANSWER";
 export const ADD_ANSWERS = "ADD_ANSWERS";
 export const REMOVE_ANSWER = "REMOVE_ANSWER";
+export const REMOVE_ANSWERS = "REMOVE_ANSWERS";
 
 const createPage = ({ questionnaireId, sectionId, pageId, position }) => {
   return {
@@ -71,11 +72,16 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         pages: state.pages.map(page => {
+          const newPage = { ...page };
           if (page.id === payload.pageId) {
-            page.answers = unionWith(page.answers, [payload.answer], isEqual);
+            newPage.answers = unionWith(
+              page.answers,
+              [payload.answer],
+              isEqual
+            );
           }
 
-          return page;
+          return newPage;
         }),
       };
 
@@ -83,11 +89,12 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         pages: state.pages.map(page => {
+          const newPage = { ...page };
           if (page.id === payload.pageId) {
-            page.answers = unionWith(page.answers, payload.answers, isEqual);
+            newPage.answers = unionWith(page.answers, payload.answers, isEqual);
           }
 
-          return page;
+          return newPage;
         }),
       };
     }
@@ -96,14 +103,32 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         pages: state.pages.map(page => {
+          const newPage = { ...page };
           if (page.id === payload.pageId) {
-            page.answers = without(page.answers, payload.answer);
+            newPage.answers = page.answers.filter(
+              answer => answer.id !== payload.answer.id
+            );
           }
 
-          return page;
+          return newPage;
         }),
       };
     }
+
+    case REMOVE_ANSWERS: {
+      return {
+        ...state,
+        pages: state.pages.map(page => {
+          const newPage = { ...page };
+          if (page.id === payload.pageId) {
+            newPage.answers = [];
+          }
+
+          return newPage;
+        }),
+      };
+    }
+
     default:
       return state;
   }
@@ -136,5 +161,10 @@ export const addAnswers = payload => ({
 
 export const removeAnswer = payload => ({
   type: REMOVE_ANSWER,
+  payload,
+});
+
+export const removeAnswers = payload => ({
+  type: REMOVE_ANSWERS,
   payload,
 });

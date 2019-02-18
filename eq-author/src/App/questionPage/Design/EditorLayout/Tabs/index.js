@@ -28,7 +28,6 @@ export const TabsContainer = styled.nav`
 
 export const Tab = styled(NavLink)`
   --color-text: ${colors.white};
-
   font-size: 1em;
   font-weight: bold;
   color: var(--color-text);
@@ -83,6 +82,7 @@ const TABS = [
 
 export const UnwrappedTabs = props => {
   const { match, children } = props;
+
   return (
     <div>
       <TabsContainer data-test="tabs-nav">

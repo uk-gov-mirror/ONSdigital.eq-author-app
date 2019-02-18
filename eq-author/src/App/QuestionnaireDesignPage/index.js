@@ -128,7 +128,7 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
   };
 
   render() {
-    const { loading, questionnaire, location } = this.props;
+    const { loading, questionnaire, location, match } = this.props;
 
     return (
       <BaseLayout questionnaire={questionnaire}>
@@ -149,16 +149,14 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
               <Switch location={location}>
                 <Route path={Routes.SECTION} component={SectionRoute} exact />
                 <Route
-                  path={Routes.SUMMARY}
-                  component={SummaryPageRoute}
+                  path={Routes.PAGE}
+                  component={
+                    match.params.pageId > 999999
+                      ? SummaryPageRoute
+                      : QuestionPageRoute
+                  }
                   exact
                 />
-                <Route
-                  path={Routes.SUMMARY_PREVIEW}
-                  component={PreviewRoute}
-                  exact
-                />
-                <Route path={Routes.PAGE} component={QuestionPageRoute} exact />
                 <Route
                   path={Routes.ROUTING}
                   component={RoutingPageRoute}

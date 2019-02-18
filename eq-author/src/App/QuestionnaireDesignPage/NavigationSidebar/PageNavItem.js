@@ -5,9 +5,10 @@ import { withRouter } from "react-router-dom";
 import CustomPropTypes from "custom-prop-types";
 import gql from "graphql-tag";
 
-import { buildQuestionnairePath, buildSummaryPath } from "utils/UrlUtils";
+import { buildQuestionnairePath } from "utils/UrlUtils";
 import NavLink from "./NavLink";
 import PageIcon from "./icon-questionpage.svg?inline";
+import SummaryPageIcon from "./icon-summarypage.svg?inline";
 
 const StyledPageItem = styled.li`
   padding: 0;
@@ -24,22 +25,19 @@ export const UnwrappedPageNavItem = ({
   match,
   ...otherProps
 }) => {
-  const buildPath =
-    page.__typename === "QuestionPage"
-      ? buildQuestionnairePath
-      : buildSummaryPath;
+  const Icon = page.__typename === "QuestionPage" ? PageIcon : SummaryPageIcon;
 
   return (
     <StyledPageItem data-test="page-item" {...otherProps}>
       <NavLink
-        to={buildPath({
+        to={buildQuestionnairePath({
           questionnaireId,
           sectionId,
           pageId: page.id,
           tab: match.params.tab,
         })}
         title={page.displayName}
-        icon={PageIcon}
+        icon={Icon}
         data-test="nav-page-link"
       >
         {page.displayName}

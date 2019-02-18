@@ -241,7 +241,6 @@ class ContentPickerModal extends React.Component {
     title: "Metadata",
     showTabButton: true,
     render: () => {
-      console.log(this.props.metadataData);
       if (!this.props.metadataData || this.props.metadataData.length === 0) {
         return (
           <ErrorText>There is no configured metadata to pick from</ErrorText>

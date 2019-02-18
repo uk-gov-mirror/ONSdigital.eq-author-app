@@ -58,7 +58,7 @@ const ContentPickerSingle = ({
               disabled={childKey && (option[childKey] || []).length === 0}
               data-test="picker-option"
             >
-              {option.displayName}
+              {option.displayName || option.label}
             </PickerOption>
           );
         })}
