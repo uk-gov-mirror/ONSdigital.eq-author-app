@@ -31,7 +31,7 @@ const CloseButton = styled.button`
 
   &:focus {
     outline: none;
-    box-shadow: inset 0 0 0 1px ${colors.tertiary};
+    box-shadow: inset 0 0 0 2px ${colors.tertiary};
   }
 `;
 

@@ -93,7 +93,6 @@ export default (state = initialState, { type, payload }) => {
           if (page.id === payload.pageId) {
             newPage.answers = unionWith(page.answers, payload.answers, isEqual);
           }
-
           return newPage;
         }),
       };

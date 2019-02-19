@@ -1,4 +1,4 @@
-import { flowRight, find, filter, flatMap, map, last } from "lodash";
+import { flowRight, find, filter, flatMap, map, get } from "lodash";
 import withFetchAnswers from "App/questionPage/Design/QuestionPageEditor/withFetchAnswers";
 import { connect } from "react-redux";
 import withQuestionnaire from "App/QuestionnairesPage/withQuestionnaire";
@@ -10,6 +10,7 @@ import {
   removeAnswer,
   removeAnswers,
 } from "redux/summary";
+
 import { CURRENCY, NUMBER, PERCENTAGE } from "constants/answer-types";
 
 const getAnswersofTypeFromSection = (type, section) =>
@@ -30,6 +31,10 @@ const mapState = (state, ownProps) => {
   });
 
   if (questionnaire) {
+    const answerType = get(page.answers, ["0", "type"]);
+
+    console.log(answerType);
+
     const currentSection = find(questionnaire.sections, { id: sectionId });
 
     const previousSections = [...questionnaire.sections].splice(
@@ -69,21 +74,17 @@ const mapState = (state, ownProps) => {
       previousSection
     );
 
-    const allPreviousCurrencyAnswers = flatMap(previousSections, section =>
-      flatMap(
-        map(section.pages, page =>
-          filter(page.answers, {
-            type: "Currency",
-          })
-        )
-      )
+    const allPreviousCurrencyAnswers = filter(
+      flatMap(flatMap(previousSections, "pages"), "answers"),
+      {
+        type: CURRENCY,
+      }
     );
-
-    console.log(allPreviousCurrencyAnswers);
 
     return {
       page,
       previousSections,
+      answerType,
       suggestions: {
         currentSection,
         previousSection,
@@ -93,23 +94,14 @@ const mapState = (state, ownProps) => {
         currencyAnswersinPreviousSection,
         percentageAnswersinPreviousSection,
         numberAnswersinPreviousSection,
+        allPreviousCurrencyAnswers,
       },
     };
   }
 
-  // number answers in current section
-  // currency answers in current section
-  // percentage answers in current section
-
-  // number answers in previous section
-  // currency answers in previous section
-  // percentage answers in previous section
-
-  // all previous number answers
-  // all previous currency answers
-  // all previous percentage answers
   return {
     page,
+    answerType: "undefined",
   };
 };
 

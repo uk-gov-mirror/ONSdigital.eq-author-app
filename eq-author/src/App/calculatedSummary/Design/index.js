@@ -56,12 +56,7 @@ export class CalculatedSummaryDesign extends React.Component {
       page,
       onChange,
       onUpdate,
-      suggestions,
-      previousSections,
-      addAnswer,
-      addAnswers,
-      removeAnswer,
-      removeAnswers,
+      ...otherProps
     } = this.props;
 
     if (loading) {
@@ -129,15 +124,7 @@ export class CalculatedSummaryDesign extends React.Component {
             />
             <div>
               <Label>Answers to calculate</Label>
-              <AnswerSelector
-                suggestions={suggestions}
-                previousSections={previousSections}
-                addAnswer={addAnswer}
-                addAnswers={addAnswers}
-                removeAnswer={removeAnswer}
-                removeAnswers={removeAnswers}
-                answers={page.answers}
-              />
+              <AnswerSelector answers={page.answers} {...otherProps} />
             </div>
             <RichTextEditor
               id="total-title"

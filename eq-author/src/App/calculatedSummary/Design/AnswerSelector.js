@@ -13,12 +13,14 @@ import {
   sortBy,
   filter,
   reverse,
+  differenceBy,
 } from "lodash";
 
 import { ANSWER } from "components/ContentPickerSelect/content-types";
 import Button from "components/buttons/Button";
 
 import iconInfo from "./icon-info.svg";
+import { CURRENCY, NUMBER, PERCENTAGE } from "constants/answer-types";
 
 const Box = styled.div`
   border: 1px solid ${colors.borders};
@@ -31,6 +33,8 @@ const Suggestions = styled.div`
   background: #fff;
   border: 1px solid ${colors.bordersLight};
   border-radius: 3px;
+  margin-top: 1em;
+  padding-bottom: 0.5em;
 `;
 
 const SuggestionsHeader = styled.div`
@@ -75,7 +79,7 @@ const SuggestionButton = styled.button`
 
   &:focus {
     outline: none;
-    box-shadow: inset 0 0 0 1px ${colors.tertiary};
+    box-shadow: 0 0 0 3px ${colors.tertiary};
   }
 `;
 
@@ -118,12 +122,6 @@ const TextButton = styled.button`
     outline-color: ${colors.blue};
     box-shadow: 0 0 0 3px ${colors.tertiary};
   }
-`;
-
-const MoreButton = styled(TextButton)`
-  border: none;
-  font-size: 0.8rem;
-  margin: 0.5rem;
 `;
 
 const Answers = styled.div`
@@ -169,8 +167,8 @@ const AnswerList = styled.ul`
 `;
 
 const AnswerListItem = styled.li`
-  margin: 0 0.5em 0.5em 0;
-  max-width: 100%;
+  margin: 0 0 0.5em 0;
+  width: 100%;
 `;
 
 const SelectButton = styled(Button)`
@@ -202,69 +200,102 @@ const EmptyText = styled.div`
   margin-bottom: 1em;
 `;
 
+const getSuggestions = props => {
+  const { suggestions, selectedAnswers, answerType } = props;
+
+  const filterSelected = answers => {
+    return differenceBy(answers, selectedAnswers, "id");
+  };
+
+  const {
+    currentSection,
+    currencyAnswersinCurrentSection,
+    numberAnswersinCurrentSection,
+    percentageAnswersinCurrentSection,
+    previousSection,
+    currencyAnswersinPreviousSection,
+    numberAnswersinPreviousSection,
+    percentageAnswersinPreviousSection,
+    allPreviousCurrencyAnswers,
+  } = suggestions;
+
+  return reverse(
+    sortBy(
+      filter(
+        filter(
+          [
+            {
+              type: CURRENCY,
+              title: "Currency answers in this section",
+              subTitle: `in ${currentSection.displayName}`,
+              answers: filterSelected(currencyAnswersinCurrentSection),
+            },
+            {
+              type: NUMBER,
+              title: "Number answers in this section",
+              subTitle: `in ${currentSection.displayName}`,
+              answers: filterSelected(numberAnswersinCurrentSection),
+            },
+            {
+              type: PERCENTAGE,
+              title: "Percentage answers in this section",
+              subTitle: `in ${currentSection.displayName}`,
+              answers: filterSelected(percentageAnswersinCurrentSection),
+            },
+            {
+              type: CURRENCY,
+              title: "Currency answers in previous section",
+              subTitle: `in ${previousSection.displayName}`,
+              answers: filterSelected(currencyAnswersinPreviousSection),
+            },
+            {
+              type: NUMBER,
+              title: "Number answers in previous section",
+              subTitle: `in ${previousSection.displayName}`,
+              answers: filterSelected(numberAnswersinPreviousSection),
+            },
+            {
+              type: PERCENTAGE,
+              title: "Percentage answers in previous section",
+              subTitle: `in ${previousSection.displayName}`,
+              answers: filterSelected(percentageAnswersinPreviousSection),
+            },
+            {
+              type: CURRENCY,
+              title: "All previous currency answers",
+              subTitle: `in whole survey`,
+              answers: filterSelected(allPreviousCurrencyAnswers),
+            },
+          ],
+          ({ answers }) => answers.length > 0
+        ),
+        ({ type }) => {
+          return answerType ? type === answerType : true;
+        }
+      ),
+      ({ answers }) => answers.length
+    )
+  );
+};
+
 export default class AnswerSelector extends Component {
   state = {
-    answers: [],
+    suggestions: [],
     showPicker: false,
   };
 
   constructor(props) {
     super(props);
-
-    const {
-      currentSection,
-      currencyAnswersinCurrentSection,
-      numberAnswersinCurrentSection,
-      percentageAnswersinCurrentSection,
-      previousSection,
-      currencyAnswersinPreviousSection,
-      numberAnswersinPreviousSection,
-      percentageAnswersinPreviousSection,
-    } = props.suggestions;
-
-    this.suggestions = reverse(
-      sortBy(
-        filter(
-          [
-            {
-              title: "Currency answers in this section",
-              subTitle: `in ${currentSection.displayName}`,
-              answers: currencyAnswersinCurrentSection,
-            },
-            {
-              title: "Number answers in this section",
-              subTitle: `in ${currentSection.displayName}`,
-              answers: numberAnswersinCurrentSection,
-            },
-            {
-              title: "Percentage answers in this section",
-              subTitle: `in ${currentSection.displayName}`,
-              answers: percentageAnswersinCurrentSection,
-            },
-            {
-              title: "Currency answers in previous section",
-              subTitle: `in ${previousSection.displayName}`,
-              answers: currencyAnswersinPreviousSection,
-            },
-            {
-              title: "Number answers in previous section",
-              subTitle: `in ${previousSection.displayName}`,
-              answers: numberAnswersinPreviousSection,
-            },
-            {
-              title: "Percentage answers in previous section",
-              subTitle: `in ${previousSection.displayName}`,
-              answers: percentageAnswersinPreviousSection,
-            },
-          ],
-          ({ answers }) => {
-            return answers.length > 0;
-          }
-        ),
-        ({ answers }) => answers.length
-      )
-    );
+    this.state.suggestions = getSuggestions(this.props);
   }
+
+  componentWillReceiveProps = nextProps => {
+    this.setState({
+      suggestions: getSuggestions(nextProps),
+    });
+
+    return nextProps;
+  };
 
   handlePickerOpen = () => {
     this.setState({ showPicker: true });
@@ -285,7 +316,7 @@ export default class AnswerSelector extends Component {
   };
 
   handleSuggestionClick = e => {
-    this.props.addAnswers(this.suggestions[e.currentTarget.id].answers);
+    this.props.addAnswers(this.state.suggestions[e.currentTarget.id].answers);
   };
 
   render() {
@@ -294,88 +325,86 @@ export default class AnswerSelector extends Component {
       removeAnswer,
       removeAnswers,
       previousSections,
+      answerType,
     } = this.props;
 
-    const { showPicker } = this.state;
-    const answerType = get(answers, ["0", "type"]);
+    const { showPicker, suggestions } = this.state;
     const answerData = previousSections;
 
     return (
       <div>
         <Box>
           <Answers>
-            <TransitionGroup>
-              {answers.length > 0 ? (
-                <FadeTransition key="section" enter exit={false}>
-                  <div>
-                    <SectionList>
-                      {previousSections.map(section => {
-                        const answersInThisSection = intersectionBy(
-                          flatMap(section.pages, page => page.answers),
-                          answers,
-                          "id"
-                        );
+            {answers.length > 0 ? (
+              <div>
+                <SectionList>
+                  {previousSections.map((section, index) => {
+                    const answersInThisSection = intersectionBy(
+                      flatMap(section.pages, page => page.answers),
+                      answers,
+                      "id"
+                    );
+                    if (answersInThisSection.length > 0) {
+                      return (
+                        <SectionListItem key={section.id}>
+                          <SectionHeader>
+                            <SectionTitle>
+                              {answerType} answers in {section.displayName}
+                            </SectionTitle>
+                            {index > -1 && (
+                              <RemoveAllButton onClick={removeAnswers}>
+                                Remove all
+                              </RemoveAllButton>
+                            )}
+                          </SectionHeader>
+                          <TransitionGroup component={AnswerList}>
+                            {answersInThisSection.map(answer => (
+                              <FadeTransition key={answer.id}>
+                                <AnswerListItem>
+                                  <AnswerChip
+                                    onRemove={() => removeAnswer(answer)}
+                                  >
+                                    {answer.label}
+                                  </AnswerChip>
+                                </AnswerListItem>
+                              </FadeTransition>
+                            ))}
+                          </TransitionGroup>
+                        </SectionListItem>
+                      );
+                    }
+                  })}
+                </SectionList>
+                <SelectButton
+                  variant="secondary"
+                  onClick={this.handlePickerOpen}
+                >
+                  Select another {(answerType || "answer").toLowerCase()} answer
+                </SelectButton>
+              </div>
+            ) : (
+              <div>
+                <Empty>
+                  <EmptyTitle>No answers selected</EmptyTitle>
+                  <EmptyText>
+                    Select an answer using the button below or use the shortcuts
+                    for common selections.
+                  </EmptyText>
+                  <EmptyButton small onClick={this.handlePickerOpen}>
+                    Select an answer
+                  </EmptyButton>
+                </Empty>
+              </div>
+            )}
 
-                        if (answersInThisSection.length > 0) {
-                          return (
-                            <SectionListItem key={section.id}>
-                              <SectionHeader>
-                                <SectionTitle>
-                                  {answerType} answers in {section.displayName}
-                                </SectionTitle>
-                                <RemoveAllButton onClick={removeAnswers}>
-                                  Remove all
-                                </RemoveAllButton>
-                              </SectionHeader>
-                              <TransitionGroup component={AnswerList}>
-                                {answersInThisSection.map(answer => (
-                                  <FadeTransition key={answer.id}>
-                                    <AnswerListItem>
-                                      <AnswerChip
-                                        onRemove={() => removeAnswer(answer)}
-                                      >
-                                        {answer.label}
-                                      </AnswerChip>
-                                    </AnswerListItem>
-                                  </FadeTransition>
-                                ))}
-                              </TransitionGroup>
-                            </SectionListItem>
-                          );
-                        }
-                      })}
-                    </SectionList>
-                    <SelectButton
-                      variant="secondary"
-                      onClick={this.handlePickerOpen}
-                    >
-                      Select another {answerType.toLowerCase()} answer
-                    </SelectButton>
-                  </div>
-                </FadeTransition>
-              ) : (
-                <FadeTransition key="empty" enter exit={false}>
-                  <div>
-                    <Empty>
-                      <EmptyTitle>No answers selected</EmptyTitle>
-                      <EmptyText>
-                        Select an answer using the button below or use the
-                        shortcuts for common selections.
-                      </EmptyText>
-                      <EmptyButton small onClick={this.handlePickerOpen}>
-                        Select an answer
-                      </EmptyButton>
-                    </Empty>
-                  </div>
-                </FadeTransition>
-              )}
-              {this.suggestions.length > 0 && (
-                <Suggestions>
-                  <SuggestionsHeader>
-                    <SuggestionsTitle>Shortcuts</SuggestionsTitle>
-                  </SuggestionsHeader>
-                  <SuggestionsList>
-                    {this.suggestions.map((suggestion, index) => (
+            <Suggestions>
+              <SuggestionsHeader>
+                <SuggestionsTitle>Shortcuts</SuggestionsTitle>
+              </SuggestionsHeader>
+              {suggestions.length > 0 ? (
+                <TransitionGroup component={SuggestionsList}>
+                  {suggestions.map((suggestion, index) => (
+                    <FadeTransition key={index}>
                       <SuggestionsListItem suggestion={suggestion} key={index}>
                         <SuggestionButton
                           onClick={this.handleSuggestionClick}
@@ -394,14 +423,16 @@ export default class AnswerSelector extends Component {
                           </SuggestionAnswers>
                         </SuggestionButton>
                       </SuggestionsListItem>
-                    ))}
-                  </SuggestionsList>
-                  {this.suggestions.length > 2 && (
-                    <MoreButton>Show more</MoreButton>
-                  )}
-                </Suggestions>
+                    </FadeTransition>
+                  ))}
+                </TransitionGroup>
+              ) : (
+                <div css={{ padding: "0.5em 1em", "font-weight": "normal" }}>
+                  No more shortcuts available
+                </div>
               )}
-            </TransitionGroup>
+            </Suggestions>
+
             <ContentPickerModal
               isOpen={showPicker}
               onClose={this.handlePickerClose}
