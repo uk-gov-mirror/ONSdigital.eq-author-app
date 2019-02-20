@@ -201,11 +201,10 @@ const EmptyText = styled.div`
 `;
 
 const getSuggestions = props => {
-  const { suggestions, selectedAnswers, answerType } = props;
+  const { suggestions, answers, answerType } = props;
 
-  const filterSelected = answers => {
-    return differenceBy(answers, selectedAnswers, "id");
-  };
+  const filterSelected = suggestedAnswers =>
+    differenceBy(suggestedAnswers, answers, "id");
 
   const {
     currentSection,
@@ -267,11 +266,9 @@ const getSuggestions = props => {
               answers: filterSelected(allPreviousCurrencyAnswers),
             },
           ],
-          ({ answers }) => answers.length > 0
+          ({ answers }) => answers.length > 1
         ),
-        ({ type }) => {
-          return answerType ? type === answerType : true;
-        }
+        ({ type }) => (answerType ? type === answerType : true)
       ),
       ({ answers }) => answers.length
     )

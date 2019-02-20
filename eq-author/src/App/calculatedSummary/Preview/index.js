@@ -5,7 +5,7 @@ import React from "react";
 import { propType } from "graphql-anywhere";
 import styled from "styled-components";
 import { flowRight } from "lodash";
-
+import Error from "components/preview/Error";
 import PageTitle from "components/preview/elements/PageTitle";
 import Info from "components/preview/elements/Info";
 
@@ -89,7 +89,7 @@ export const UnwrappedPreviewPageRoute = ({ page }) => {
       <Container>
         <PageTitle title={page.title} />
         <Info>Please review your answers and confirm these are correct.</Info>
-        {page.answers.length > 0 && (
+        {page.answers.length > 0 ? (
           <Summary>
             {page.answers.map(answer => (
               <SummaryItem key={answer.id}>
@@ -106,20 +106,27 @@ export const UnwrappedPreviewPageRoute = ({ page }) => {
                 </Grid>
               </SummaryItem>
             ))}
-            <SummaryTotal>
-              <Grid>
-                <Column cols={7}>
-                  <SummaryTotalLabel
-                    dangerouslySetInnerHTML={{ __html: page.totalTitle }}
-                  />
-                </Column>
-                <Column cols={3}>
-                  <SummaryValue>Value</SummaryValue>
-                </Column>
-                <Column cols={2} />
-              </Grid>
-            </SummaryTotal>
+
+            {page.totalTitle ? (
+              <SummaryTotal>
+                <Grid>
+                  <Column cols={7}>
+                    <SummaryTotalLabel
+                      dangerouslySetInnerHTML={{ __html: page.totalTitle }}
+                    />
+                  </Column>
+                  <Column cols={3}>
+                    <SummaryValue>Value</SummaryValue>
+                  </Column>
+                  <Column cols={2} />
+                </Grid>
+              </SummaryTotal>
+            ) : (
+              <Error large>Missing Total Title</Error>
+            )}
           </Summary>
+        ) : (
+          <Error large>No answers selected</Error>
         )}
       </Container>
     </EditorLayout>
