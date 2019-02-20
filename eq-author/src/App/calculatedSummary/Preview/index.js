@@ -60,6 +60,7 @@ const SummaryLabel = styled.div`
 
 const SummaryValue = styled.div`
   background: #e0e0e0;
+  color: ${colors.textLight};
   line-height: 1;
   padding: 0.2em 0.5em;
   text-align: center;
@@ -89,6 +90,7 @@ export const UnwrappedPreviewPageRoute = ({ page }) => {
       <Container>
         <PageTitle title={page.title} />
         <Info>Please review your answers and confirm these are correct.</Info>
+
         {page.answers.length > 0 ? (
           <Summary>
             {page.answers.map(answer => (
@@ -122,7 +124,7 @@ export const UnwrappedPreviewPageRoute = ({ page }) => {
                 </Grid>
               </SummaryTotal>
             ) : (
-              <Error large>Missing Total Title</Error>
+              <Error large>Missing total title</Error>
             )}
           </Summary>
         ) : (
