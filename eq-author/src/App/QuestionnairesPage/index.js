@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import PropTypes from "prop-types";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
@@ -25,6 +25,9 @@ import withDeleteQuestionnaire from "./withDeleteQuestionnaire";
 import withCreateQuestionnaire from "./withCreateQuestionnaire";
 import withDuplicateQuestionnaire from "./withDuplicateQuestionnaire";
 
+import ReactJoyride, { STATUS } from "react-joyride";
+import { Tooltip } from "components/Joyride";
+
 import { raiseToast } from "redux/toast/actions";
 
 const StyledButtonGroup = styled(ButtonGroup)`
@@ -47,6 +50,42 @@ const QUESTIONNAIRES_QUERY = gql`
 export class UnconnectedQuestionnairesPage extends React.PureComponent {
   state = {
     isModalOpen: false,
+    run: true,
+    steps: [
+      {
+        title: "Welcome to eQ Author",
+        content: <div>Hello</div>,
+        placement: "center",
+        target: "body",
+      },
+    ],
+  };
+
+  helpers = {};
+
+  setHelpers = helpers => {
+    this.helpers = helpers;
+  };
+
+  handleClickRestart = () => {
+    this.helpers.reset(true);
+  };
+
+  handleSelect = option => {
+    const { setLocale } = this.props;
+    setLocale(option.value);
+  };
+
+  handleJoyrideCallback = data => {
+    const { status, type } = data;
+
+    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
+      this.setState({ run: false });
+    }
+
+    console.groupCollapsed(type);
+    console.log(data); //eslint-disable-line no-console
+    console.groupEnd();
   };
 
   handleModalOpen = () => this.setState({ isModalOpen: true });
@@ -79,6 +118,7 @@ export class UnconnectedQuestionnairesPage extends React.PureComponent {
 
     return (
       <Titled title={this.renderTitle}>
+        <ReactJoyride steps={this.state.steps} tooltipComponent={Tooltip} />
         <BaseLayout title={"Your Questionnaires"}>
           <MainCanvas>
             <StyledButtonGroup horizontal>
@@ -86,6 +126,7 @@ export class UnconnectedQuestionnairesPage extends React.PureComponent {
                 onClick={this.handleModalOpen}
                 primary
                 data-test="create-questionnaire"
+                className="btn-create-questionnaire"
               >
                 Create
               </Button>

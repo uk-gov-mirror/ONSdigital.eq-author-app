@@ -141,6 +141,7 @@
     "react-dom": "latest",
     "react-firebaseui": "latest",
     "react-hot-loader": "latest",
+    "react-joyride": "^2.0.5",
     "react-modal": "latest",
     "react-redux": "^5.0.7",
     "react-router": "latest",
