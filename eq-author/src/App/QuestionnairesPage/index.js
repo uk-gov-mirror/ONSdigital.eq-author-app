@@ -26,7 +26,7 @@ import withCreateQuestionnaire from "./withCreateQuestionnaire";
 import withDuplicateQuestionnaire from "./withDuplicateQuestionnaire";
 
 import ReactJoyride, { STATUS } from "react-joyride";
-import { Tooltip } from "components/Joyride";
+import { Tooltip, WelcomeModal } from "components/Joyride";
 
 import { raiseToast } from "redux/toast/actions";
 
@@ -57,35 +57,9 @@ export class UnconnectedQuestionnairesPage extends React.PureComponent {
         content: <div>Hello</div>,
         placement: "center",
         target: "body",
+        tooltipComponent: WelcomeModal,
       },
     ],
-  };
-
-  helpers = {};
-
-  setHelpers = helpers => {
-    this.helpers = helpers;
-  };
-
-  handleClickRestart = () => {
-    this.helpers.reset(true);
-  };
-
-  handleSelect = option => {
-    const { setLocale } = this.props;
-    setLocale(option.value);
-  };
-
-  handleJoyrideCallback = data => {
-    const { status, type } = data;
-
-    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
-      this.setState({ run: false });
-    }
-
-    console.groupCollapsed(type);
-    console.log(data); //eslint-disable-line no-console
-    console.groupEnd();
   };
 
   handleModalOpen = () => this.setState({ isModalOpen: true });
