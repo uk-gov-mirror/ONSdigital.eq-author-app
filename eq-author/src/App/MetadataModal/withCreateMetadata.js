@@ -31,7 +31,7 @@ export const createUpdater = questionnaireId => (proxy, result) => {
   const id = `Questionnaire${questionnaireId}`;
   const questionnaire = proxy.readFragment({ id, fragment, fragmentName });
 
-  questionnaire.metadata.push(result.data.createMetadata);
+  //   questionnaire.metadata.push(result.data.createMetadata);
 
   proxy.writeFragment({
     id,

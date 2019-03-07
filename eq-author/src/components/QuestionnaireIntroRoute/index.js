@@ -119,7 +119,13 @@ export const QUESTIONNAIRE_QUERY = gql`
       summary
       metadata {
         id
-        displayName
+        key
+        alias
+        type
+        textValue
+        languageValue
+        regionValue
+        dateValue
         __typename
       }
       __typename

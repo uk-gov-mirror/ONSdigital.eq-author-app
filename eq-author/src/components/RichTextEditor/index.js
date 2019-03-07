@@ -340,8 +340,6 @@ class RichTextEditor extends React.Component {
 
   focus() {
     if (this.editorInstance) {
-      console.log("focus");
-
       this.editorInstance.focus();
     }
   }

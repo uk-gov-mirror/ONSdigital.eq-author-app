@@ -117,23 +117,27 @@ export class UnconnectedQuestionnairesPage extends React.PureComponent {
                               textValue: "ESSENTIAL ENTERPRISE LTD."
                             };
 
-                            onUpdateMetadata(tradAsMetadata);
-                          }
-                        }
-                      );
-                      onAddMetadata(id).then(
-                        ({ data: { createMetadata: metadata } }) => {
-                          if (questionnaire.theme === "default") {
-                            ruNameMetadata = {
-                              id: metadata.id,
-                              key: "ru_name",
-                              alias: "RU Name",
-                              type: "Text",
-                              textValue: "ESSENTIAL ENTERPRISE LTD."
-                            };
+                            onAddMetadata(id).then(
+                              ({ data: { createMetadata: metadata } }) => {
+                                if (questionnaire.theme === "default") {
+                                  ruNameMetadata = {
+                                    id: metadata.id,
+                                    key: "ru_name",
+                                    alias: "RU Name",
+                                    type: "Text",
+                                    textValue: "ESSENTIAL ENTERPRISE LTD."
+                                  };
 
-                            onUpdateMetadata(ruNameMetadata);
-                            createIntro(id, { tradAsMetadata, ruNameMetadata });
+                                  onUpdateMetadata(tradAsMetadata);
+
+                                  onUpdateMetadata(ruNameMetadata);
+                                  createIntro(id, {
+                                    tradAsMetadata,
+                                    ruNameMetadata
+                                  });
+                                }
+                              }
+                            );
                           }
                         }
                       );

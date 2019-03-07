@@ -177,7 +177,13 @@ const QuestionnaireIntroEditor = ({
     <div>
       <Section>
         <Padding>
-          <SectionTitle>Introduction</SectionTitle>
+          <SectionTitle style={{ marginBottom: "0" }}>
+            Introduction content{" "}
+          </SectionTitle>
+          <SectionDescription>
+            This content is displayed above the “start survey” button. The title
+            is not editable.
+          </SectionDescription>
           <RichTextEditor
             id="intro-title"
             name="title"
