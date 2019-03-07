@@ -139,7 +139,8 @@ class RichTextEditor extends React.Component {
     placeholder: "",
     multiline: false,
     autoFocus: false,
-    toolbar: true
+    toolbar: true,
+    disabled: false
   };
 
   state = {
@@ -510,12 +511,14 @@ class RichTextEditor extends React.Component {
       id,
       placeholder,
       toolbar,
+      disabled,
       ...otherProps
     } = this.props;
 
     return (
       <Wrapper>
         <Field
+          disabled={disabled}
           onClick={this.handleClick}
           onMouseDown={this.handleMouseDown}
           onBlur={this.handleBlur}
@@ -558,6 +561,7 @@ class RichTextEditor extends React.Component {
               spellCheck
               webDriverTestID={testSelector}
               placeholder={placeholder}
+              readOnly={disabled}
             />
           </Input>
         </Field>

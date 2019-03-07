@@ -7,6 +7,11 @@ const StyledField = styled.div`
   width: 100%;
   margin-bottom: ${props => (props.last ? "0" : "1")}em;
   position: relative;
+
+  &[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 `;
 
 const Field = ({ children, last, ...otherProps }) => (

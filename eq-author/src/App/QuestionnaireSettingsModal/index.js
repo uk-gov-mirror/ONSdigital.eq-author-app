@@ -34,7 +34,8 @@ const QuestionnaireSettingsModal = ({
   isOpen,
   onClose,
   onSubmit,
-  confirmText
+  confirmText,
+  ...otherProps
 }) => (
   <StyledModal
     isOpen={isOpen}
@@ -52,6 +53,7 @@ const QuestionnaireSettingsModal = ({
       onSubmit={onSubmit}
       onUpdate={noop}
       confirmText={confirmText}
+      {...otherProps}
     />
   </StyledModal>
 );

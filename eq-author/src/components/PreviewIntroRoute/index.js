@@ -99,6 +99,11 @@ const DetailsContent = styled.div`
   padding: 0.2em 0 0.2em 1em;
 `;
 
+const Link = styled.span`
+  text-decoration: underline;
+  color: ${colors.primary};
+`;
+
 /*  eslint-disable react/no-danger */
 const PageTitle = ({ children, missingText = "Missing page title" }) => (
   <H1>
@@ -144,6 +149,11 @@ export const UnwrappedPreviewIntroRoute = ({
     >
       <Container>
         <PageTitle missingText="Missing introduction title">{title}</PageTitle>
+        <p>
+          If the company details or structure have changed contact us on{" "}
+          <Link>0300 1234 931</Link> or email <Link>surveys@ons.gov.uk</Link>
+        </p>
+
         <Description
           data-test="description"
           dangerouslySetInnerHTML={{ __html: description }}

@@ -4,7 +4,6 @@ import { Titled } from "react-titled";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { Toolbar } from "App/questionPage/Design/EditorToolbar/index.js";
 import EditorLayout from "App/questionPage/Design/EditorLayout/index.js";
 
 import QuestionnaireIntroEditor from "./QuestionnaireIntroEditor";
@@ -24,18 +23,11 @@ import gql from "graphql-tag";
 import { flowRight, merge, get } from "lodash";
 import Loading from "components/Loading";
 import Error from "components/Error";
-import ToggleSwitch from "components/buttons/ToggleSwitch";
-import { Label } from "components/Forms";
+
 import styled from "styled-components";
 
-const ToggleField = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-`;
-
 const Padding = styled.div`
-  padding: 0.5em 1em 0;
+  padding: 2em 0 0 0;
   position: relative;
   width: 100%;
 `;
@@ -66,31 +58,17 @@ const QuestionnaireIntroRoute = ({
     <EditorLayout design preview={intro.enabled}>
       <Titled title={() => "Questionnaire Introduction"}>
         <Padding>
-          <ToggleField>
-            <Label style={{ margin: 0 }} htmlFor="toggle-q-intro">
-              Enabled
-            </Label>
-            <ToggleSwitch
-              id="toggle-q-intro"
-              name="toggle-q-intro"
-              onChange={toggleIntro}
-              checked={intro.enabled}
-              autoFocus={!intro.enabled}
-            />
-          </ToggleField>
+          <QuestionnaireIntroEditor
+            intro={intro}
+            questionnaire={data.questionnaire}
+            addDetail={addDetail}
+            removeDetail={removeDetail}
+            moveDetailUp={moveDetailUp}
+            moveDetailDown={moveDetailDown}
+            onChange={changeField}
+            updateDetail={updateDetail}
+          />
         </Padding>
-
-        <QuestionnaireIntroEditor
-          intro={intro}
-          enabled={intro.enabled}
-          questionnaire={data.questionnaire}
-          addDetail={addDetail}
-          removeDetail={removeDetail}
-          moveDetailUp={moveDetailUp}
-          moveDetailDown={moveDetailDown}
-          onChange={changeField}
-          updateDetail={updateDetail}
-        />
       </Titled>
     </EditorLayout>
   );

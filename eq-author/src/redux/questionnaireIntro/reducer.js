@@ -15,14 +15,16 @@ import move from "lodash-move";
 
 const initialState = {};
 
-const defaultBusinessState = metadata => {
+const defaultBusinessState = ({ tradAsMetadata, ruNameMetadata }) => {
   return {
     enabled: true,
     title: `<p>You are completing this for <span data-piped="metadata" data-id="${
-      metadata.id
-    }">${metadata.key}</span></p>`,
+      tradAsMetadata.id
+    }">${tradAsMetadata.key}</span> (<span data-piped="metadata" data-id="${
+      ruNameMetadata.id
+    }">${ruNameMetadata.key}</span>) </p>`,
     description:
-      "<p>If the company details or structure have changed contact us on 0300 1234 931 or email surveys@ons.gov.uk</p><ul><li>Data should relate to all sites in England, Scotland, Wales and Northern Ireland unless otherwise stated. </li><li>You can provide info estimates if actual figures aren’t available.</li><li>We will treat your data securely and confidentially.</li></ul>",
+      "<ul><li>Data should relate to all sites in England, Scotland, Wales and Northern Ireland unless otherwise stated. </li><li>You can provide info estimates if actual figures aren’t available.</li><li>We will treat your data securely and confidentially.</li></ul>",
     legal: "notice-1",
     secondaryTitle: "Information you need",
     secondaryDescription:

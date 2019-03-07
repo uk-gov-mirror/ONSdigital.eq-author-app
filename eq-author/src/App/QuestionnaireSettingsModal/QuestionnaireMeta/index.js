@@ -53,7 +53,8 @@ export const StatelessQuestionnaireMeta = ({
   onSubmit,
   onCancel,
   onChange,
-  confirmText
+  confirmText,
+  enableTheme
 }) => (
   <Form onSubmit={onSubmit}>
     <Field>
@@ -79,12 +80,13 @@ export const StatelessQuestionnaireMeta = ({
         </Field>
       </Column>
       <Column cols={6}>
-        <Field>
+        <Field disabled={!enableTheme}>
           <Label htmlFor="theme">Questionnaire type</Label>
           <Select
             id="theme"
             onChange={onChange}
             defaultValue={questionnaire.theme}
+            disabled={!enableTheme}
           >
             <option value="default">Business</option>
             <option value="census">Social</option>

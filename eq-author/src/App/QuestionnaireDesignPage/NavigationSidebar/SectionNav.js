@@ -26,24 +26,25 @@ class SectionNav extends Component {
   };
 
   render() {
-    const { questionnaire, match } = this.props;
+    const { questionnaire } = this.props;
 
     return (
       <TransitionGroup component={NavList}>
-        <NavItemTransition key="survey-intro" onEntered={scrollIntoView}>
-          <NavLink
-            to={buildQuestionnaireIntroPath({
-              questionnaireId: questionnaire.id,
-              introductionId: "introduction",
-              tab: last(document.location.hash.split("/"))
-            })}
-            title="Intro"
-            icon={PageIcon}
-          >
-            Questionnaire intro
-          </NavLink>
-        </NavItemTransition>
-
+        {questionnaire.intro && (
+          <NavItemTransition key="survey-intro" onEntered={scrollIntoView}>
+            <NavLink
+              to={buildQuestionnaireIntroPath({
+                questionnaireId: questionnaire.id,
+                introductionId: "introduction",
+                tab: last(document.location.hash.split("/"))
+              })}
+              title="Intro"
+              icon={PageIcon}
+            >
+              Questionnaire intro
+            </NavLink>
+          </NavItemTransition>
+        )}
         {questionnaire.sections.map(section => (
           <NavItemTransition key={section.id} onEntered={scrollIntoView}>
             <SectionNavItem questionnaire={questionnaire} section={section} />

@@ -87,25 +87,6 @@ class PropertiesPanel extends React.Component {
       <PropertiesPane>
         <PropertiesPaneBody>
           <ScrollPane>
-            {intro &&
-              data.questionnaire.theme === "default" && (
-                <IntroProperties key="intro-properties">
-                  <PropertiesPanelTitle>Introduction Page</PropertiesPanelTitle>
-                  <Field style={{ marginTop: "1em" }}>
-                    <Label>Legal basis</Label>
-                    <Select
-                      id="intro-legal"
-                      name="legal"
-                      onChange={changeField}
-                      value={intro.legal}
-                    >
-                      <option value="notice-1">Notice 1</option>
-                      <option value="notice-2">Notice 2</option>
-                      <option value="voluntary">Voluntary</option>
-                    </Select>
-                  </Field>
-                </IntroProperties>
-              )}
             {get("answers.length", page) > 0 && (
               <div>
                 {page.answers.map((answer, index) => (

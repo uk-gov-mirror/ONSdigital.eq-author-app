@@ -102,26 +102,48 @@ export class UnconnectedQuestionnairesPage extends React.PureComponent {
                 isOpen={this.state.isModalOpen}
                 onClose={this.handleModalClose}
                 onSubmit={questionnaire => {
-                  onCreateQuestionnaire(questionnaire).then(({ id }) => {
-                    onAddMetadata(id).then(
-                      ({ data: { createMetadata: metadata } }) => {
-                        if (questionnaire.theme === "default") {
-                          const tradAsMetadata = {
-                            id: metadata.id,
-                            key: "trad_as",
-                            alias: "Trad As",
-                            type: "Text",
-                            textValue: "ACME CO."
-                          };
+                  if (questionnaire.theme === "default") {
+                    onCreateQuestionnaire(questionnaire).then(({ id }) => {
+                      let tradAsMetadata, ruNameMetadata;
 
-                          onUpdateMetadata(tradAsMetadata);
-                          createIntro(id, tradAsMetadata);
+                      onAddMetadata(id).then(
+                        ({ data: { createMetadata: metadata } }) => {
+                          if (questionnaire.theme === "default") {
+                            tradAsMetadata = {
+                              id: metadata.id,
+                              key: "trad_as",
+                              alias: "Trad As",
+                              type: "Text",
+                              textValue: "ESSENTIAL ENTERPRISE LTD."
+                            };
+
+                            onUpdateMetadata(tradAsMetadata);
+                          }
                         }
-                      }
-                    );
-                  });
+                      );
+                      onAddMetadata(id).then(
+                        ({ data: { createMetadata: metadata } }) => {
+                          if (questionnaire.theme === "default") {
+                            ruNameMetadata = {
+                              id: metadata.id,
+                              key: "ru_name",
+                              alias: "RU Name",
+                              type: "Text",
+                              textValue: "ESSENTIAL ENTERPRISE LTD."
+                            };
+
+                            onUpdateMetadata(ruNameMetadata);
+                            createIntro(id, { tradAsMetadata, ruNameMetadata });
+                          }
+                        }
+                      );
+                    });
+                  } else {
+                    onCreateQuestionnaire(questionnaire);
+                  }
                 }}
                 confirmText="Create"
+                enableTheme
               />
             </StyledButtonGroup>
             <StyledCenteredPanel>

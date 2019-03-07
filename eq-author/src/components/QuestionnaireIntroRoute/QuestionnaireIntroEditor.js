@@ -32,16 +32,6 @@ const SectionDescription = styled.p`
   color: ${colors.textLight};
 `;
 
-const disabled = css`
-  opacity: 0.4;
-  pointer-events: none;
-`;
-
-const Toggle = styled.div`
-  transition: opacity 300ms ease-in-out;
-  ${props => !props.enabled && disabled};
-`;
-
 const titleControls = {
   emphasis: true,
   piping: true
@@ -184,7 +174,7 @@ const QuestionnaireIntroEditor = ({
   const { metadata } = questionnaire;
 
   return (
-    <Toggle enabled={enabled}>
+    <div>
       <Section>
         <Padding>
           <SectionTitle>Introduction</SectionTitle>
@@ -198,6 +188,7 @@ const QuestionnaireIntroEditor = ({
             metadata={metadata}
             size="large"
             autoFocus={enabled}
+            disabled
           />
           <RichTextEditor
             id="intro-description"
@@ -327,7 +318,7 @@ const QuestionnaireIntroEditor = ({
           />
         </Padding>
       </Section>
-    </Toggle>
+    </div>
   );
 };
 
