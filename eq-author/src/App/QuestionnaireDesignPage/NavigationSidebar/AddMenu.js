@@ -58,10 +58,11 @@ const AddMenu = ({
   canAddCalculatedSummaryPage,
   onAddQuestionConfirmation,
   canAddQuestionConfirmation,
+  userCanEdit,
   ...otherProps
 }) => {
   const addBtn = (
-    <AddButton data-test="btn-add">
+    <AddButton data-test="btn-add" disabled={!userCanEdit}>
       <IconText icon={IconPlus}>Add</IconText>
     </AddButton>
   );

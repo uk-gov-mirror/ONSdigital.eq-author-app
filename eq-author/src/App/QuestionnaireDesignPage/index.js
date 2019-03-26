@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { Switch } from "react-router-dom";
 import { Titled } from "react-titled";
 import { Route, Redirect } from "react-router";
-import { find, flatMap, flowRight } from "lodash";
+import { find, flatMap, flowRight, get } from "lodash";
 
 import BaseLayout from "components/BaseLayout";
 import { Grid, Column } from "components/Grid";
@@ -32,6 +32,8 @@ import withCreateQuestionConfirmation from "./withCreateQuestionConfirmation";
 import NavigationSidebar from "./NavigationSidebar";
 
 import { ERR_PAGE_NOT_FOUND } from "constants/error-codes";
+import isEditor from "utils/isEditor";
+import PermissionsContext from "App/QuestionnaireDesignPage/PermissionsContext";
 
 export class UnwrappedQuestionnaireDesignPage extends Component {
   static propTypes = {
@@ -181,64 +183,59 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
   };
 
   render() {
-    const {
-      loading,
-      data: { questionnaire },
-      location,
-    } = this.props;
+    const { loading, data, location, userCanEdit } = this.props;
+
+    if (!data) {
+      return null;
+    }
+
+    window.__userCanEdit = userCanEdit;
+
+    const { questionnaire } = data;
 
     if (!loading && !questionnaire) {
       throw new Error(ERR_PAGE_NOT_FOUND);
     }
 
     return (
-      <BaseLayout questionnaire={questionnaire}>
-        <Titled title={this.getTitle}>
-          <Grid>
-            <Column cols={3} gutters={false}>
-              <NavigationSidebar
-                data-test="side-nav"
-                loading={loading}
-                onAddSection={this.props.onAddSection}
-                onAddQuestionPage={this.handleAddPage("QuestionPage")}
-                canAddQuestionPage={this.canAddQuestionAndCalculatedSummmaryPages()}
-                onAddCalculatedSummaryPage={this.handleAddPage(
-                  "CalculatedSummaryPage"
-                )}
-                canAddCalculatedSummaryPage={this.canAddQuestionAndCalculatedSummmaryPages()}
-                questionnaire={questionnaire}
-                canAddQuestionConfirmation={this.canAddQuestionConfirmation()}
-                onAddQuestionConfirmation={this.handleAddQuestionConfirmation}
-              />
-            </Column>
-            <Column cols={9}>
-              <Switch location={location}>
-                {[
-                  ...pageRoutes,
-                  ...sectionRoutes,
-                  ...questionConfirmationRoutes,
-                  ...introductionRoutes,
-                ]}
-                <Route path="*" render={this.renderRedirect} />
-              </Switch>
-            </Column>
-          </Grid>
-        </Titled>
-      </BaseLayout>
+      <PermissionsContext.Provider value={{ userCanEdit }}>
+        <BaseLayout questionnaire={questionnaire} title={this.getTitle("")}>
+          <Titled title={this.getTitle}>
+            <Grid>
+              <Column cols={3} gutters={false}>
+                <NavigationSidebar
+                  data-test="side-nav"
+                  loading={loading}
+                  onAddSection={this.props.onAddSection}
+                  onAddQuestionPage={this.handleAddPage("QuestionPage")}
+                  canAddQuestionPage={this.canAddQuestionAndCalculatedSummmaryPages()}
+                  onAddCalculatedSummaryPage={this.handleAddPage(
+                    "CalculatedSummaryPage"
+                  )}
+                  canAddCalculatedSummaryPage={this.canAddQuestionAndCalculatedSummmaryPages()}
+                  questionnaire={questionnaire}
+                  canAddQuestionConfirmation={this.canAddQuestionConfirmation()}
+                  onAddQuestionConfirmation={this.handleAddQuestionConfirmation}
+                />
+              </Column>
+              <Column cols={9}>
+                <Switch location={location}>
+                  {[
+                    ...pageRoutes,
+                    ...sectionRoutes,
+                    ...questionConfirmationRoutes,
+                    ...introductionRoutes,
+                  ]}
+                  <Route path="*" render={this.renderRedirect} />
+                </Switch>
+              </Column>
+            </Grid>
+          </Titled>
+        </BaseLayout>
+      </PermissionsContext.Provider>
     );
   }
 }
-
-const withMutations = flowRight(
-  connect(
-    null,
-    { raiseToast }
-  ),
-  withCreateSection,
-  withCreateQuestionPage,
-  withCreateQuestionConfirmation,
-  withCreateCalculatedSummaryPage
-);
 
 const QUESTIONNAIRE_QUERY = gql`
   query GetQuestionnaire($input: QueryInput!) {
@@ -248,11 +245,36 @@ const QUESTIONNAIRE_QUERY = gql`
       }
       ...NavigationSidebar
     }
+    me {
+      id
+      name
+      email
+      picture
+      __typename
+    }
   }
   ${NavigationSidebar.fragments.NavigationSidebar}
 `;
 
-export default withMutations(props => (
+const mapState = (state, props) => {
+  const { data } = props;
+
+  if (!data.questionnaire) {
+    return { userCanEdit: null };
+  }
+
+  const { questionnaire, me } = data;
+
+  return {
+    userCanEdit: isEditor(
+      get(get(state.sharing, questionnaire.id), "users"),
+      me,
+      questionnaire
+    ),
+  };
+};
+
+export const withQuestionnaire = Component => props => (
   <Query
     query={QUESTIONNAIRE_QUERY}
     variables={{
@@ -261,8 +283,24 @@ export default withMutations(props => (
       },
     }}
   >
-    {innerProps => (
-      <UnwrappedQuestionnaireDesignPage {...innerProps} {...props} />
-    )}
+    {innerProps => {
+      return <Component {...innerProps} {...props} />;
+    }}
   </Query>
-));
+);
+
+const withProps = flowRight(
+  withQuestionnaire,
+  connect(
+    mapState,
+    { raiseToast }
+  ),
+  withCreateSection,
+  withCreateQuestionConfirmation,
+  withCreateSection,
+  withCreateQuestionPage,
+  withCreateQuestionConfirmation,
+  withCreateCalculatedSummaryPage
+);
+
+export default withProps(UnwrappedQuestionnaireDesignPage);

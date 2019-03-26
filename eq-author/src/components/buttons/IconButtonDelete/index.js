@@ -22,6 +22,10 @@ const DeleteButton = styled(Button).attrs({
       transform: translateY(-1px) rotate(6deg);
     }
   }
+
+  &[disabled] {
+    opacity: 0.2;
+  }
 `;
 
 const DeleteTooltip = ({ children }) => (

@@ -116,6 +116,10 @@ const Input = styled.div`
     ${props => props.placeholderStyle === "unordered-list-item" && list};
     color: #a3a3a3;
   }
+
+  &[disabled] {
+    pointer-events: none;
+  }
 `;
 
 const convertToHTML = toHTML(pipedEntityToHTML);
@@ -398,6 +402,10 @@ class RichTextEditor extends React.Component {
   };
 
   focus() {
+    if (this.props.disabled) {
+      return false;
+    }
+
     if (this.editorInstance) {
       this.editorInstance.getEditorRef().editor.focus();
     }
@@ -425,6 +433,10 @@ class RichTextEditor extends React.Component {
   };
 
   handleChange = editorState => {
+    if (this.props.disabled) {
+      return false;
+    }
+
     editorState = this.stripFormatting(editorState);
     return this.setState({ editorState });
   };

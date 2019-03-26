@@ -101,7 +101,7 @@ class NavigationHeader extends React.Component {
   };
 
   render() {
-    const { questionnaire, onUpdateQuestionnaire } = this.props;
+    const { questionnaire, onUpdateQuestionnaire, userCanEdit } = this.props;
 
     return (
       <Fragment>
@@ -150,6 +150,7 @@ class NavigationHeader extends React.Component {
                 )}
                 confirmText="Apply"
                 canEditType={false}
+                userCanEdit={userCanEdit}
               />
             </IconListItem>
           </IconList>
@@ -166,6 +167,7 @@ class NavigationHeader extends React.Component {
             onAddQuestionConfirmation={this.handleAddQuestionConfirmation}
             canAddQuestionConfirmation={this.props.canAddQuestionConfirmation}
             data-test="add-menu"
+            userCanEdit={userCanEdit}
           />
         </NavigationHeaderRow>
       </Fragment>

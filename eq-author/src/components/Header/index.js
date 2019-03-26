@@ -19,14 +19,18 @@ import { signOutUser } from "redux/auth/actions";
 import logo from "components/Header/logo.svg";
 
 import shareIcon from "components/Header/icon-share.svg?inline";
+import lockIcon from "components/Header/icon-lock.svg?inline";
 import viewIcon from "components/Header/icon-view.svg?inline";
 
 import IconText from "components/IconText";
 import Truncated from "components/Truncated";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
-import { flowRight, get } from "lodash/fp";
+import { flowRight, get } from "lodash";
 import { Routes } from "utils/UrlUtils";
+
+import SharingModal from "components/Sharing/SharingModal";
+import { addUser, removeUser, togglePublic } from "redux/sharing";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -93,9 +97,20 @@ export class UnconnectedHeader extends React.Component {
     questionnaire: CustomPropTypes.questionnaire,
     signOutUser: PropTypes.func.isRequired,
     raiseToast: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+  };
+
+  state = {
+    sharingModalIsOpen: false,
   };
 
   displayToast = () => {
+    const textField = document.createElement("textarea");
+    textField.innerText = this.getPreviewUrl(this.props.questionnaire.id);
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand("copy");
+    textField.remove();
     this.props.raiseToast("ShareToast", "Link copied to clipboard");
   };
 
@@ -108,18 +123,12 @@ export class UnconnectedHeader extends React.Component {
   }
 
   handleShare = () => {
-    const textField = document.createElement("textarea");
-    textField.innerText = this.getPreviewUrl(this.props.questionnaire.id);
-    document.body.appendChild(textField);
-    textField.select();
-    document.execCommand("copy");
-    textField.remove();
-    this.displayToast();
+    this.setState({ sharingModalIsOpen: true });
   };
 
   render() {
-    const { questionnaire } = this.props;
-    const currentUser = get("data.me", this.props);
+    const { questionnaire, title, isPublic, ...otherProps } = this.props;
+    const currentUser = get(this.props, "data.me");
 
     return (
       <StyledHeader>
@@ -129,11 +138,9 @@ export class UnconnectedHeader extends React.Component {
           </Logo>
         </LogoContainer>
         <QuestionnaireTitle>
-          {questionnaire && (
-            <Title data-test="questionnaire-title">
-              {questionnaire.displayName}
-            </Title>
-          )}
+          <Title data-test="questionnaire-title">
+            {questionnaire ? questionnaire.displayName : title}
+          </Title>
         </QuestionnaireTitle>
 
         <UtilityBtns>
@@ -153,7 +160,9 @@ export class UnconnectedHeader extends React.Component {
                 data-test="btn-share"
                 small
               >
-                <IconText icon={shareIcon}>Share</IconText>
+                <IconText icon={isPublic ? shareIcon : lockIcon}>
+                  Sharing
+                </IconText>
               </ShareButton>
             </React.Fragment>
           )}
@@ -164,6 +173,17 @@ export class UnconnectedHeader extends React.Component {
             />
           )}
         </UtilityBtns>
+
+        {questionnaire && (
+          <SharingModal
+            owner={questionnaire.createdBy}
+            isPublic={isPublic}
+            displayToast={this.displayToast}
+            isOpen={this.state.sharingModalIsOpen}
+            onClose={() => this.setState({ sharingModalIsOpen: false })}
+            {...otherProps}
+          />
+        )}
       </StyledHeader>
     );
   }
@@ -199,11 +219,51 @@ export const withCurrentUser = Component => {
   return Comp;
 };
 
+const mapState = (state, ownProps) => {
+  const { questionnaire } = ownProps;
+
+  if (!questionnaire) {
+    return {};
+  }
+
+  const questionnaireSharing = get(state.sharing, questionnaire.id);
+
+  return {
+    users: get(questionnaireSharing, "users", []),
+    isPublic: get(questionnaireSharing, "public", true),
+  };
+};
+
+const mapDispatch = (dispatch, ownProps) => {
+  let questionnaireActions = {};
+  const { questionnaire } = ownProps;
+  let actions = {
+    signOutUser: user => dispatch(signOutUser(user)),
+    raiseToast: (...args) => dispatch(raiseToast(...args)),
+  };
+
+  if (questionnaire) {
+    questionnaireActions = {
+      addUser: user =>
+        dispatch(addUser({ user, questionnaireId: questionnaire.id })),
+      removeUser: user =>
+        dispatch(removeUser({ user, questionnaireId: questionnaire.id })),
+      togglePublic: value =>
+        dispatch(togglePublic({ value, questionnaireId: questionnaire.id })),
+    };
+  }
+
+  return {
+    ...actions,
+    ...questionnaireActions,
+  };
+};
+
 export default flowRight(
-  connect(
-    null,
-    { signOutUser, raiseToast }
-  ),
   withRouter,
-  withCurrentUser
+  withCurrentUser,
+  connect(
+    mapState,
+    mapDispatch
+  )
 )(UnconnectedHeader);

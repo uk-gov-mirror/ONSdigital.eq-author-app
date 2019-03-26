@@ -4,6 +4,7 @@ import { isEqual } from "lodash";
 import fp from "lodash/fp";
 import { startRequest, endRequest } from "redux/saving/actions";
 import { connect } from "react-redux";
+import PermissionsContext from "App/QuestionnaireDesignPage/PermissionsContext";
 
 const withSaveTracking = connect(
   null,
@@ -98,13 +99,17 @@ const withEntityEditor = entityPropName => WrappedComponent => {
       };
 
       return (
-        <WrappedComponent
-          {...this.props}
-          {...props}
-          onChange={this.handleChange}
-          onUpdate={this.handleUpdate}
-          onSubmit={this.handleSubmit}
-        />
+        <PermissionsContext.Consumer>
+          {({ userCanEdit }) => (
+            <WrappedComponent
+              {...this.props}
+              {...props}
+              onChange={this.handleChange}
+              onUpdate={this.handleUpdate}
+              onSubmit={this.handleSubmit}
+            />
+          )}
+        </PermissionsContext.Consumer>
       );
     }
   }

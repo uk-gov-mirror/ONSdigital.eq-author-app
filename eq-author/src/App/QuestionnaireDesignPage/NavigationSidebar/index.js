@@ -14,6 +14,8 @@ import SectionNav from "./SectionNav";
 import NavigationHeader from "./NavigationHeader";
 import IntroductionNavItem from "./IntroductionNavItem";
 
+import PermissionsContext from "App/QuestionnaireDesignPage/PermissionsContext";
+
 const Container = styled.div`
   background: ${colors.darkBlue};
   color: ${colors.white};
@@ -70,33 +72,38 @@ export class UnwrappedNavigationSidebar extends Component {
     return (
       <Container data-test="side-nav">
         {loading ? null : (
-          <React.Fragment>
-            <NavigationHeader
-              questionnaire={questionnaire}
-              onUpdateQuestionnaire={onUpdateQuestionnaire}
-              onAddSection={this.handleAddSection}
-              onAddCalculatedSummaryPage={onAddCalculatedSummaryPage}
-              canAddCalculatedSummaryPage={canAddCalculatedSummaryPage}
-              onAddQuestionPage={onAddQuestionPage}
-              canAddQuestionPage={canAddQuestionPage}
-              onAddQuestionConfirmation={onAddQuestionConfirmation}
-              canAddQuestionConfirmation={canAddQuestionConfirmation}
-              data-test="nav-section-header"
-            />
-            <NavigationScrollPane>
-              <NavList>
-                {questionnaire.introduction && (
-                  <IntroductionNavItem
-                    questionnaire={questionnaire}
-                    data-test="nav-introduction"
-                  />
-                )}
-                <li>
-                  <SectionNav questionnaire={questionnaire} />
-                </li>
-              </NavList>
-            </NavigationScrollPane>
-          </React.Fragment>
+          <PermissionsContext.Consumer>
+            {({ userCanEdit }) => (
+              <React.Fragment>
+                <NavigationHeader
+                  questionnaire={questionnaire}
+                  onUpdateQuestionnaire={onUpdateQuestionnaire}
+                  onAddSection={this.handleAddSection}
+                  onAddQuestionConfirmation={onAddQuestionConfirmation}
+                  canAddQuestionConfirmation={canAddQuestionConfirmation}
+                  userCanEdit={userCanEdit}
+                  data-test="nav-section-header"
+                  onAddCalculatedSummaryPage={onAddCalculatedSummaryPage}
+                  canAddCalculatedSummaryPage={canAddCalculatedSummaryPage}
+                  onAddQuestionPage={onAddQuestionPage}
+                  canAddQuestionPage={canAddQuestionPage}
+                />
+                <NavigationScrollPane>
+                  <NavList>
+                    {questionnaire.introduction && (
+                      <IntroductionNavItem
+                        questionnaire={questionnaire}
+                        data-test="nav-introduction"
+                      />
+                    )}
+                    <li>
+                      <SectionNav questionnaire={questionnaire} />
+                    </li>
+                  </NavList>
+                </NavigationScrollPane>
+              </React.Fragment>
+            )}
+          </PermissionsContext.Consumer>
         )}
       </Container>
     );
@@ -107,6 +114,10 @@ UnwrappedNavigationSidebar.fragments = {
   NavigationSidebar: gql`
     fragment NavigationSidebar on Questionnaire {
       id
+      createdBy {
+        name
+        id
+      }
       ...SectionNav
       ...NavigationHeader
       ...IntroductionNavItem

@@ -3,20 +3,19 @@ import PropTypes from "prop-types";
 import styled, { css } from "styled-components";
 import { NavLink } from "react-router-dom";
 import { buildQuestionnairePath } from "utils/UrlUtils";
-import { colors, radius } from "constants/theme";
+import { colors } from "constants/theme";
 import CustomPropTypes from "custom-prop-types";
 
 const StyledLink = styled(NavLink)`
   text-decoration: none;
   color: ${colors.blue};
-  padding: 0.5em;
+  padding: 0 0.5em;
+  display: flex;
+  flex-direction: column;
+  margin-left: -0.5em;
+
   &:focus {
-    border-radius: ${radius};
     outline: none;
-    box-shadow: 0 0 0 3px ${colors.tertiary};
-  }
-  &:hover {
-    text-decoration: underline;
   }
 
   ${props =>

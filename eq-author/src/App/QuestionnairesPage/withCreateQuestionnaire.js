@@ -25,6 +25,7 @@ export const redirectToDesigner = history => ({ data }) => {
       pageId: page.id,
     })
   );
+  return questionnaire;
 };
 
 export const mapMutateToProps = ({ ownProps, mutate }) => ({

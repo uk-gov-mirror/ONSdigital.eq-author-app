@@ -1341,6 +1341,11 @@ read-pkg@^4.0.1:
     parse-json "^4.0.0"
     pify "^3.0.0"
 
+redux-localstorage@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/redux-localstorage/-/redux-localstorage-0.4.1.tgz#faf6d719c581397294d811473ffcedee065c933c"
+  integrity sha1-+vbXGcWBOXKU2BFHP/zt7gZckzw=
+
 regex-not@^1.0.0, regex-not@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/regex-not/-/regex-not-1.0.2.tgz#1f4ece27e00b0b65e0247a6810e6a85d83a5752c"
