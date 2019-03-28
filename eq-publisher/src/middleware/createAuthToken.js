@@ -12,6 +12,8 @@ module.exports = (req, res, next) => {
     uuid.v4()
   );
 
-  res.locals.accessToken = token;
+  req.locals = {
+    accessToken: token,
+  };
   next();
 };

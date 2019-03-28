@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "apollo-fetch": "latest",
+    "body-parser": "^1.18.3",
     "cheerio": "latest",
     "eslint-config-eq-author": "latest",
     "express": "latest",
@@ -22,6 +23,7 @@
     "nodemon": "latest",
     "request": "latest",
     "request-promise": "latest",
+    "supertest": "^4.0.2",
     "uuid": "latest"
   },
   "devDependencies": {

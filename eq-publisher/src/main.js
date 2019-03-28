@@ -2,6 +2,7 @@ const express = require("express");
 const pino = require("express-pino-logger");
 const { isNil } = require("lodash");
 const helmet = require("helmet");
+const bodyParser = require("body-parser");
 
 const errorHandler = require("./middleware/errorHandler");
 const fetchData = require("./middleware/fetchData");
@@ -10,6 +11,7 @@ const respondWithData = require("./middleware/respondWithData");
 const status = require("./middleware/status");
 const noContent = require("./middleware/nocontent");
 const createAuthToken = require("./middleware/createAuthToken");
+const override = require("./middleware/override");
 
 const Convert = require("./process/Convert");
 const SchemaValidator = require("./validation/SchemaValidator");
@@ -49,6 +51,8 @@ app.use(
   })
 );
 
+app.use(bodyParser.json());
+
 app.get(
   "/graphql/:questionnaireId",
   logger,
@@ -66,6 +70,16 @@ app.get(
   respondWithData
 );
 
+app.post(
+  "/publish/:questionnaireId",
+  logger,
+  createAuthToken,
+  fetchData(getQuestionnaire(process.env.EQ_AUTHOR_API_URL)),
+  schemaConverter(converter),
+  override,
+  respondWithData
+);
+
 app.get("/status", status);
 app.get("/favicon.ico", noContent);
 
@@ -76,3 +90,7 @@ const PORT = process.env.PORT || 9000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Listening on port", PORT); // eslint-disable-line
 });
+
+module.exports = {
+  app,
+};

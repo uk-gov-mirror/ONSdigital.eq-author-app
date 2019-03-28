@@ -6,7 +6,7 @@ const fetchData = getQuestionnaire => async (req, res, next) => {
   try {
     result = await getQuestionnaire(
       req.params.questionnaireId,
-      res.locals.accessToken
+      req.locals.accessToken
     );
   } catch (err) {
     return next(err);
@@ -21,7 +21,7 @@ const fetchData = getQuestionnaire => async (req, res, next) => {
     });
   }
 
-  res.locals.questionnaire = questionnaire;
+  req.locals.questionnaire = questionnaire;
   return next();
 };
 
