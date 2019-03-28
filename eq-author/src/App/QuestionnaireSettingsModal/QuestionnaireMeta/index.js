@@ -16,6 +16,9 @@ import questionnaireFragment from "graphql/fragments/questionnaire.graphql";
 import showConfirmationIcon from "./icon-show-confirmation.svg";
 import showNavIcon from "./icon-show-nav.svg";
 
+const BUSINESS = "Business";
+const SOCIAL = "Social";
+
 const Icon = styled.img`
   height: 3em;
   vertical-align: middle;
@@ -49,100 +52,112 @@ export const StatelessQuestionnaireMeta = ({
   onChange,
   confirmText,
   canEditType,
-}) => (
-  <Form onSubmit={onSubmit}>
-    <Field>
-      <Label htmlFor="title">Questionnaire Title</Label>
-      <Input
-        id="title"
-        autoFocus
-        defaultValue={questionnaire.title}
-        onChange={onChange}
-        required
-        data-test="txt-questionnaire-title"
-      />
-    </Field>
-    <Grid>
-      <Column cols={6}>
-        <Field>
-          <Label htmlFor="shortTitle">Short title (optional)</Label>
-          <Input
-            id="shortTitle"
-            defaultValue={questionnaire.shortTitle}
-            onChange={onChange}
-            data-test="txt-questionnaire-short-title"
-          />
-        </Field>
-      </Column>
-      <Column cols={6}>
-        <Field disabled={!canEditType}>
-          <Label htmlFor="type">Questionnaire type</Label>
-          <Select
-            id="type"
-            onChange={onChange}
-            defaultValue={questionnaire.type || ""}
-            data-test="select-questionnaire-type"
-            disabled={!canEditType}
-          >
-            <option value="" disabled>
-              Please select...
-            </option>
-            <option value="Business">Business</option>
-            <option value="Social">Social</option>
-          </Select>
-        </Field>
-      </Column>
-    </Grid>
+}) => {
+  const { type } = questionnaire;
+  return (
+    <Form onSubmit={onSubmit}>
+      <Field>
+        <Label htmlFor="title">Questionnaire Title</Label>
+        <Input
+          id="title"
+          autoFocus
+          defaultValue={questionnaire.title}
+          onChange={onChange}
+          required
+          data-test="txt-questionnaire-title"
+        />
+      </Field>
+      <Grid>
+        <Column cols={6}>
+          <Field>
+            <Label htmlFor="shortTitle">Short title (optional)</Label>
+            <Input
+              id="shortTitle"
+              defaultValue={questionnaire.shortTitle}
+              onChange={onChange}
+              data-test="txt-questionnaire-short-title"
+            />
+          </Field>
+        </Column>
+        <Column cols={6}>
+          <Field>
+            <Label htmlFor="type">Questionnaire type</Label>
+            <Select
+              id="type"
+              onChange={onChange}
+              defaultValue={questionnaire.type || ""}
+              data-test="select-questionnaire-type"
+            >
+              {canEditType && (
+                <option value="" disabled>
+                  Please select&hellip;
+                </option>
+              )}
 
-    <ToggleWrapper>
-      <InlineField>
-        <FlexLabel inline htmlFor="navigation">
-          <Icon src={showNavIcon} alt="" fade={!questionnaire.navigation} />
-          <DescribedText description="Allows respondents to navigate between sections when they are completing the survey.">
-            Show section navigation
-          </DescribedText>
-        </FlexLabel>
-        <ToggleSwitch
-          id="navigation"
-          name="navigation"
-          onChange={onChange}
-          checked={questionnaire.navigation}
-        />
-      </InlineField>
-      <InlineField>
-        <FlexLabel inline htmlFor="summary">
-          <Icon
-            src={showConfirmationIcon}
-            alt=""
-            fade={!questionnaire.summary}
+              <option value="Business" disabled={type === SOCIAL}>
+                Business
+              </option>
+              <option value="Business" disabled={type === SOCIAL}>
+                Business with NI version
+              </option>
+              <option value="Social" disabled={type === BUSINESS}>
+                Social
+              </option>
+            </Select>
+          </Field>
+        </Column>
+      </Grid>
+
+      <ToggleWrapper>
+        <InlineField>
+          <FlexLabel inline htmlFor="navigation">
+            <Icon src={showNavIcon} alt="" fade={!questionnaire.navigation} />
+            <DescribedText description="Allows respondents to navigate between sections when they are completing the survey.">
+              Show section navigation
+            </DescribedText>
+          </FlexLabel>
+          <ToggleSwitch
+            id="navigation"
+            name="navigation"
+            onChange={onChange}
+            checked={questionnaire.navigation}
           />
-          <DescribedText description="A summary of the all of the respondents answers will be on the confirmation page at the end of the survey.">
-            Show summary on confirmation page
-          </DescribedText>
-        </FlexLabel>
-        <ToggleSwitch
-          id="summary"
-          name="summary"
-          onChange={onChange}
-          checked={questionnaire.summary}
-        />
-      </InlineField>
-    </ToggleWrapper>
-    <ButtonGroup horizontal align="right">
-      <Button onClick={onCancel} variant="secondary" type="button">
-        Cancel
-      </Button>
-      <Button
-        type="submit"
-        variant="primary"
-        disabled={!(questionnaire.title && questionnaire.type)}
-        data-test="questionnaire-submit-button"
-      >
-        {confirmText}
-      </Button>
-    </ButtonGroup>
-  </Form>
-);
+        </InlineField>
+        <InlineField>
+          <FlexLabel inline htmlFor="summary">
+            <Icon
+              src={showConfirmationIcon}
+              alt=""
+              fade={!questionnaire.summary}
+            />
+            <DescribedText description="A summary of the all of the respondents answers will be on the confirmation page at the end of the survey.">
+              Show summary on confirmation page
+            </DescribedText>
+          </FlexLabel>
+          <ToggleSwitch
+            id="summary"
+            name="summary"
+            onChange={onChange}
+            checked={questionnaire.summary}
+          />
+        </InlineField>
+      </ToggleWrapper>
+      <ButtonGroup horizontal align="right">
+        <Button onClick={onCancel} variant="secondary" type="button">
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!(questionnaire.title && questionnaire.type)}
+          data-test="questionnaire-submit-button"
+        >
+          {confirmText}
+        </Button>
+      </ButtonGroup>
+    </Form>
+  );
+};
 
 StatelessQuestionnaireMeta.defaultProps = {
   canEditType: true,
