@@ -211,11 +211,6 @@ const getSuggestions = props => {
     currencyAnswersinCurrentSection,
     numberAnswersinCurrentSection,
     percentageAnswersinCurrentSection,
-    previousSection,
-    currencyAnswersinPreviousSection,
-    numberAnswersinPreviousSection,
-    percentageAnswersinPreviousSection,
-    allPreviousCurrencyAnswers,
   } = suggestions;
 
   return reverse(
@@ -241,32 +236,8 @@ const getSuggestions = props => {
               subTitle: `in ${currentSection.displayName}`,
               answers: filterSelected(percentageAnswersinCurrentSection),
             },
-            {
-              type: CURRENCY,
-              title: "Currency answers in previous section",
-              subTitle: `in ${previousSection.displayName}`,
-              answers: filterSelected(currencyAnswersinPreviousSection),
-            },
-            {
-              type: NUMBER,
-              title: "Number answers in previous section",
-              subTitle: `in ${previousSection.displayName}`,
-              answers: filterSelected(numberAnswersinPreviousSection),
-            },
-            {
-              type: PERCENTAGE,
-              title: "Percentage answers in previous section",
-              subTitle: `in ${previousSection.displayName}`,
-              answers: filterSelected(percentageAnswersinPreviousSection),
-            },
-            {
-              type: CURRENCY,
-              title: "All previous currency answers",
-              subTitle: `in whole survey`,
-              answers: filterSelected(allPreviousCurrencyAnswers),
-            },
           ],
-          ({ answers }) => answers.length > 1
+          ({ answers }) => answers.length > 0
         ),
         ({ type }) => (answerType ? type === answerType : true)
       ),

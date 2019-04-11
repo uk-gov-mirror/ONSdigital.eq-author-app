@@ -22,11 +22,6 @@ const getAnswersofTypeFromSection = (type, section) =>
     )
   );
 
-const getAnswersOfTypeFromSections = (sections, type) =>
-  filter(flatMap(flatMap(sections, "pages"), "answers"), {
-    type,
-  });
-
 const mapState = (state, ownProps) => {
   const { questionnaire } = ownProps;
   const { pageId, sectionId } = ownProps.match.params;
@@ -62,36 +57,6 @@ const mapState = (state, ownProps) => {
       currentSection
     );
 
-    const currencyAnswersinPreviousSection = getAnswersofTypeFromSection(
-      CURRENCY,
-      previousSection
-    );
-
-    const percentageAnswersinPreviousSection = getAnswersofTypeFromSection(
-      PERCENTAGE,
-      previousSection
-    );
-
-    const numberAnswersinPreviousSection = getAnswersofTypeFromSection(
-      NUMBER,
-      previousSection
-    );
-
-    const allPreviousCurrencyAnswers = getAnswersOfTypeFromSections(
-      previousSections,
-      CURRENCY
-    );
-
-    const allPreviousNumericAnswers = getAnswersOfTypeFromSections(
-      previousSections,
-      NUMBER
-    );
-
-    const allPreviousPercentageAnswers = getAnswersOfTypeFromSections(
-      previousSections,
-      PERCENTAGE
-    );
-
     return {
       page,
       previousSections,
@@ -102,12 +67,6 @@ const mapState = (state, ownProps) => {
         currencyAnswersinCurrentSection,
         numberAnswersinCurrentSection,
         percentageAnswersinCurrentSection,
-        currencyAnswersinPreviousSection,
-        percentageAnswersinPreviousSection,
-        numberAnswersinPreviousSection,
-        allPreviousNumericAnswers,
-        allPreviousCurrencyAnswers,
-        allPreviousPercentageAnswers,
       },
     };
   }
