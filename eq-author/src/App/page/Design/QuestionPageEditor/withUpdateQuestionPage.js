@@ -10,10 +10,11 @@ export const mapMutateToProps = ({ mutate }) => ({
     const data = filter(pageFragment, page);
 
     const currentUpdateQuestionCount = updateQuestionCount++;
+    let latestUpdateQuestionPage;
 
     return mutate({
-      variables: { 
-        input: data
+      variables: {
+        input: data,
       },
       optimisticResponse: {
         updateQuestionPage: {
@@ -22,23 +23,34 @@ export const mapMutateToProps = ({ mutate }) => ({
           __typename: "QuestionPage",
         },
       },
+      /*
       update: (proxy, { data: {updateQuestionPage}}) => {
         // Update the local cache with the last called mutation to avoid race condition caused by
         // second mutation returning before the previous
-        if (currentUpdateQuestionCount === updateQuestionCount - 1) {
-          console.log({currentUpdateQuestionCount, updateQuestionCount, updateQuestionPage}, {
-            id: `${updateQuestionPage.__typename}${updateQuestionPage.id}`,
-            fragment: pageFragment,
-            data: updateQuestionPage
-          });
-          proxy.writeFragment( {
-            id: `${updateQuestionPage.__typename}${updateQuestionPage.id}`,
-            fragment: pageFragment,
-            data: updateQuestionPage
-          });     
+        console.log("update", {updateQuestionPage, currentUpdateQuestionCount, updateQuestionCount});
 
+        if (currentUpdateQuestionCount === updateQuestionCount - 1) {
+          latestUpdateQuestionPage = updateQuestionPage;
+        } else {
+          if (latestUpdateQuestionPage) {
+            console.log("latest", {latestUpdateQuestionPage, updateQuestionCount, updateQuestionPage}, {
+              id: `${latestUpdateQuestionPage.__typename}${latestUpdateQuestionPage.id}`,
+              fragment: pageFragment,
+              data: latestUpdateQuestionPage
+            });
+            proxy.writeFragment( {
+              id: `${latestUpdateQuestionPage.__typename}${latestUpdateQuestionPage.id}`,
+              fragment: pageFragment,
+              data: latestUpdateQuestionPage
+            });
+
+            latestUpdateQuestionPage = null;
+          }
         }
       }
+      */
+    }).then(res => {
+      return false;
     });
   },
 });
