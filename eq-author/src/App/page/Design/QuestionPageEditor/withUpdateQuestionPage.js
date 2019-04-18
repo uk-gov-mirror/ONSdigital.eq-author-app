@@ -4,15 +4,16 @@ import pageFragment from "graphql/fragments/page.graphql";
 import { filter } from "graphql-anywhere";
 
 let updateQuestionCount = 0;
+let callStack = {};
 
 export const mapMutateToProps = ({ mutate }) => ({
   onUpdateQuestionPage: page => {
     const data = filter(pageFragment, page);
 
     const currentUpdateQuestionCount = updateQuestionCount++;
-    let latestUpdateQuestionPage;
+    const key = `call${currentUpdateQuestionCount}`;
 
-    return mutate({
+    callStack[key] = mutate({
       variables: {
         input: data,
       },
@@ -23,35 +24,33 @@ export const mapMutateToProps = ({ mutate }) => ({
           __typename: "QuestionPage",
         },
       },
-      /*
-      update: (proxy, { data: {updateQuestionPage}}) => {
+
+      update: (proxy, { data: { updateQuestionPage } }) => {
         // Update the local cache with the last called mutation to avoid race condition caused by
         // second mutation returning before the previous
-        console.log("update", {updateQuestionPage, currentUpdateQuestionCount, updateQuestionCount});
 
-        if (currentUpdateQuestionCount === updateQuestionCount - 1) {
-          latestUpdateQuestionPage = updateQuestionPage;
-        } else {
-          if (latestUpdateQuestionPage) {
-            console.log("latest", {latestUpdateQuestionPage, updateQuestionCount, updateQuestionPage}, {
-              id: `${latestUpdateQuestionPage.__typename}${latestUpdateQuestionPage.id}`,
-              fragment: pageFragment,
-              data: latestUpdateQuestionPage
-            });
-            proxy.writeFragment( {
-              id: `${latestUpdateQuestionPage.__typename}${latestUpdateQuestionPage.id}`,
-              fragment: pageFragment,
-              data: latestUpdateQuestionPage
-            });
+        // Remove this entry from callStack
+        delete callStack[key];
 
-            latestUpdateQuestionPage = null;
-          }
+        const callStackList = Object.entries(callStack);
+
+        if (callStackList.length) {
+          Promise.all(callStackList).then(() => {
+            if (currentUpdateQuestionCount === updateQuestionCount - 1) {
+              // Just write last called to local cache
+
+              proxy.writeFragment({
+                id: `${updateQuestionPage.__typename}${updateQuestionPage.id}`,
+                fragment: pageFragment,
+                data: updateQuestionPage,
+              });
+            }
+          });
         }
-      }
-      */
-    }).then(res => {
-      return false;
+      },
     });
+
+    return callStack[key];
   },
 });
 
