@@ -4,16 +4,17 @@ import pageFragment from "graphql/fragments/page.graphql";
 import { filter } from "graphql-anywhere";
 
 let updateQuestionCount = 0;
-let callStack = {};
+let lastCalledResult;
 
 export const mapMutateToProps = ({ mutate }) => ({
   onUpdateQuestionPage: page => {
     const data = filter(pageFragment, page);
 
     const currentUpdateQuestionCount = updateQuestionCount++;
-    const key = `call${currentUpdateQuestionCount}`;
 
-    callStack[key] = mutate({
+    lastCalledResult = null;
+
+    return mutate({
       variables: {
         input: data,
       },
@@ -29,28 +30,20 @@ export const mapMutateToProps = ({ mutate }) => ({
         // Update the local cache with the last called mutation to avoid race condition caused by
         // second mutation returning before the previous
 
-        // Remove this entry from callStack
-        delete callStack[key];
-
-        const callStackList = Object.entries(callStack);
-
-        if (callStackList.length) {
-          Promise.all(callStackList).then(() => {
-            if (currentUpdateQuestionCount === updateQuestionCount - 1) {
-              // Just write last called to local cache
-
-              proxy.writeFragment({
-                id: `${updateQuestionPage.__typename}${updateQuestionPage.id}`,
-                fragment: pageFragment,
-                data: updateQuestionPage,
-              });
-            }
-          });
+        if (currentUpdateQuestionCount === updateQuestionCount - 1) {
+          lastCalledResult = updateQuestionPage;
+        } else {
+          // Write results of last called mutation to local cache if it has already been returned
+          if (lastCalledResult) {
+            proxy.writeFragment({
+              id: `${updateQuestionPage.__typename}${updateQuestionPage.id}`,
+              fragment: pageFragment,
+              data: lastCalledResult,
+            });
+          }
         }
       },
     });
-
-    return callStack[key];
   },
 });
 
