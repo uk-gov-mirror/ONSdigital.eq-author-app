@@ -62,6 +62,7 @@ const ToolbarButton = ({
       <StyledToolbarButton
         active={active && canFocus}
         disabled={disabled || !canFocus}
+        canFocus={canFocus}
         {...otherProps}
       >
         {children}

@@ -17,6 +17,7 @@ export const UnwrappedPreviousAnswerContentPicker = ({
     name="previousAnswer"
     contentTypes={[ANSWER]}
     answerData={shapeTree(get(data, path))}
+    hasClearButton
     {...otherProps}
   />
 );

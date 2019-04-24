@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { propType } from "graphql-anywhere";
-import { find, flatten } from "lodash";
+import { flatten, isEmpty, find, reduce, filter } from "lodash";
 import { TransitionGroup } from "react-transition-group";
 import gql from "graphql-tag";
 
@@ -10,13 +10,14 @@ import { colors } from "constants/theme";
 import { CURRENCY, NUMBER, PERCENTAGE } from "constants/answer-types";
 import FadeTransition from "components/transitions/FadeTransition";
 import ContentPickerModal from "components/ContentPickerModal";
-import shapeTree from "components/ContentPicker/shapeTree";
-import { ANSWER } from "components/ContentPickerSelect/content-types";
+
 import Button from "components/buttons/Button";
 import TextButton from "components/buttons/TextButton";
 
 import AnswerChip from "./AnswerChip";
 import iconInfo from "./icon-info.svg";
+
+const validTypes = [CURRENCY, NUMBER, PERCENTAGE];
 
 const Box = styled.div`
   border: 1px solid ${colors.borders};
@@ -154,9 +155,9 @@ const SelectButton = styled(Button)`
 `;
 
 const Empty = styled.div`
-  color: #7a7a7a;
+  color: ${colors.textLight};
   text-align: center;
-  padding: 1em 2em 2em;
+  padding: 1em 2em;
 
   &::before {
     display: block;
@@ -185,7 +186,6 @@ const NoShortcuts = styled.div`
 `;
 
 const buildSuggestions = (section, answers) => {
-  const validTypes = [CURRENCY, NUMBER, PERCENTAGE];
   const suggestions = validTypes
     .map(type => ({
       suggestionTitle: `${type} answers in this section`,
@@ -208,10 +208,12 @@ export default class AnswerSelector extends Component {
       page,
       page: { summaryAnswers },
     } = this.props;
+
     const newSelectedValues = summaryAnswers.filter(
       selectedSummaryAnswer =>
         !find(answers, answer => answer.id === selectedSummaryAnswer.id)
     );
+
     onUpdateCalculatedSummaryPage({
       id: page.id,
       summaryAnswers: newSelectedValues,
@@ -226,17 +228,14 @@ export default class AnswerSelector extends Component {
     this.setState({ showPicker: false });
   };
 
-  handlePickerSubmit = answer => {
-    const {
-      onUpdateCalculatedSummaryPage,
-      page,
-      page: { summaryAnswers },
-    } = this.props;
+  handlePickerSubmit = answers => {
+    const { onUpdateCalculatedSummaryPage, page } = this.props;
 
     this.setState({ showPicker: false });
+
     onUpdateCalculatedSummaryPage({
       id: page.id,
-      summaryAnswers: [...summaryAnswers, answer],
+      summaryAnswers: answers,
     });
   };
 
@@ -279,7 +278,13 @@ export default class AnswerSelector extends Component {
                     <AnswerChip
                       onRemove={() => this.handleRemoveAnswers([answer])}
                     >
-                      {answer.displayName}
+                      <div css={{ fontWeight: "normal" }}>
+                        {answer.displayName}
+                      </div>
+
+                      <div css={{ fontSize: "0.8em" }}>
+                        {answer.page && answer.page.displayName}
+                      </div>
                     </AnswerChip>
                   </AnswerListItem>
                 </FadeTransition>
@@ -292,11 +297,23 @@ export default class AnswerSelector extends Component {
           onClick={this.handlePickerOpen}
           data-test="answer-selector"
         >
-          Select another {(answerType || "answer").toLowerCase()} answer
+          Select {(answerType || "answer").toLowerCase()} answer/s
         </SelectButton>
       </div>
     );
   }
+
+  renderNoAnswers = () => {
+    return (
+      <Empty>
+        <EmptyTitle>No numeric answers in this section</EmptyTitle>
+        <EmptyText>
+          A calculated summary can only be used with numeric answers <br />
+          (currency, percentage or number)
+        </EmptyText>
+      </Empty>
+    );
+  };
 
   render() {
     const {
@@ -307,12 +324,24 @@ export default class AnswerSelector extends Component {
     if (summaryAnswers.length > 0) {
       answerType = summaryAnswers[0].type;
     }
+
     const suggestions = buildSuggestions(section, availableSummaryAnswers);
+    const answerIsNumeric = answer => validTypes.indexOf(answer.type) > -1;
+    const getNumericAnswerInPage = page =>
+      filter(page.answers, answerIsNumeric);
+
+    const numericAnswersInSection = filter(
+      section.pages,
+      getNumericAnswerInPage
+    );
+
     return (
       <div>
         <Box>
           <Answers>
-            {summaryAnswers.length > 0 ? (
+            {numericAnswersInSection.length < 1 ? (
+              this.renderNoAnswers()
+            ) : summaryAnswers.length > 0 ? (
               this.renderAnswers(summaryAnswers, answerType)
             ) : (
               <div>
@@ -332,51 +361,62 @@ export default class AnswerSelector extends Component {
                 </Empty>
               </div>
             )}
-            <Suggestions>
-              <SuggestionsHeader>
-                <SuggestionsTitle>Shortcuts</SuggestionsTitle>
-              </SuggestionsHeader>
-              {suggestions.length > 0 ? (
-                <SuggestionsList>
-                  {suggestions.map((suggestion, index) => (
-                    <SuggestionsListItem suggestion={suggestion} key={index}>
-                      <SuggestionButton
-                        onClick={() => {
-                          this.handleSuggestionSelect(suggestion.answers);
-                        }}
-                        id={index}
-                        data-test={`${suggestion.answers[0].type}-suggestion`}
-                      >
-                        <SuggestionText>
-                          <SuggestionTitle>
-                            {suggestion.suggestionTitle}
-                          </SuggestionTitle>
-                          <SuggestionSubtitle>
-                            {suggestion.suggestionSubtitle}
-                          </SuggestionSubtitle>
-                        </SuggestionText>
-                        <SuggestionAnswers>
-                          {suggestion.answers.length} answers
-                        </SuggestionAnswers>
-                      </SuggestionButton>
-                    </SuggestionsListItem>
-                  ))}
-                </SuggestionsList>
-              ) : (
-                <NoShortcuts>
-                  No shortcuts available. Add numeric answers to be provided
-                  with suggested selections.
-                </NoShortcuts>
-              )}
-            </Suggestions>
-            <ContentPickerModal
-              isOpen={this.state.showPicker}
-              onClose={this.handlePickerClose}
-              onSubmit={this.handlePickerSubmit}
-              answerData={shapeTree(availableSummaryAnswers, "page")}
-              levels={2}
-              contentTypes={[ANSWER]}
-            />
+
+            {!isEmpty(availableSummaryAnswers) && (
+              <Suggestions>
+                <SuggestionsHeader>
+                  <SuggestionsTitle>Shortcuts</SuggestionsTitle>
+                </SuggestionsHeader>
+                {suggestions.length > 0 ? (
+                  <SuggestionsList>
+                    {suggestions.map((suggestion, index) => (
+                      <SuggestionsListItem suggestion={suggestion} key={index}>
+                        <SuggestionButton
+                          onClick={() => {
+                            this.handleSuggestionSelect(suggestion.answers);
+                          }}
+                          id={index}
+                          data-test={`${suggestion.answers[0].type}-suggestion`}
+                        >
+                          <SuggestionText>
+                            <SuggestionTitle>
+                              {suggestion.suggestionTitle}
+                            </SuggestionTitle>
+                            <SuggestionSubtitle>
+                              {suggestion.suggestionSubtitle}
+                            </SuggestionSubtitle>
+                          </SuggestionText>
+                          <SuggestionAnswers>
+                            {suggestion.answers.length} answers
+                          </SuggestionAnswers>
+                        </SuggestionButton>
+                      </SuggestionsListItem>
+                    ))}
+                  </SuggestionsList>
+                ) : (
+                  <NoShortcuts>
+                    No shortcuts available. Add numeric answers to be provided
+                    with suggested selections.
+                  </NoShortcuts>
+                )}
+              </Suggestions>
+            )}
+            {this.state.showPicker && (
+              <ContentPickerModal
+                isOpen={this.state.showPicker}
+                onClose={this.handlePickerClose}
+                onSubmit={this.handlePickerSubmit}
+                selectedObjs={summaryAnswers}
+                validTypes={validTypes}
+                answerData={[
+                  {
+                    ...section,
+                    pages: section.pages.filter(page => page.answers),
+                  },
+                ]}
+                multiselect
+              />
+            )}
           </Answers>
         </Box>
       </div>
@@ -391,11 +431,30 @@ AnswerSelector.fragments = {
       section {
         id
         displayName
+        pages {
+          id
+          displayName
+          ... on QuestionPage {
+            answers {
+              id
+              displayName
+              type
+              page {
+                id
+                displayName
+              }
+            }
+          }
+        }
       }
       summaryAnswers {
         id
         displayName
         type
+        page {
+          id
+          displayName
+        }
       }
       availableSummaryAnswers {
         id

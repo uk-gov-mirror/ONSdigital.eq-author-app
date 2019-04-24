@@ -10,15 +10,18 @@ import shapeTree from "components/ContentPicker/shapeTree";
 
 import CustomPropTypes from "custom-prop-types";
 
-import IconPiping from "components/RichTextEditor/icon-link.svg?inline";
+import IconPipeAnswer from "components/RichTextEditor/icon-pipe-answer.svg?inline";
+import IconPipeMetadata from "components/RichTextEditor/icon-pipe-metadata.svg?inline";
+import IconPipeVariable from "components/RichTextEditor/icon-pipe-variable.svg?inline";
+
 import ToolbarButton from "components/RichTextEditor/ToolbarButton";
 
-import { ANSWER, METADATA } from "components/ContentPickerSelect/content-types";
+const ANSWER = "ANSWER";
+const METADATA = "METADATA";
+const VARIABLE = "VARIABLE";
 
-const PipingIconButton = props => (
-  <ToolbarButton {...props}>
-    <IconPiping />
-  </ToolbarButton>
+const PipingIconButton = ({ children, ...props }) => (
+  <ToolbarButton {...props}>{children}</ToolbarButton>
 );
 
 export const MenuButton = styled(PipingIconButton)`
@@ -28,10 +31,6 @@ export const MenuButton = styled(PipingIconButton)`
     opacity: 0.2;
   }
 `;
-
-const buttonProps = {
-  title: "Pipe value",
-};
 
 export class Menu extends React.Component {
   static propTypes = {
@@ -55,18 +54,12 @@ export class Menu extends React.Component {
   };
 
   state = {
-    isPickerOpen: false,
-  };
-
-  handleButtonClick = () => {
-    this.setState(state => ({
-      isPickerOpen: !state.isPickerOpen,
-    }));
+    isAnswerPickerOpen: false,
   };
 
   handlePickerClose = () => {
     this.setState({
-      isPickerOpen: false,
+      pickerOpen: false,
     });
   };
 
@@ -79,43 +72,72 @@ export class Menu extends React.Component {
     const {
       answerData,
       metadataData,
+      variableData,
       disabled,
       loading,
       canFocus,
-      defaultTab,
     } = this.props;
 
-    const isDisabled =
-      loading || disabled || (isEmpty(answerData) && isEmpty(metadataData));
-
-    if (isDisabled) {
-      return <MenuButton {...buttonProps} disabled />;
-    }
-
-    const allowableContentTypes = this.props.allowableTypes || [
-      ANSWER,
-      METADATA,
-    ];
+    const { pickerOpen } = this.state;
 
     return (
       <React.Fragment>
         <MenuButton
-          {...buttonProps}
-          disabled={isDisabled}
-          onClick={this.handleButtonClick}
+          title="Pipe answer"
+          disabled={loading || disabled || isEmpty(answerData)}
+          onClick={() => this.setState({ pickerOpen: ANSWER })}
           canFocus={canFocus}
-          data-test="piping-button"
-        />
-        <ContentPickerModal
-          isOpen={this.state.isPickerOpen}
-          answerData={answerData}
-          metadataData={metadataData}
-          onClose={this.handlePickerClose}
-          onSubmit={this.handlePickerSubmit}
-          data-test="picker"
-          contentTypes={allowableContentTypes}
-          defaultTab={defaultTab}
-        />
+        >
+          <IconPipeAnswer />
+        </MenuButton>
+        {pickerOpen === ANSWER && (
+          <ContentPickerModal
+            isOpen={pickerOpen === ANSWER}
+            answerData={answerData}
+            onClose={this.handlePickerClose}
+            onSubmit={this.handlePickerSubmit}
+          />
+        )}
+        <MenuButton
+          title="Pipe metadata"
+          onClick={() => this.setState({ pickerOpen: METADATA })}
+          disabled={loading || disabled || isEmpty(metadataData)}
+          canFocus={canFocus}
+        >
+          <IconPipeMetadata />
+        </MenuButton>
+        {pickerOpen === METADATA && (
+          <ContentPickerModal
+            isOpen={pickerOpen === METADATA}
+            metadataData={metadataData}
+            onClose={this.handlePickerClose}
+            onSubmit={this.handlePickerSubmit}
+          />
+        )}
+        <MenuButton
+          title="Pipe variable"
+          onClick={() => this.setState({ pickerOpen: VARIABLE })}
+          disabled={loading || disabled || isEmpty(metadataData)}
+          canFocus={canFocus}
+        >
+          <IconPipeVariable />
+        </MenuButton>
+        {pickerOpen === VARIABLE && (
+          <ContentPickerModal
+            isOpen={pickerOpen === VARIABLE}
+            variableData={[
+              {
+                id: "1",
+                displayName: "Total",
+                type: "Sum",
+                description: "The sum of the answers chosen on this page",
+                __typename: "Variable",
+              },
+            ]}
+            onClose={this.handlePickerClose}
+            onSubmit={this.handlePickerSubmit}
+          />
+        )}
       </React.Fragment>
     );
   }
@@ -172,10 +194,6 @@ const postProcessPipingContent = entity => {
 };
 
 export const UnwrappedPipingMenu = props => {
-  if (!props.canFocus) {
-    return <MenuButton {...buttonProps} disabled />;
-  }
-
   return (
     <AvailablePipingContentQuery
       questionnaireId={props.match.params.questionnaireId}

@@ -28,7 +28,7 @@ const CloseButton = styled.button`
   background: url(${iconClose}) no-repeat center center;
   width: 1rem;
   height: 1rem;
-  margin: 0 0.3em;
+  margin: 0 0.5em;
   cursor: pointer;
 
   &:focus {

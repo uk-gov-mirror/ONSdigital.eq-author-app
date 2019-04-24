@@ -2,40 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 import { propType } from "graphql-anywhere";
 import styled from "styled-components";
-import { compact, find, isEmpty } from "lodash";
-
-import BaseTabs from "components/BaseTabs";
+import { xorBy, find } from "lodash";
 import Modal, { CloseButton } from "components/modals/Modal";
-import {
-  AnswerContentPicker,
-  QuestionContentPicker,
-  MetadataContentPicker,
-  RoutingDestinationContentPicker,
-  VariableContentPicker,
-} from "components/ContentPicker";
-
-import { colors } from "constants/theme";
-import {
-  ANSWER,
-  QUESTION,
-  METADATA,
-  DESTINATION,
-  VARIABLES,
-} from "components/ContentPickerSelect/content-types";
 
 import LogicalDestination from "graphql/fragments/logical-destination.graphql";
 import QuestionPageDestination from "graphql/fragments/question-page-destination.graphql";
 import SectionDestination from "graphql/fragments/section-destination.graphql";
 
-const HeaderSegment = styled.div`
-  margin: 0;
-`;
+import MultipleAnswerPicker from "./MultipleAnswerPicker";
+import AnswerPicker from "./AnswerPicker";
+import MetaDataPicker from "./MetaDataPicker";
+import DestinationPicker from "./DestinationPicker";
+import VariablePicker from "./VariablePicker";
 
-const Title = styled.h1`
-  color: ${colors.darkGrey};
-  font-weight: bold;
-  font-size: 1.3em;
-  margin: 1em 0;
+import Button from "components/buttons/Button";
+import ButtonGroup from "components/buttons/ButtonGroup";
+import { colors } from "constants/theme";
+
+const ModalFooter = styled.div`
+  padding: 1.5em;
+  border-top: 1px solid ${colors.bordersLight};
 `;
 
 export const StyledCloseButton = styled(CloseButton)`
@@ -47,79 +33,20 @@ export const StyledCloseButton = styled(CloseButton)`
   align-items: center;
 `;
 
-const NavigationHeader = styled.div`
-  align-items: center;
-  border-bottom: 1px solid #ccc;
-  position: relative;
-  width: 100%;
-`;
-
-export const TabButton = styled.button`
-  text-transform: uppercase;
-  border: 0;
-  color: ${colors.darkGrey};
-  cursor: pointer;
-  font-size: 0.9em;
-  font-weight: bold;
-  letter-spacing: 0.05em;
-  padding: 1.1em;
-  position: relative;
-
-  &[aria-selected="true"] {
-    color: ${colors.blue};
-    border-bottom: 2px solid ${colors.primary};
-    margin-bottom: -2px;
-  }
-
-  &:focus {
-    outline: 3px solid ${colors.orange};
-    outline-offset: -3px;
-    z-index: 2;
-  }
-
-  &:hover {
-    background: ${colors.lighterGrey};
-  }
-`;
-
 const StyledModal = styled(Modal)`
   .Modal {
     padding: 0;
     width: 45em;
-    height: 30em;
   }
 `;
 
-const ContentWrapper = styled.div`
-  margin: 0 1em;
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 0;
+const Container = styled.div`
+  background: white;
 `;
 
-const ErrorText = styled.span`
-  align-items: center;
-  color: ${colors.darkGrey};
-  display: flex;
-  font-size: 1.2em;
-  height: 100%;
-  justify-content: center;
-  width: 100%;
-`;
-
-const Flex = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
+export const UNSELECTED = "UNSELECTED";
 
 class ContentPickerModal extends React.Component {
-  state = {
-    selectedTab: this.getSelectedTab(),
-  };
-
   static propTypes = {
     answerData: PropTypes.arrayOf(
       PropTypes.shape({
@@ -156,212 +83,155 @@ class ContentPickerModal extends React.Component {
     onSubmit: PropTypes.func,
     isOpen: PropTypes.bool,
     onClose: PropTypes.func,
-    contentTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
-    levels: PropTypes.number,
-    defaultTab: PropTypes.string,
+    multiselect: PropTypes.bool,
   };
 
-  getSelectedTab() {
-    const { answerData = [], defaultTab } = this.props;
-    if (defaultTab) {
-      return defaultTab;
+  static defaultProps = {
+    multiselect: false,
+  };
+
+  state = {
+    selectedItem: this.props.selectedObj,
+    selectedItems: this.props.selectedObjs,
+  };
+
+  handleUnselected = () => {
+    console.log("handleUnselected");
+
+    this.setState({ selectedItem: UNSELECTED });
+  };
+
+  handleSelected = selectedItem => {
+    const { selectedItems } = this.state;
+    const { multiselect } = this.props;
+
+    /* eslint-disable no-extra-boolean-cast */
+    if (multiselect) {
+      if (Boolean(find(selectedItems, { id: selectedItem.id }))) {
+        this.setState({
+          selectedItems: xorBy(selectedItems, [selectedItem], "id"),
+        });
+      } else {
+        this.setState({
+          selectedItems: [...selectedItems, selectedItem],
+        });
+      }
+    } else {
+      this.setState({ selectedItem });
     }
-    return answerData.length > 0 ? "answers" : "metadata";
-  }
-
-  handleTabChange = selectedTab => {
-    this.setState({ selectedTab });
   };
 
-  handleAnswerSubmit = ({ id, displayName, type }) => {
-    this.props.onSubmit({
-      id,
-      displayName,
-      type,
-      pipingType: "answers",
-    });
+  handleConfirm = () => {
+    const { selectedItems, selectedItem } = this.state;
+    const { onSubmit, multiselect } = this.props;
+
+    if (multiselect) {
+      onSubmit(selectedItems);
+    } else {
+      onSubmit(selectedItem);
+    }
   };
 
-  handleMetadataSubmit = ({ id, displayName }) => {
-    this.props.onSubmit({
-      id,
-      displayName,
-      pipingType: "metadata",
-    });
+  isSelected = item => {
+    const { selectedItem } = this.state;
+    return selectedItem && selectedItem.id === item.id;
   };
 
-  handleVariableSubmit = ({ id, displayName }) => {
-    this.props.onSubmit({
-      id,
-      displayName,
-      type: "sum",
-      pipingType: "variable",
-    });
-  };
+  renderPicker = () => {
+    const {
+      answerData,
+      metadataData,
+      destinationData,
+      variableData,
+      multiselect,
+      ...otherProps
+    } = this.props;
 
-  buttonRender = (props, tab) =>
-    tab.showTabButton ? <TabButton {...props}>{tab.title}</TabButton> : null;
+    const { selectedItem, selectedItems } = this.state;
 
-  answerTab = {
-    id: "answers",
-    title: "Answer",
-    showTabButton: true,
-    render: () => {
-      if (!this.props.answerData || this.props.answerData.length === 0) {
-        return (
-          <ErrorText data-test="no-previous-answers">
-            There are no previous answers to pick from
-          </ErrorText>
-        );
-      }
-      return (
-        <React.Fragment>
-          <HeaderSegment>
-            <Title>Select a previous answer</Title>
-          </HeaderSegment>
-          <AnswerContentPicker
-            data={this.props.answerData}
-            onSubmit={this.handleAnswerSubmit}
-            onClose={this.props.onClose}
-            selectedId={this.props.selectedId}
-            levels={this.props.levels}
-          />
-        </React.Fragment>
-      );
-    },
-  };
-
-  questionTab = {
-    id: "question",
-    title: "Question",
-    showTabButton: true,
-    render: () => {
-      if (!this.props.questionData || this.props.questionData.length === 0) {
-        return <ErrorText>There are no questions to pick from</ErrorText>;
-      }
-      return (
-        <React.Fragment>
-          <HeaderSegment>
-            <Title>Select a previous question</Title>
-          </HeaderSegment>
-          <QuestionContentPicker
-            data={this.props.questionData}
-            onSubmit={this.props.onSubmit}
-            onClose={this.props.onClose}
-          />
-        </React.Fragment>
-      );
-    },
-  };
-
-  metadataTab = {
-    id: "metadata",
-    title: "Metadata",
-    showTabButton: true,
-    render: () => {
-      if (!this.props.metadataData || this.props.metadataData.length === 0) {
-        return (
-          <ErrorText>There is no configured metadata to pick from</ErrorText>
-        );
-      }
-      return (
-        <React.Fragment>
-          <HeaderSegment>
-            <Title>Select metadata</Title>
-          </HeaderSegment>
-          <MetadataContentPicker
-            data={this.props.metadataData}
-            onSubmit={this.handleMetadataSubmit}
-            onClose={this.props.onClose}
-          />
-        </React.Fragment>
-      );
-    },
-  };
-
-  variableTab = {
-    id: "variables",
-    title: "Variables",
-    showTabButton: true,
-    render: () => (
-      <>
-        <HeaderSegment>
-          <Title>Select variable</Title>
-        </HeaderSegment>
-        <VariableContentPicker
-          data={[
-            {
-              id: "1",
-              displayName: "Total",
-              type: "Sum",
-              __typename: "Variable",
-            },
-          ]}
-          onSubmit={this.handleVariableSubmit}
-          onClose={this.props.onClose}
+    if (answerData) {
+      return multiselect ? (
+        <MultipleAnswerPicker
+          onConfirm={this.handleConfirm}
+          onSelected={this.handleSelected}
+          onUnselected={this.handleUnselected}
+          selectedItems={selectedItems}
+          selectedItem={selectedItem}
+          data={answerData}
+          {...otherProps}
         />
-      </>
-    ),
-  };
-
-  destinationTab = {
-    id: "destination",
-    title: "Destination",
-    showTabButton: false,
-    render: () => {
-      if (!this.props.destinationData || isEmpty(this.props.destinationData)) {
-        return <ErrorText>There are no destinations to pick from</ErrorText>;
-      }
-      return (
-        <React.Fragment>
-          <HeaderSegment>
-            <Title>Select a destination</Title>
-          </HeaderSegment>
-          <RoutingDestinationContentPicker
-            data={this.props.destinationData}
-            onSubmit={this.props.onSubmit}
-            onClose={this.props.onClose}
-            selectedObj={this.props.selectedObj}
-          />
-        </React.Fragment>
+      ) : (
+        <AnswerPicker
+          onConfirm={this.handleConfirm}
+          onSelected={this.handleSelected}
+          onUnselected={this.handleUnselected}
+          isSelected={this.isSelected}
+          selectedItem={selectedItem}
+          data={answerData}
+        />
       );
-    },
+    } else if (metadataData) {
+      return (
+        <MetaDataPicker
+          onConfirm={this.handleConfirm}
+          onSelected={this.handleSelected}
+          onUnselected={this.handleUnselected}
+          isSelected={this.isSelected}
+          selectedItem={selectedItem}
+          data={metadataData}
+        />
+      );
+    } else if (destinationData) {
+      return (
+        <DestinationPicker
+          onConfirm={this.handleConfirm}
+          onSelected={this.handleSelected}
+          onUnselected={this.handleUnselected}
+          isSelected={this.isSelected}
+          selectedItem={selectedItem}
+          data={destinationData}
+        />
+      );
+    } else if (variableData) {
+      return (
+        <VariablePicker
+          onConfirm={this.handleConfirm}
+          onSelected={this.handleSelected}
+          onUnselected={this.handleUnselected}
+          isSelected={this.isSelected}
+          selectedItem={selectedItem}
+          data={variableData}
+        />
+      );
+    }
   };
-  tabConfig = [
-    this.props.contentTypes.indexOf(ANSWER) !== -1 ? this.answerTab : null,
-    this.props.contentTypes.indexOf(QUESTION) !== -1 ? this.questionTab : null,
-    this.props.contentTypes.indexOf(METADATA) !== -1 ? this.metadataTab : null,
-    this.props.contentTypes.indexOf(VARIABLES) !== -1 ? this.variableTab : null,
-    this.props.contentTypes.indexOf(DESTINATION) !== -1
-      ? this.destinationTab
-      : null,
-  ];
-
-  tabList = ({ children }) => (
-    <NavigationHeader>
-      <StyledCloseButton
-        onClick={this.props.onClose}
-        hasTabs={find(this.tabConfig, "showTabButton")}
-      >
-        &times;
-      </StyledCloseButton>
-      {children}
-    </NavigationHeader>
-  );
 
   render() {
+    const { onClose, isOpen, onOpen } = this.props;
+
     return (
-      <StyledModal isOpen={this.props.isOpen} hasCloseButton={false}>
-        <Flex>
-          <BaseTabs
-            activeId={this.state.selectedTab}
-            onChange={this.handleTabChange}
-            TabList={this.tabList}
-            buttonRender={this.buttonRender}
-            tabs={compact(this.tabConfig)}
-            ContentWrapper={ContentWrapper}
-          />
-        </Flex>
+      <StyledModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        hasCloseButton
+      >
+        <Container>{this.renderPicker()}</Container>
+        <ModalFooter>
+          <ButtonGroup horizontal align="right">
+            <Button variant="secondary" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              autoFocus
+              onClick={this.handleConfirm}
+              disabled={this.state.selectedItem === UNSELECTED}
+            >
+              Confirm
+            </Button>
+          </ButtonGroup>
+        </ModalFooter>
       </StyledModal>
     );
   }

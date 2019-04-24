@@ -72,10 +72,13 @@ export class UnwrappedDateValidation extends React.Component {
     <PreviousAnswerContentPicker
       answerId={this.props.answer.id}
       onSubmit={this.props.onChangeUpdate}
-      selectedContentDisplayName={get(
-        this.props.validation.previousAnswer,
-        "displayName"
-      )}
+      selectedContent={{
+        title: get(
+          this.props.validation.previousAnswer,
+          "displayName",
+          "Please select..."
+        ),
+      }}
       selectedId={get(this.props.validation.previousAnswer, "id")}
       path={`answer.validation.${this.props.readKey}.availablePreviousAnswers`}
     />
@@ -85,10 +88,9 @@ export class UnwrappedDateValidation extends React.Component {
     <MetadataContentPicker
       answerId={this.props.answer.id}
       onSubmit={this.props.onChangeUpdate}
-      selectedContentDisplayName={get(
-        this.props.validation.metadata,
-        "displayName"
-      )}
+      selectedContent={{
+        title: get(this.props.validation.metadata, "displayName"),
+      }}
       path={`answer.validation.${this.props.readKey}.availableMetadata`}
     />
   );

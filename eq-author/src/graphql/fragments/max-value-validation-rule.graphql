@@ -6,5 +6,6 @@ fragment MaxValueValidationRule on MaxValueValidationRule {
   previousAnswer {
     id
     displayName
+    type
   }
 }

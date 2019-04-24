@@ -21,25 +21,40 @@ const Connector = styled(PathEnd)`
 `;
 
 export class UnwrappedNumericValidation extends React.Component {
-  PreviousAnswer = () => (
-    <FieldWithInclude
-      id="inclusive"
-      name="inclusive"
-      onChange={this.props.onChangeUpdate}
-      checked={this.props.validation.inclusive}
-    >
-      <PreviousAnswerContentPicker
-        answerId={this.props.answer.id}
-        onSubmit={this.props.onChangeUpdate}
-        selectedContentDisplayName={get(
-          this.props.validation.previousAnswer,
-          "displayName"
-        )}
-        selectedId={get(this.props.validation.previousAnswer, "id")}
-        path={`answer.validation.${this.props.readKey}.availablePreviousAnswers`}
-      />
-    </FieldWithInclude>
-  );
+  PreviousAnswer = () => {
+    const { answer, validation, readKey, onChangeUpdate } = this.props;
+    const selectedContent = validation.previousAnswer
+      ? {
+          title: get(
+            validation.previousAnswer,
+            "displayName",
+            "Please select..."
+          ),
+          subTitle: "Question title",
+          type: get(validation.previousAnswer, "type"),
+        }
+      : {
+          title: "Please select...",
+        };
+
+    return (
+      <FieldWithInclude
+        id="inclusive"
+        name="inclusive"
+        onChange={this.props.onChangeUpdate}
+        checked={this.props.validation.inclusive}
+      >
+        <PreviousAnswerContentPicker
+          answerId={answer.id}
+          onSubmit={onChangeUpdate}
+          selectedObj={validation.previousAnswer}
+          selectedContent={selectedContent}
+          selectedId={get(validation.previousAnswer, "id")}
+          path={`answer.validation.${readKey}.availablePreviousAnswers`}
+        />
+      </FieldWithInclude>
+    );
+  };
 
   Custom = () => (
     <FieldWithInclude

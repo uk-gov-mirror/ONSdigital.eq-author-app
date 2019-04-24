@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 /* eslint-disable import/unambiguous,no-console */
+require("dotenv").config();
+
 const fs = require("fs");
 const jsonPath = process.env.DATA_DIR;
 const { createQuestionnaire } = require("../utils/datastore");

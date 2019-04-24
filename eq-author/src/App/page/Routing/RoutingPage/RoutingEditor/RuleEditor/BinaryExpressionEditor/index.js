@@ -184,6 +184,17 @@ export class UnwrappedBinaryExpressionEditor extends React.Component {
   render() {
     const routingEditor = this.renderEditor();
 
+    const selectedContent =
+      this.props.expression.left.reason !== "NoRoutableAnswerOnPage"
+        ? {
+            title: this.props.expression.left.displayName,
+            type: this.props.expression.left.type,
+            subTitle: "Question title",
+          }
+        : {
+            title: "Please select...",
+          };
+
     return (
       <div data-test="routing-binary-expression">
         <Grid align="center">
@@ -194,12 +205,9 @@ export class UnwrappedBinaryExpressionEditor extends React.Component {
             <RoutingAnswerContentPicker
               id={this.id}
               path="page.availableRoutingAnswers"
-              selectedContentDisplayName={get(
-                "left.displayName",
-                this.props.expression
-              )}
+              selectedContent={selectedContent}
               onSubmit={this.handleLeftSideChange}
-              selectedId={get("left.id", this.props.expression)}
+              selectedObj={get("left", this.props.expression)}
             />
           </Column>
           <Column gutters={false} cols={1}>

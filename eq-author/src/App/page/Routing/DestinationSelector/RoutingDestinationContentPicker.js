@@ -8,46 +8,51 @@ import { DESTINATION } from "components/ContentPickerSelect/content-types";
 
 import getAvailableRoutingDestinations from "./getAvailableRoutingDestinations.graphql";
 
-const getLogicalDisplayName = (
-  logical,
-  loading,
-  availableRoutingDestinations
-) => {
-  if (logical === "EndOfQuestionnaire") {
-    return "End of questionnaire";
+const getLogical = (logical, loading, availableRoutingDestinations) => {
+  if (loading) {
+    return {
+      title: "Loading...",
+    };
   }
 
-  if (loading) {
-    return "";
+  if (logical === "EndOfQuestionnaire") {
+    return {
+      title: "End of questionnaire",
+    };
   }
 
   if (availableRoutingDestinations.pages.length) {
-    return availableRoutingDestinations.pages[0].displayName;
+    if (logical === "NextPage") {
+      return {
+        title: "Next page",
+        subTitle: availableRoutingDestinations.pages[0].displayName,
+      };
+    } else {
+      return {
+        title: availableRoutingDestinations.pages[0].displayName,
+      };
+    }
   }
   if (availableRoutingDestinations.sections.length) {
-    return availableRoutingDestinations.sections[0].displayName;
+    return {
+      title: availableRoutingDestinations.sections[0].displayName,
+    };
   }
-  return "End of questionnaire";
+  return {
+    title: "End of questionnaire",
+  };
 };
 
-const getAbsoluteDisplayName = selected => {
+const getAbsolute = selected => {
   const absolute = selected.section || selected.page;
-  return absolute.displayName;
+  return { title: absolute.displayName };
 };
 
-const getSelectedDisplayName = (
-  selected,
-  loading,
-  availableRoutingDestinations
-) => {
+const getSelected = (selected, loading, availableRoutingDestinations) => {
   if (selected.logical) {
-    return getLogicalDisplayName(
-      selected.logical,
-      loading,
-      availableRoutingDestinations
-    );
+    return getLogical(selected.logical, loading, availableRoutingDestinations);
   }
-  return getAbsoluteDisplayName(selected);
+  return getAbsolute(selected);
 };
 
 export const UnwrappedRoutingDestinationContentPicker = ({
@@ -62,11 +67,7 @@ export const UnwrappedRoutingDestinationContentPicker = ({
       name="routingDestination"
       contentTypes={[DESTINATION]}
       destinationData={destinationData}
-      selectedContentDisplayName={getSelectedDisplayName(
-        selected,
-        loading,
-        destinationData
-      )}
+      selectedContent={getSelected(selected, loading, destinationData)}
       selectedObj={selected || undefined}
       {...otherProps}
     />

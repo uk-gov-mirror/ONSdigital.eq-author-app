@@ -550,7 +550,6 @@ class RichTextEditor extends React.Component {
               testId={`${testSelector}-toolbar`}
               {...otherProps}
             />
-
             <Editor
               ariaLabel={label}
               ariaLabelledBy={`label-${id}`}

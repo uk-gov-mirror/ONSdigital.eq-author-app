@@ -58,6 +58,7 @@ const Separator = styled.div`
   border-left: 1px solid ${colors.lightGrey};
   margin: 0.4em 0.7rem;
 `;
+
 const ToolbarPanel = styled.div`
   position: ${props => (props.visible ? "sticky" : "relative")};
   top: 0;
@@ -89,8 +90,6 @@ class ToolBar extends React.Component {
       piping: PropTypes.bool,
     }),
     testId: PropTypes.string,
-    allowableTypes: PropTypes.arrayOf(PropTypes.string),
-    defaultTab: PropTypes.string,
   };
 
   renderButton = button => {
@@ -118,8 +117,6 @@ class ToolBar extends React.Component {
       selectionIsCollapsed,
       controls: { piping },
       testId,
-      allowableTypes,
-      defaultTab,
     } = this.props;
 
     const isPipingDisabled = !(piping && selectionIsCollapsed);
@@ -135,8 +132,6 @@ class ToolBar extends React.Component {
             disabled={isPipingDisabled}
             onItemChosen={onPiping}
             canFocus={visible}
-            allowableTypes={allowableTypes}
-            defaultTab={defaultTab}
           />
         </ButtonGroup>
       </ToolbarPanel>

@@ -6,5 +6,6 @@ fragment MinValueValidationRule on MinValueValidationRule {
   previousAnswer {
     id
     displayName
+    type
   }
 }

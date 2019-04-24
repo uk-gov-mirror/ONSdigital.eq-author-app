@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { colors } from "constants/theme";
 import { darken } from "polished";
@@ -23,7 +23,7 @@ const ScrollPane = styled.div`
   ::-webkit-scrollbar-track {
     border-radius: 0;
     box-shadow: none;
-    display: none;
+    background: rgba(0, 0, 0, 0.1);
   }
 
   ::-webkit-scrollbar {
