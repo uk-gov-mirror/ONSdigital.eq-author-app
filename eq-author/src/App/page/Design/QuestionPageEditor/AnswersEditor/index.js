@@ -8,33 +8,59 @@ import withMoveAnswer from "./withMoveAnswer";
 import AnswerTransition from "./AnswerTransition";
 import AnswerEditor from "./AnswerEditor";
 
-export const AnswersEditor = ({
-  answers,
-  onUpdate,
-  onAddOption,
-  onUpdateOption,
-  onDeleteOption,
-  onAddExclusive,
-  onDeleteAnswer,
-  moveAnswer,
-}) => {
-  return (
-    <Reorder list={answers} onMove={moveAnswer} Transition={AnswerTransition}>
-      {(props, answer) => (
-        <AnswerEditor
-          {...props}
-          answer={answer}
-          onUpdate={onUpdate}
-          onAddOption={onAddOption}
-          onAddExclusive={onAddExclusive}
-          onUpdateOption={onUpdateOption}
-          onDeleteOption={onDeleteOption}
-          onDeleteAnswer={onDeleteAnswer}
-        />
-      )}
-    </Reorder>
-  );
+const currentAnswersReducer = (accumulator, answer) => {
+  accumulator[answer.id] = true;
+  return accumulator;
 };
+class AnswersEditor extends React.Component {
+  currentAnswers = this.props.answers.reduce(currentAnswersReducer, {});
+
+  isNewAnswer = answerId => {
+    return !this.currentAnswers[answerId];
+  };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.answers.length !== prevProps.answers.length) {
+      this.currentAnswers = this.props.answers.reduce(
+        currentAnswersReducer,
+        {}
+      );
+    }
+  }
+
+  render() {
+    const {
+      answers,
+      onUpdate,
+      onAddOption,
+      onUpdateOption,
+      onDeleteOption,
+      onAddExclusive,
+      onDeleteAnswer,
+      moveAnswer,
+    } = this.props;
+    console.log({ answers }, this.currentAnswers);
+    return (
+      <Reorder list={answers} onMove={moveAnswer} Transition={AnswerTransition}>
+        {(props, answer) => {
+          return (
+            <AnswerEditor
+              {...props}
+              answer={answer}
+              onUpdate={onUpdate}
+              onAddOption={onAddOption}
+              onAddExclusive={onAddExclusive}
+              onUpdateOption={onUpdateOption}
+              onDeleteOption={onDeleteOption}
+              onDeleteAnswer={onDeleteAnswer}
+              isNewAnswer={this.isNewAnswer(answer.id)}
+            />
+          );
+        }}
+      </Reorder>
+    );
+  }
+}
 
 AnswersEditor.propTypes = {
   answers: PropTypes.arrayOf(propType(AnswerEditor.fragments.AnswerEditor))

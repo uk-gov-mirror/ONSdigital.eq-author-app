@@ -28,6 +28,29 @@ const createQuestionPage = (input = {}) => ({
   ...input,
 });
 
+const questionPageValidation = page => {
+  const errors = [];
+
+  if (!page.title) {
+    errors.push({
+      field: "title",
+      message: "Question title is required",
+    });
+  }
+
+  // Add total answer validation errors
+  const answerErrorCount = page.answers.reduce((acc, answer) => {
+    return answer.validationErrorInfo && answer.validationErrorInfo.totalCount
+      ? acc + answer.validationErrorInfo.totalCount
+      : acc;
+  }, 0);
+
+  return {
+    errors,
+    totalCount: errors.length + answerErrorCount,
+  };
+};
+
 Resolvers.QuestionPage = {
   answers: page => page.answers,
   section: ({ id }, input, ctx) => getSectionByPageId(ctx, id),
@@ -76,6 +99,7 @@ Resolvers.QuestionPage = {
     };
   },
   routing: questionPage => questionPage.routing,
+  validationErrorInfo: page => questionPageValidation(page),
 };
 
 Resolvers.Mutation = {
@@ -98,6 +122,7 @@ Resolvers.Mutation = {
     const page = getPageById(ctx, input.id);
     merge(page, input);
     await saveQuestionnaire(ctx.questionnaire);
+    page.validationErrorInfo = questionPageValidation(page);
     return page;
   },
 };

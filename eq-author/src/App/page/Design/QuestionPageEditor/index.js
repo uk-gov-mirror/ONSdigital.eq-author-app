@@ -158,6 +158,13 @@ UnwrappedQuestionPageEditor.fragments = {
           }
         }
       }
+      validationErrorInfo {
+        errors {
+          field
+          message
+        }
+        totalCount
+      }
     }
     ${AnswersEditor.fragments.AnswersEditor}
   `,

@@ -107,6 +107,7 @@ const getPageQuery = `
             ...destination2Fragment
           }
         }
+        validationErrorInfo
       }
     }
   }  

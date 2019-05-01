@@ -32,7 +32,7 @@ import {
   get,
 } from "lodash/fp";
 import { sharedStyles } from "components/Forms/css";
-import { Field, Label } from "components/Forms";
+import { Field, FieldMessage, Label } from "components/Forms";
 
 const styleMap = {
   ITALIC: {
@@ -180,6 +180,7 @@ class RichTextEditor extends React.Component {
       })
     ),
     disabled: PropTypes.bool,
+    validationText: PropTypes.string,
   };
 
   constructor(props) {
@@ -514,6 +515,7 @@ class RichTextEditor extends React.Component {
       id,
       placeholder,
       disabled,
+      validationText,
       ...otherProps
     } = this.props;
 
@@ -566,6 +568,7 @@ class RichTextEditor extends React.Component {
             />
           </Input>
         </Field>
+        <FieldMessage message={validationText} />
       </Wrapper>
     );
   }
