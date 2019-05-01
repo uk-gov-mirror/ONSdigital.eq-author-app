@@ -117,6 +117,23 @@ export class UnconnectedHeader extends React.Component {
     this.displayToast();
   };
 
+  canLaunchSurvey = () => {
+    let surveyValid = true;
+
+    this.props.questionnaire.sections.forEach(section => {
+      section.pages.forEach(page => {
+        if (
+          page.validationErrorInfo &&
+          page.validationErrorInfo.totalCount > 0
+        ) {
+          surveyValid = false;
+        }
+      });
+    });
+
+    return surveyValid;
+  };
+
   render() {
     const { questionnaire } = this.props;
     const currentUser = get("data.me", this.props);
@@ -144,6 +161,7 @@ export class UnconnectedHeader extends React.Component {
                 variant="tertiary-light"
                 data-test="btn-preview"
                 small
+                disabled={!this.canLaunchSurvey()}
               >
                 <IconText icon={viewIcon}>View survey</IconText>
               </LinkButton>

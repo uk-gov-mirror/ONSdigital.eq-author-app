@@ -11,6 +11,7 @@ export const redirectToNewPage = ({ history, match: { params } }) => page => {
       questionnaireId: params.questionnaireId,
       sectionId: section.id,
       pageId: id,
+      newPage: true,
     })
   );
 };

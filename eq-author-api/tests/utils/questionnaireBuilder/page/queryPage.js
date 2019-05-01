@@ -120,6 +120,7 @@ const getPageQuery = `
             id
           }
         }
+        validationErrorInfo
       }
     }
   }  

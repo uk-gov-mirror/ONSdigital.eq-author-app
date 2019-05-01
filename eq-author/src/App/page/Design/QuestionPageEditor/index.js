@@ -165,6 +165,12 @@ UnwrappedQuestionPageEditor.fragments = {
         availablePreviousAnswers {
           ...AvailableAnswers
         }
+      validationErrorInfo {
+        errors {
+          field
+          message
+        }
+        totalCount
       }
     }
     ${TotalValidationRuleFragment}

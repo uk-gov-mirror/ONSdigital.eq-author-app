@@ -49,6 +49,20 @@ export class StatelessMetaEditor extends React.Component {
   description = React.createRef();
   guidance = React.createRef();
 
+  getFieldMessage = field => {
+    const {
+      page: { validationErrorInfo },
+    } = this.props;
+
+    const messages = validationErrorInfo && validationErrorInfo.errors;
+    if (!messages) {
+      return false;
+    }
+
+    const fieldMessage = messages.find(m => m.field === field);
+    return fieldMessage && fieldMessage.message;
+  };
+
   render() {
     const {
       page,
@@ -73,6 +87,7 @@ export class StatelessMetaEditor extends React.Component {
           metadata={get(page, "section.questionnaire.metadata", [])}
           testSelector="txt-question-title"
           autoFocus={!page.title}
+          validationText={this.getFieldMessage("title")}
         />
         <TransitionGroup>
           {page.descriptionEnabled && (
