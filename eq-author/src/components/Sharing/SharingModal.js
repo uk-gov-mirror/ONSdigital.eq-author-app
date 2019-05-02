@@ -28,6 +28,7 @@ const InlineField = styled(Field)`
   flex-direction: row;
   align-items: center;
   margin: 0 0 1em;
+  height: 100%;
 `;
 
 const CenteredHeading = styled(Heading)`
@@ -86,25 +87,24 @@ const SharingModal = ({
             Get shareable link
           </ShareButton>
         </CenteredHeading>
-        <div css={{ position: "relative" }}>
-          <InlineField>
-            <Label inline htmlFor="public">
-              Public
-              <br />
-              <LabelDescription>
-                When enabled, this questionnaire is publicly accessible to all
-                users in read-only mode. If turned off, then editors will still
-                have access.
-              </LabelDescription>
-            </Label>
-            <ToggleSwitch
-              id="public"
-              name="public"
-              onChange={togglePublic}
-              checked={isPublic}
-            />
-          </InlineField>
-        </div>
+
+        <InlineField>
+          <Label inline htmlFor="public">
+            Public
+            <br />
+            <LabelDescription>
+              When enabled, this questionnaire is publicly accessible to all
+              users in read-only mode. If turned off, then editors will still
+              have access.
+            </LabelDescription>
+          </Label>
+          <ToggleSwitch
+            id="public"
+            name="public"
+            onChange={togglePublic}
+            checked={isPublic}
+          />
+        </InlineField>
 
         <InlineField>
           <Label inline>
@@ -124,7 +124,11 @@ const SharingModal = ({
           onUserSelect={addUser}
         />
 
-        <ButtonGroup horizontal align="right" css={{ position: "relative" }}>
+        <ButtonGroup
+          horizontal
+          align="right"
+          css={{ position: "relative", height: "100%" }}
+        >
           <Button variant="primary" onClick={onClose}>
             Done
           </Button>
