@@ -193,8 +193,10 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
       throw new Error(ERR_PAGE_NOT_FOUND);
     }
 
+    const title = questionnaire && questionnaire.displayName;
+
     return (
-      <BaseLayout questionnaire={questionnaire}>
+      <BaseLayout title={title} questionnaire={questionnaire}>
         <Titled title={this.getTitle}>
           <Grid>
             <Column cols={3} gutters={false}>

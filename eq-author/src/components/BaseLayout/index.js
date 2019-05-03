@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import App from "./App";
 import Header from "components/Header";
-import ScrollPane from "components/ScrollPane";
 import { Titled } from "react-titled";
 
 import ConnectedOfflineBanner from "components/OfflineBanner";
@@ -36,24 +35,13 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-const defaultTitle = () => "Author";
-
 const BaseLayout = ({ children, title, questionnaire }) => (
-  <Titled title={defaultTitle}>
+  <Titled title={() => title}>
     <App>
       <Wrapper>
-        <Header questionnaire={questionnaire} />
+        <Header title={title} questionnaire={questionnaire} />
         <ConnectedOfflineBanner />
-        <Main>
-          {title ? (
-            <ScrollPane>
-              <Title>{title}</Title>
-              {children}
-            </ScrollPane>
-          ) : (
-            children
-          )}
-        </Main>
+        <Main>{children}</Main>
         {ReactDOM.createPortal(
           <ToastContainer />,
           document.getElementById("toast")
