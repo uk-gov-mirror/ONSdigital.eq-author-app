@@ -81,6 +81,7 @@ export class UnwrappedQuestionPageEditor extends React.Component {
 
     return (
       <div data-test="question-page-editor">
+        {page.isNew ? <div>NEW PAGE</div> : ""}
         <PageHeader
           {...this.props}
           onUpdate={onUpdate}
@@ -165,6 +166,7 @@ UnwrappedQuestionPageEditor.fragments = {
         availablePreviousAnswers {
           ...AvailableAnswers
         }
+      }
       validationErrorInfo {
         errors {
           field
@@ -172,6 +174,7 @@ UnwrappedQuestionPageEditor.fragments = {
         }
         totalCount
       }
+      isNew @client
     }
     ${TotalValidationRuleFragment}
     ${AvailableAnswersFragment}

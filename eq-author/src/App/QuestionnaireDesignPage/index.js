@@ -96,7 +96,9 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
       loading,
       data: { questionnaire },
     } = this.props;
-    return loading ? title : `${questionnaire.title} - ${title}`;
+    return loading || !questionnaire
+      ? title
+      : `${questionnaire.title} - ${title}`;
   };
 
   renderRedirect = () => {
@@ -189,8 +191,12 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
       location,
     } = this.props;
 
+    console.info(
+      "TODO: Rendering with loading=false and data={} for before data.questionnaire is defined. Why? Whats Changed?",
+      this.props
+    );
     if (!loading && !error && !questionnaire) {
-      throw new Error(ERR_PAGE_NOT_FOUND);
+      //      throw new Error(ERR_PAGE_NOT_FOUND);
     }
 
     return (

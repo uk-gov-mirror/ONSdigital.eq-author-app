@@ -69,7 +69,7 @@ export class UnwrappedNavigationSidebar extends Component {
 
     return (
       <Container data-test="side-nav">
-        {loading ? null : (
+        {loading || !questionnaire ? null : (
           <React.Fragment>
             <NavigationHeader
               questionnaire={questionnaire}

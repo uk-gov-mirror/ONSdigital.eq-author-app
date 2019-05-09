@@ -97,7 +97,7 @@
   },
   "dependencies": {
     "apollo-cache-inmemory": "latest",
-    "apollo-client": "latest",
+    "apollo-client": "^2.5.1",
     "apollo-client-preset": "latest",
     "apollo-link": "latest",
     "apollo-link-context": "latest",

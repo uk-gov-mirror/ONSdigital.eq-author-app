@@ -15,5 +15,6 @@ mutation createQuestionPage($input: CreateQuestionPageInput!) {
     confirmation {
       id
     }
+    isNew @client
   }
 }

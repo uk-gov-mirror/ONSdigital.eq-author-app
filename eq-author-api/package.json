@@ -13,7 +13,7 @@
     "create-migration": "node scripts/createMigration.js"
   },
   "dependencies": {
-    "apollo-server-express": "latest",
+    "apollo-server-express": "^2.5.0",
     "body-parser": "latest",
     "chalk": "latest",
     "cheerio": "latest",

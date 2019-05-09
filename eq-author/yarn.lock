@@ -1294,6 +1294,14 @@ apollo-cache@1.1.25, apollo-cache@^1.1.25:
     apollo-utilities "^1.1.2"
     tslib "^1.9.3"
 
+apollo-cache@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/apollo-cache/-/apollo-cache-1.2.1.tgz#aae71eb4a11f1f7322adc343f84b1a39b0693644"
+  integrity sha512-nzFmep/oKlbzUuDyz6fS6aYhRmfpcHWqNkkA9Bbxwk18RD6LXC4eZkuE0gXRX0IibVBHNjYVK+Szi0Yied4SpQ==
+  dependencies:
+    apollo-utilities "^1.2.1"
+    tslib "^1.9.3"
+
 apollo-client-preset@latest:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/apollo-client-preset/-/apollo-client-preset-1.0.8.tgz#23bd7176849d0d815f12c648774d009b258a449e"
@@ -1305,7 +1313,7 @@ apollo-client-preset@latest:
     apollo-link-http "^1.3.1"
     graphql-tag "^2.4.2"
 
-apollo-client@^2.2.2, apollo-client@latest:
+apollo-client@^2.2.2:
   version "2.4.12"
   resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.4.12.tgz#9fa15f502d04f8cc788a9fbb825163b437681504"
   integrity sha512-E5ClFSB9btJLYibLKwLDSCg+w9tI+25eZgXOM+DClawu7of4d/xhuV/xvpuZpsMP3qwrp0QPacBnfG4tUJs3/w==
@@ -1319,6 +1327,21 @@ apollo-client@^2.2.2, apollo-client@latest:
     tslib "^1.9.3"
     zen-observable "^0.8.0"
 
+apollo-client@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.5.1.tgz#36126ed1d32edd79c3713c6684546a3bea80e6d1"
+  integrity sha512-MNcQKiqLHdGmNJ0rZ0NXaHrToXapJgS/5kPk0FygXt+/FmDCdzqcujI7OPxEC6e9Yw5S/8dIvOXcRNuOMElHkA==
+  dependencies:
+    "@types/zen-observable" "^0.8.0"
+    apollo-cache "1.2.1"
+    apollo-link "^1.0.0"
+    apollo-link-dedup "^1.0.0"
+    apollo-utilities "1.2.1"
+    symbol-observable "^1.0.2"
+    ts-invariant "^0.2.1"
+    tslib "^1.9.3"
+    zen-observable "^0.8.0"
+
 apollo-link-context@latest:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/apollo-link-context/-/apollo-link-context-1.0.12.tgz#02d72e621a3b75239d4419a9bfd38d8bd9bb0d3f"
@@ -1327,11 +1350,12 @@ apollo-link-context@latest:
     apollo-link "^1.2.6"
 
 apollo-link-dedup@^1.0.0:
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/apollo-link-dedup/-/apollo-link-dedup-1.0.13.tgz#bb22957e18b6125ae8bfb46cab6bda8d33ba8046"
-  integrity sha512-i4NuqT3DSFczFcC7NMUzmnYjKX7NggLY+rqYVf+kE9JjqKOQhT6wqhaWsVIABfIUGE/N0DTgYJBCMu/18aXmYA==
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/apollo-link-dedup/-/apollo-link-dedup-1.0.18.tgz#635cb5659b082e7f270f7649c4b0f71021f7bb4b"
+  integrity sha512-1rr54wyMTuqUmbWvcXbwduIcaCDcuIgU6MqQ599nAMuTrbSOXthGfoAD8BDTxBGQ9roVlM7ABP0VZVEWRoHWSg==
   dependencies:
-    apollo-link "^1.2.6"
+    apollo-link "^1.2.11"
+    tslib "^1.9.3"
 
 apollo-link-error@latest:
   version "1.1.5"
@@ -1356,7 +1380,17 @@ apollo-link-http@^1.3.1, apollo-link-http@latest:
     apollo-link "^1.2.6"
     apollo-link-http-common "^0.2.8"
 
-apollo-link@^1.0.0, apollo-link@^1.0.6, apollo-link@^1.2.3, apollo-link@^1.2.6, apollo-link@latest:
+apollo-link@^1.0.0, apollo-link@^1.2.11, apollo-link@^1.2.6:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.11.tgz#493293b747ad3237114ccd22e9f559e5e24a194d"
+  integrity sha512-PQvRCg13VduLy3X/0L79M6uOpTh5iHdxnxYuo8yL7sJlWybKRJwsv4IcRBJpMFbChOOaHY7Og9wgPo6DLKDKDA==
+  dependencies:
+    apollo-utilities "^1.2.1"
+    ts-invariant "^0.3.2"
+    tslib "^1.9.3"
+    zen-observable-ts "^0.8.18"
+
+apollo-link@^1.0.6, apollo-link@^1.2.3, apollo-link@latest:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.6.tgz#d9b5676d79c01eb4e424b95c7171697f6ad2b8da"
   integrity sha512-sUNlA20nqIF3gG3F8eyMD+mO80fmf3dPZX+GUOs3MI9oZR8ug09H3F0UsWJMcpEg6h55Yy5wZ+BMmAjrbenF/Q==
@@ -1364,12 +1398,21 @@ apollo-link@^1.0.0, apollo-link@^1.0.6, apollo-link@^1.2.3, apollo-link@^1.2.6, 
     apollo-utilities "^1.0.0"
     zen-observable-ts "^0.8.13"
 
-apollo-utilities@1.1.2, apollo-utilities@^1.0.0, apollo-utilities@^1.0.1, apollo-utilities@^1.1.2:
+apollo-utilities@1.1.2, apollo-utilities@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.1.2.tgz#aa5eca9d1f1eb721c381a22e0dde03559d856db3"
   integrity sha512-EjDx8vToK+zkWIxc76ZQY/irRX52puNg04xf/w8R0kVTDAgHuVfnFVC01O5vE25kFnIaa5em0pFI0p9b6YMkhQ==
   dependencies:
     fast-json-stable-stringify "^2.0.0"
+    tslib "^1.9.3"
+
+apollo-utilities@1.2.1, apollo-utilities@^1.0.0, apollo-utilities@^1.1.2, apollo-utilities@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.2.1.tgz#1c3a1ebf5607d7c8efe7636daaf58e7463b41b3c"
+  integrity sha512-Zv8Udp9XTSFiN8oyXOjf6PMHepD4yxxReLsl6dPUy5Ths7jti3nmlBzZUOxuTWRwZn0MoclqL7RQ5UEJN8MAxg==
+  dependencies:
+    fast-json-stable-stringify "^2.0.0"
+    ts-invariant "^0.2.1"
     tslib "^1.9.3"
 
 append-transform@^1.0.0:
@@ -12292,6 +12335,20 @@ tryer@^1.0.0:
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
 
+ts-invariant@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/ts-invariant/-/ts-invariant-0.2.1.tgz#3d587f9d6e3bded97bf9ec17951dd9814d5a9d3f"
+  integrity sha512-Z/JSxzVmhTo50I+LKagEISFJW3pvPCqsMWLamCTX8Kr3N5aMrnGOqcflbe5hLUzwjvgPfnLzQtHZv0yWQ+FIHg==
+  dependencies:
+    tslib "^1.9.3"
+
+ts-invariant@^0.3.2:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/ts-invariant/-/ts-invariant-0.3.3.tgz#b5742b1885ecf9e29c31a750307480f045ec0b16"
+  integrity sha512-UReOKsrJFGC9tUblgSRWo+BsVNbEd77Cl6WiV/XpMlkifXwNIJbknViCucHvVZkXSC/mcWeRnIGdY7uprcwvdQ==
+  dependencies:
+    tslib "^1.9.3"
+
 ts-pnp@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.0.0.tgz#44a3a9e8c13fcb711bcda75d7b576c21af120c9d"
@@ -13325,14 +13382,15 @@ yauzl@2.8.0:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.0.1"
 
-zen-observable-ts@^0.8.13:
-  version "0.8.13"
-  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.13.tgz#ae1fd77c84ef95510188b1f8bca579d7a5448fc2"
-  integrity sha512-WDb8SM0tHCb6c0l1k60qXWlm1ok3zN9U4VkLdnBKQwIYwUoB9psH7LIFgR+JVCCMmBxUgOjskIid8/N02k/2Bg==
+zen-observable-ts@^0.8.13, zen-observable-ts@^0.8.18:
+  version "0.8.18"
+  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.18.tgz#ade44b1060cc4a800627856ec10b9c67f5f639c8"
+  integrity sha512-q7d05s75Rn1j39U5Oapg3HI2wzriVwERVo4N7uFGpIYuHB9ff02P/E92P9B8T7QVC93jCMHpbXH7X0eVR5LA7A==
   dependencies:
+    tslib "^1.9.3"
     zen-observable "^0.8.0"
 
 zen-observable@^0.8.0:
-  version "0.8.13"
-  resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.13.tgz#a9f1b9dbdfd2d60a08761ceac6a861427d44ae2e"
-  integrity sha512-fa+6aDUVvavYsefZw0zaZ/v3ckEtMgCFi30sn91SEZea4y/6jQp05E3omjkX91zV6RVdn15fqnFZ6RKjRGbp2g==
+  version "0.8.14"
+  resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.14.tgz#d33058359d335bc0db1f0af66158b32872af3bf7"
+  integrity sha512-kQz39uonEjEESwh+qCi83kcC3rZJGh4mrZW7xjkSQYXkq//JZHTtKo+6yuVloTgMtzsIWOJrjIrKvk/dqm0L5g==

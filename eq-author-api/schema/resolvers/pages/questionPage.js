@@ -114,6 +114,7 @@ Resolvers.Mutation = {
       typeof position === "number" ? position : section.pages.length;
     section.pages.splice(insertionPosition, 0, page);
     await saveQuestionnaire(ctx.questionnaire);
+    page.validationErrorInfo = questionPageValidation(page);
     return page;
   },
   updateQuestionPage: async (_, { input }, ctx) => {
