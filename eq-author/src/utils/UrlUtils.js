@@ -12,7 +12,6 @@ export const Routes = {
   HOME: "/",
   SIGN_IN: "/sign-in",
   QUESTIONNAIRE: `/q/:questionnaireId/:entityName?/:entityId?/:tab?/:modifier?`,
-  QUESTIONNAIRE_NEW: `/q/:questionnaireId/:entityName?/:entityId?/:tab??new=1`,
 };
 
 export const generatePath = curry(rrGeneratePath, 2);
@@ -41,13 +40,12 @@ export const buildSectionPath = ({ sectionId, tab, ...rest }) => {
     entityName: SECTION,
   });
 };
-export const buildPagePath = ({ pageId, tab, newPage, ...rest }) => {
+export const buildPagePath = ({ pageId, tab, ...rest }) => {
   if (!pageId) {
     throw new Error("Page id must be provided");
   }
-  const route = newPage ? Routes.QUESTIONNAIRE_NEW : Routes.QUESTIONNAIRE;
 
-  return generatePath(route)({
+  return generatePath(Routes.QUESTIONNAIRE)({
     ...rest,
     tab: sanitiseTab(["design", "routing", "preview"])(tab),
     entityId: pageId,
