@@ -69,6 +69,7 @@ const withEntityEditor = entityPropName => WrappedComponent => {
       }
 
       this.dirtyField = null;
+
       this.props.startRequest();
 
       this.props
@@ -92,6 +93,12 @@ const withEntityEditor = entityPropName => WrappedComponent => {
       this.props.onSubmit(this.entity);
     };
 
+    enableValidationMessage = () => {
+      const isNewEntity = this.props.answer && this.props.answer.isNew;
+
+      return !isNewEntity;
+    };
+
     render() {
       const props = {
         [entityPropName]: this.entity,
@@ -104,6 +111,7 @@ const withEntityEditor = entityPropName => WrappedComponent => {
           onChange={this.handleChange}
           onUpdate={this.handleUpdate}
           onSubmit={this.handleSubmit}
+          enableValidationMessage={this.enableValidationMessage()}
         />
       );
     }

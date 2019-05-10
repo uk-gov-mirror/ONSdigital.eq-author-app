@@ -5,9 +5,9 @@ export default (link, cache) => {
   cache.writeData({
     data: {
       newPageId: "",
+      newAnswerId: "",
     },
   });
-  console.log("cachinit", cache);
 
   return new ApolloClient({
     link,

@@ -8,26 +8,7 @@ import withMoveAnswer from "./withMoveAnswer";
 import AnswerTransition from "./AnswerTransition";
 import AnswerEditor from "./AnswerEditor";
 
-const currentAnswersReducer = (accumulator, answer) => {
-  accumulator[answer.id] = true;
-  return accumulator;
-};
 class AnswersEditor extends React.Component {
-  currentAnswers = this.props.answers.reduce(currentAnswersReducer, {});
-
-  isNewAnswer = answerId => {
-    return !this.currentAnswers[answerId];
-  };
-
-  componentDidUpdate(prevProps) {
-    if (this.props.answers.length !== prevProps.answers.length) {
-      this.currentAnswers = this.props.answers.reduce(
-        currentAnswersReducer,
-        {}
-      );
-    }
-  }
-
   render() {
     const {
       answers,
@@ -39,7 +20,7 @@ class AnswersEditor extends React.Component {
       onDeleteAnswer,
       moveAnswer,
     } = this.props;
-    console.log({ answers }, this.currentAnswers);
+
     return (
       <Reorder list={answers} onMove={moveAnswer} Transition={AnswerTransition}>
         {(props, answer) => {
@@ -53,7 +34,6 @@ class AnswersEditor extends React.Component {
               onUpdateOption={onUpdateOption}
               onDeleteOption={onDeleteOption}
               onDeleteAnswer={onDeleteAnswer}
-              isNewAnswer={this.isNewAnswer(answer.id)}
             />
           );
         }}

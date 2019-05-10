@@ -22,6 +22,7 @@ export const StatelessBasicAnswer = ({
   descriptionPlaceholder,
   showDescription,
   autoFocus,
+  enableValidationMessage,
 }) => (
   <div>
     <Field>
@@ -37,6 +38,7 @@ export const StatelessBasicAnswer = ({
         data-test="txt-answer-label"
         bold
       />
+      {enableValidationMessage ? "Enable" : "Disable"}
     </Field>
     {showDescription && (
       <Field>
@@ -71,6 +73,7 @@ StatelessBasicAnswer.propTypes = {
   descriptionPlaceholder: PropTypes.string,
   showDescription: PropTypes.bool,
   autoFocus: PropTypes.bool,
+  enableValidationMessage: PropTypes.bool,
 };
 
 StatelessBasicAnswer.defaultProps = {
@@ -78,6 +81,7 @@ StatelessBasicAnswer.defaultProps = {
   descriptionText: "Description (optional)",
   showDescription: false,
   autoFocus: true,
+  enableValidationMessage: true,
 };
 
 StatelessBasicAnswer.fragments = {

@@ -5,8 +5,13 @@ export const typeDefs = gql`
     isNew: Boolean!
   }
 
+  extend type Answer {
+    isNew: Boolean!
+  }
+
   extend type Mutation {
     createQuestionPage: QuestionPage
+    createAnswer: Answer
   }
 `;
 
@@ -16,6 +21,21 @@ const GET_NEW_PAGE_ID = gql`
   }
 `;
 
+const GET_NEW_ANSWER_ID = gql`
+  query newAnswerId {
+    newAnswerId @client
+  }
+`;
+
+const isNewAnswer = (answer, _, { cache }) => {
+  const { newAnswerId } = cache.readQuery({ query: GET_NEW_ANSWER_ID });
+  if (newAnswerId && answer.id !== newAnswerId) {
+    // Reset new page id
+    cache.writeData({ data: { newAnswerId: null } });
+  }
+  return answer.id === newAnswerId;
+};
+
 export const resolvers = {
   QuestionPage: {
     isNew: (questionPage, _, { cache }) => {
@@ -24,15 +44,25 @@ export const resolvers = {
         // Reset new page id
         cache.writeData({ data: { newPageId: "" } });
       }
-      console.log("isNew", questionPage.id === newPageId);
       return questionPage.id === newPageId;
     },
+  },
+
+  BasicAnswer: {
+    isNew: isNewAnswer,
+  },
+
+  MultipleChoiceAnswer: {
+    isNew: isNewAnswer,
   },
 
   Mutation: {
     createQuestionPage: (_, input, { cache }) => {
       cache.writeData({ data: { newPageId: _.createQuestionPage.id } });
-      console.log("createQuestion", _.createQuestionPage.id, cache);
+    },
+
+    createAnswer: (_, input, { cache, getCacheKey }) => {
+      cache.writeData({ data: { newAnswerId: _.createAnswer.id } });
     },
   },
 };
