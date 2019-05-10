@@ -2,5 +2,9 @@
   base    = "eq-author"
   publish = "eq-author/build"
   command = "yarn build"
-  REACT_APP_API_URL = "https://prototype-units.ngrok.io/graphql"
 
+[context.branch-deploy]
+   environment = { REACT_APP_API_URL = "https://prototype-units.ngrok.io/graphql" }
+
+[context.production]
+  environment = { REACT_APP_API_URL = "https://prototype-units.ngrok.io/graphql" }
