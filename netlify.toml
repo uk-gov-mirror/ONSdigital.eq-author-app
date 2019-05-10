@@ -2,6 +2,5 @@
   base    = "eq-author"
   publish = "eq-author/build"
   command = "yarn build"
-
-[context.branch-deploy]
   REACT_APP_API_URL = "https://prototype-units.ngrok.io/graphql"
+
