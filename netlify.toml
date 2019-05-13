@@ -5,6 +5,3 @@
 
 [context.branch-deploy]
    environment = { REACT_APP_API_URL = "https://eq-author.uk/prototype-units/graphql" }
-
-[context.production]
-  environment = { REACT_APP_API_URL = "https://eq-author.uk/prototype-units/graphql" }
