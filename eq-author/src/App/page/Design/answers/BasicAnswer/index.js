@@ -11,6 +11,19 @@ import EarliestDateValidationRule from "graphql/fragments/earliest-date-validati
 import LatestDateValidationRule from "graphql/fragments/latest-date-validation-rule.graphql";
 import gql from "graphql-tag";
 
+const getFieldMessage = ({ answer, field, enableValidationMessage }) => {
+  const messages =
+    answer.validationErrorInfo && answer.validationErrorInfo.errors;
+  console.log({ messages, field, enableValidationMessage });
+  if (!messages || !enableValidationMessage) {
+    return false;
+  }
+
+  const fieldMessage = messages.find(m => m.field === field);
+  console.log({ fieldMessage });
+  return fieldMessage && fieldMessage.message;
+};
+
 export const StatelessBasicAnswer = ({
   answer,
   onChange,
@@ -38,7 +51,11 @@ export const StatelessBasicAnswer = ({
         data-test="txt-answer-label"
         bold
       />
-      {enableValidationMessage ? "Enable" : "Disable"}
+      {getFieldMessage({
+        answer,
+        field: "label",
+        enableValidationMessage,
+      })}
     </Field>
     {showDescription && (
       <Field>

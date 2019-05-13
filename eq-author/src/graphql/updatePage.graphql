@@ -4,7 +4,9 @@
 mutation UpdateQuestionPage($input: UpdateQuestionPageInput!) {
   updateQuestionPage(input: $input) {
     ...Page
-    ...ValidationErrorInfo
+    validationErrorInfo {
+      ...ValidationErrorInfo
+    }
     displayName
   }
 }

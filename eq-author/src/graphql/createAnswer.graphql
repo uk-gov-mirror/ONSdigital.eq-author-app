@@ -58,6 +58,7 @@ mutation createAnswer($input: CreateAnswerInput!) {
     ... on MultipleChoiceAnswer {
       options {
         ...Option
+        isNew @client
       }
       mutuallyExclusiveOption {
         id

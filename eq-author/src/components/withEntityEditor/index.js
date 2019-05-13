@@ -22,6 +22,7 @@ const withEntityEditor = entityPropName => WrappedComponent => {
 
     state = {
       [entityPropName]: this.props[entityPropName],
+      lostFocus: false,
     };
 
     dirtyField = null;
@@ -82,6 +83,12 @@ const withEntityEditor = entityPropName => WrappedComponent => {
         });
     };
 
+    handleLoseFocus = () => {
+      this.setState({
+        lostFocus: true,
+      });
+    };
+
     componentWillUnmount() {
       this.unmounted = true;
     }
@@ -94,8 +101,8 @@ const withEntityEditor = entityPropName => WrappedComponent => {
     };
 
     enableValidationMessage = () => {
-      const isNewEntity = this.props.answer && this.props.answer.isNew;
-
+      const isNewEntity =
+        !this.state.lostFocus && this.props.answer && this.props.answer.isNew;
       return !isNewEntity;
     };
 
@@ -105,14 +112,16 @@ const withEntityEditor = entityPropName => WrappedComponent => {
       };
 
       return (
-        <WrappedComponent
-          {...this.props}
-          {...props}
-          onChange={this.handleChange}
-          onUpdate={this.handleUpdate}
-          onSubmit={this.handleSubmit}
-          enableValidationMessage={this.enableValidationMessage()}
-        />
+        <div onBlur={this.handleLoseFocus}>
+          <WrappedComponent
+            {...this.props}
+            {...props}
+            onChange={this.handleChange}
+            onUpdate={this.handleUpdate}
+            onSubmit={this.handleSubmit}
+            enableValidationMessage={this.enableValidationMessage()}
+          />
+        </div>
       );
     }
   }

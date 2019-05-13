@@ -1,3 +1,5 @@
+#import "./validationErrorInfo.graphql"
+
 fragment Answer on Answer {
   id
   description
@@ -7,4 +9,7 @@ fragment Answer on Answer {
   type
   properties
   displayName
+  validationErrorInfo {
+    ...ValidationErrorInfo
+  }
 }

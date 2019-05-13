@@ -1,9 +1,7 @@
-fragment ValidationErrorInfo on QuestionPage {
-    validationErrorInfo {
-        errors {
-            field
-            message
-        },
-        totalCount
-    }
+fragment ValidationErrorInfo on ValidationErrorInfo {
+    errors {
+        field
+        message
+    },
+    totalCount
 }

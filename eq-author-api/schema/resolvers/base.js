@@ -74,6 +74,48 @@ const getQuestionnaireList = () => {
   return listQuestionnaires();
 };
 
+const answerValidation = answer => {
+  const errors = [];
+
+  if (!answer.label) {
+    errors.push({
+      field: "label",
+      message: "Answer label is required",
+    });
+  }
+
+  // Add total answer validation errors
+  let optionErrorCount = 0;
+  if (answer.options) {
+    optionErrorCount = answer.options.reduce((acc, option) => {
+      return option.validationErrorInfo && option.validationErrorInfo.totalCount
+        ? acc + option.validationErrorInfo.totalCount
+        : acc;
+    }, 0);
+  }
+
+  return {
+    errors,
+    totalCount: errors.length + optionErrorCount,
+  };
+};
+
+const optionValidation = option => {
+  const errors = [];
+
+  if (!option.label) {
+    errors.push({
+      field: "label",
+      message: "Option label is required",
+    });
+  }
+
+  return {
+    errors,
+    totalCount: errors.length,
+  };
+};
+
 const createSection = (input = {}) => ({
   id: uuid.v4(),
   title: "",
@@ -220,6 +262,8 @@ const Resolvers = {
       onAnswerCreated(page, answer);
 
       await saveQuestionnaire(ctx.questionnaire);
+
+      answer.validationErrorInfo = answerValidation(answer);
       return answer;
     },
     updateAnswer: async (root, { input }, ctx) => {
@@ -234,7 +278,7 @@ const Resolvers = {
       const answer = find(concat(answers, additionalAnswers), { id: input.id });
       merge(answer, input);
       await saveQuestionnaire(ctx.questionnaire);
-
+      answer.validationErrorInfo = answerValidation(answer);
       return answer;
     },
     updateAnswersOfType: async (
@@ -295,6 +339,7 @@ const Resolvers = {
       parent.options.push(option);
 
       await saveQuestionnaire(ctx.questionnaire);
+      option.validationErrorInfo = optionValidation(option);
 
       return option;
     },
@@ -328,6 +373,8 @@ const Resolvers = {
       merge(option, input);
 
       await saveQuestionnaire(ctx.questionnaire);
+
+      option.validationErrorInfo = optionValidation(option);
 
       return option;
     },
@@ -553,6 +600,8 @@ const Resolvers = {
     // Have defined a secondaryLabelDefault field to fallback on if secondaryLabel is empty
     secondaryLabelDefault: answer =>
       getName({ label: answer.secondaryLabel }, "BasicAnswer"),
+
+    validationErrorInfo: answer => answerValidation(answer),
   },
 
   MultipleChoiceAnswer: {
@@ -568,6 +617,7 @@ const Resolvers = {
     mutuallyExclusiveOption: answer =>
       find(answer.options, { mutuallyExclusive: true }),
     displayName: answer => getName(answer, "MultipleChoiceAnswer"),
+    validationErrorInfo: answer => answerValidation(answer),
   },
 
   Option: {
@@ -582,6 +632,7 @@ const Resolvers = {
     },
     displayName: option => getName(option, "Option"),
     additionalAnswer: option => option.additionalAnswer,
+    validationErrorInfo: option => optionValidation(option),
   },
 
   ValidationType: {

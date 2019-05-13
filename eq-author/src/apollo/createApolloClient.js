@@ -6,6 +6,7 @@ export default (link, cache) => {
     data: {
       newPageId: "",
       newAnswerId: "",
+      newOptions: [],
     },
   });
 

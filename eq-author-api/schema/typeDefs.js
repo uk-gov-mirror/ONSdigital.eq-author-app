@@ -141,6 +141,7 @@ interface Answer {
   type: AnswerType!
   page: QuestionPage
   properties: JSON
+  validationErrorInfo: ValidationErrorInfo
 }
 
 type BasicAnswer implements Answer {
@@ -156,6 +157,7 @@ type BasicAnswer implements Answer {
   page: QuestionPage
   properties: JSON
   validation: ValidationType
+  validationErrorInfo: ValidationErrorInfo
 }
 
 type MultipleChoiceAnswer implements Answer {
@@ -172,6 +174,7 @@ type MultipleChoiceAnswer implements Answer {
   mutuallyExclusiveOption: Option
   page: QuestionPage
   properties: JSON
+  validationErrorInfo: ValidationErrorInfo
 }
 
 type Option {
@@ -183,6 +186,7 @@ type Option {
   qCode: String
   answer: Answer
   additionalAnswer: BasicAnswer
+  validationErrorInfo: ValidationErrorInfo
 }
 
 enum LogicalDestinations {

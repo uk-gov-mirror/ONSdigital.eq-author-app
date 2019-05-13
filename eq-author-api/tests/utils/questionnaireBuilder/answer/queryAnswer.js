@@ -16,6 +16,7 @@ const getAnswerQuery = `
         id
       }
       properties
+      validationErrorInfo
       ... on BasicAnswer {
         validation {
           ... on NumberValidation {

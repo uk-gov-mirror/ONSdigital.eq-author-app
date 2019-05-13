@@ -12,6 +12,7 @@ import withEntityEditor from "components/withEntityEditor";
 import focusOnEntity from "utils/focusOnEntity";
 import TotalValidationRuleFragment from "graphql/fragments/total-validation-rule.graphql";
 import AvailableAnswersFragment from "graphql/fragments/available-answers.graphql";
+import ValidationErrorInfoFragment from "graphql/fragments/validationErrorInfo.graphql";
 
 import PageHeader from "../PageHeader";
 import withUpdateAnswer from "../answers/withUpdateAnswer";
@@ -168,14 +169,11 @@ UnwrappedQuestionPageEditor.fragments = {
         }
       }
       validationErrorInfo {
-        errors {
-          field
-          message
-        }
-        totalCount
+        ...ValidationErrorInfo
       }
       isNew @client
     }
+    ${ValidationErrorInfoFragment}
     ${TotalValidationRuleFragment}
     ${AvailableAnswersFragment}
     ${AnswersEditor.fragments.AnswersEditor}
