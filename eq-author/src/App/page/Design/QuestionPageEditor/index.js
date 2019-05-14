@@ -52,6 +52,7 @@ export class UnwrappedQuestionPageEditor extends React.Component {
     onChange: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     fetchAnswers: PropTypes.func.isRequired,
+    lostFocus: PropTypes.bool,
   };
 
   handleDeleteAnswer = answerId => {
@@ -76,13 +77,13 @@ export class UnwrappedQuestionPageEditor extends React.Component {
       onDeleteOption,
       onAddExclusive,
       fetchAnswers,
+      enableValidationMessage,
     } = this.props;
 
     const id = getIdForObject(page);
 
     return (
       <div data-test="question-page-editor">
-        {page.isNew ? <div>NEW PAGE</div> : ""}
         <PageHeader
           {...this.props}
           onUpdate={onUpdate}
@@ -96,6 +97,7 @@ export class UnwrappedQuestionPageEditor extends React.Component {
               onUpdate={onUpdate}
               page={page}
               fetchAnswers={fetchAnswers}
+              enableValidationMessage={enableValidationMessage}
             />
           </QuestionSegment>
           <AnswersEditor

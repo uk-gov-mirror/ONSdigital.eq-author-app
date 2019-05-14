@@ -63,6 +63,8 @@ export class StatelessOption extends Component {
     autoFocus: PropTypes.bool,
     label: PropTypes.string,
     enableValidationMessage: PropTypes.bool,
+    lostFocus: PropTypes.bool,
+    answerLostFocus: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -96,17 +98,17 @@ export class StatelessOption extends Component {
   }
 
   renderFieldMessage(field) {
-    const { option, enableValidationMessage } = this.props;
+    const { option, enableValidationMessage, lostFocus } = this.props;
 
     const messages =
       option.validationErrorInfo && option.validationErrorInfo.errors;
-    console.log("option messages", { messages });
-    if (!messages || !enableValidationMessage || option.isNew) {
+
+    if (!messages || !enableValidationMessage || (option.isNew && !lostFocus)) {
       return false;
     }
 
     const fieldMessage = messages.find(m => m.field === field);
-    console.log("option field message", { fieldMessage });
+
     return fieldMessage && fieldMessage.message;
   }
 
@@ -122,7 +124,6 @@ export class StatelessOption extends Component {
       descriptionPlaceholder,
       autoFocus,
       label,
-      enableValidationMessage,
       ...otherProps
     } = this.props;
 

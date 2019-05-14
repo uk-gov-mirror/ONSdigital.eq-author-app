@@ -77,11 +77,19 @@ const getQuestionnaireList = () => {
 const answerValidation = answer => {
   const errors = [];
 
-  if (!answer.label) {
-    errors.push({
-      field: "label",
-      message: "Answer label is required",
-    });
+  switch (answer.type) {
+    case "Radio":
+    case "Checkbox":
+      //No mandatory field on Radio & Checkbox answer
+      break;
+
+    default:
+      if (!answer.label) {
+        errors.push({
+          field: "label",
+          message: "Answer label is required",
+        });
+      }
   }
 
   // Add total answer validation errors

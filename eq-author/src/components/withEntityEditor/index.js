@@ -18,6 +18,8 @@ const withEntityEditor = entityPropName => WrappedComponent => {
       onSubmit: PropTypes.func,
       startRequest: PropTypes.func,
       endRequest: PropTypes.func,
+      answerLostFocus: PropTypes.bool,
+      answer: PropTypes.object, // eslint-disable-line
     };
 
     state = {
@@ -41,6 +43,13 @@ const withEntityEditor = entityPropName => WrappedComponent => {
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState({
           [entityPropName]: newEntity,
+        });
+      }
+
+      if (this.props.answerLostFocus && !prevProps.answerLostFocus) {
+        // eslint-disable-next-line react/no-did-update-set-state
+        this.setState({
+          lostFocus: true,
         });
       }
     }
@@ -83,7 +92,7 @@ const withEntityEditor = entityPropName => WrappedComponent => {
         });
     };
 
-    handleLoseFocus = () => {
+    handleLoseFocus = event => {
       this.setState({
         lostFocus: true,
       });
@@ -101,8 +110,10 @@ const withEntityEditor = entityPropName => WrappedComponent => {
     };
 
     enableValidationMessage = () => {
-      const isNewEntity =
-        !this.state.lostFocus && this.props.answer && this.props.answer.isNew;
+      const { page, answer } = this.props;
+      const entity = page || answer;
+
+      const isNewEntity = !this.state.lostFocus && entity && entity.isNew;
       return !isNewEntity;
     };
 
@@ -120,6 +131,7 @@ const withEntityEditor = entityPropName => WrappedComponent => {
             onUpdate={this.handleUpdate}
             onSubmit={this.handleSubmit}
             enableValidationMessage={this.enableValidationMessage()}
+            lostFocus={this.state.lostFocus}
           />
         </div>
       );

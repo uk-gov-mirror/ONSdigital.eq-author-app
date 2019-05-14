@@ -74,8 +74,27 @@ const Buttons = styled.div`
 `;
 
 class AnswerEditor extends React.Component {
+  state = {
+    answerLostFocus: false,
+  };
+
+  constructor(props) {
+    super(props);
+    this.answerNode = React.createRef();
+  }
+
   handleDeleteAnswer = () => {
     this.props.onDeleteAnswer(this.props.answer.id);
+  };
+
+  handleLostFocus = () => {
+    const focusNode = this.answerNode.current;
+    const isWithin = focusNode.querySelector(":focus-within");
+    if (!isWithin) {
+      this.setState({
+        answerLostFocus: true,
+      });
+    }
   };
 
   formatIncludes = x =>
@@ -86,14 +105,28 @@ class AnswerEditor extends React.Component {
 
   renderAnswer(answer) {
     const { type } = answer;
+    const { answerLostFocus } = this.state;
+
     if ([TEXTFIELD, TEXTAREA].includes(type)) {
-      return <BasicAnswer {...this.props} />;
+      return <BasicAnswer {...this.props} answerLostFocus={answerLostFocus} />;
     }
     if ([PERCENTAGE, NUMBER, CURRENCY].includes(type)) {
-      return <BasicAnswer {...this.props} showDescription />;
+      return (
+        <BasicAnswer
+          {...this.props}
+          showDescription
+          answerLostFocus={answerLostFocus}
+        />
+      );
     }
     if (type === CHECKBOX) {
-      return <MultipleChoiceAnswer type={answer.type} {...this.props} />;
+      return (
+        <MultipleChoiceAnswer
+          type={answer.type}
+          {...this.props}
+          answerLostFocus={answerLostFocus}
+        />
+      );
     }
     if (type === RADIO) {
       return (
@@ -101,6 +134,7 @@ class AnswerEditor extends React.Component {
           minOptions={2}
           type={answer.type}
           {...this.props}
+          answerLostFocus={answerLostFocus}
         />
       );
     }
@@ -120,56 +154,58 @@ class AnswerEditor extends React.Component {
 
   render() {
     return (
-      <Answer data-test="answer-editor">
-        <AnswerHeader>
-          <AnswerType data-test="answer-type">
-            {this.props.answer.type}
-          </AnswerType>
+      <div ref={this.answerNode}>
+        <Answer onBlur={this.handleLostFocus} data-test="answer-editor">
+          <AnswerHeader>
+            <AnswerType data-test="answer-type">
+              {this.props.answer.type}
+            </AnswerType>
 
-          <Buttons>
-            <Tooltip
-              content="Move answer up"
-              place="top"
-              offset={{ top: 0, bottom: 10 }}
-            >
-              <MoveButton
-                disabled={!this.props.canMoveUp}
-                onClick={this.props.onMoveUp}
-                data-test="btn-move-answer-up"
+            <Buttons>
+              <Tooltip
+                content="Move answer up"
+                place="top"
+                offset={{ top: 0, bottom: 10 }}
               >
-                <IconUp />
-              </MoveButton>
-            </Tooltip>
-            <Tooltip
-              content="Move answer down"
-              place="top"
-              offset={{ top: 0, bottom: 10 }}
-            >
-              <MoveButton
-                disabled={!this.props.canMoveDown}
-                onClick={this.props.onMoveDown}
-                data-test="btn-move-answer-down"
+                <MoveButton
+                  disabled={!this.props.canMoveUp}
+                  onClick={this.props.onMoveUp}
+                  data-test="btn-move-answer-up"
+                >
+                  <IconUp />
+                </MoveButton>
+              </Tooltip>
+              <Tooltip
+                content="Move answer down"
+                place="top"
+                offset={{ top: 0, bottom: 10 }}
               >
-                <IconDown />
-              </MoveButton>
-            </Tooltip>
-            <Tooltip
-              content="Delete answer"
-              place="top"
-              offset={{ top: 0, bottom: 10 }}
-            >
-              <DeleteButton
-                size="medium"
-                onClick={this.handleDeleteAnswer}
-                aria-label="Delete answer"
-                data-test="btn-delete-answer"
-              />
-            </Tooltip>
-          </Buttons>
-        </AnswerHeader>
+                <MoveButton
+                  disabled={!this.props.canMoveDown}
+                  onClick={this.props.onMoveDown}
+                  data-test="btn-move-answer-down"
+                >
+                  <IconDown />
+                </MoveButton>
+              </Tooltip>
+              <Tooltip
+                content="Delete answer"
+                place="top"
+                offset={{ top: 0, bottom: 10 }}
+              >
+                <DeleteButton
+                  size="medium"
+                  onClick={this.handleDeleteAnswer}
+                  aria-label="Delete answer"
+                  data-test="btn-delete-answer"
+                />
+              </Tooltip>
+            </Buttons>
+          </AnswerHeader>
 
-        <Padding>{this.renderAnswer(this.props.answer)}</Padding>
-      </Answer>
+          <Padding>{this.renderAnswer(this.props.answer)}</Padding>
+        </Answer>
+      </div>
     );
   }
 }

@@ -14,13 +14,12 @@ import gql from "graphql-tag";
 const getFieldMessage = ({ answer, field, enableValidationMessage }) => {
   const messages =
     answer.validationErrorInfo && answer.validationErrorInfo.errors;
-  console.log({ messages, field, enableValidationMessage });
+
   if (!messages || !enableValidationMessage) {
     return false;
   }
 
   const fieldMessage = messages.find(m => m.field === field);
-  console.log({ fieldMessage });
   return fieldMessage && fieldMessage.message;
 };
 

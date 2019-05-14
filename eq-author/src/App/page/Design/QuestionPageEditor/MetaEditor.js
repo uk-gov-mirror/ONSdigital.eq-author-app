@@ -52,10 +52,11 @@ export class StatelessMetaEditor extends React.Component {
   getFieldMessage = field => {
     const {
       page: { validationErrorInfo },
+      enableValidationMessage,
     } = this.props;
 
     const messages = validationErrorInfo && validationErrorInfo.errors;
-    if (!messages) {
+    if (!messages || !enableValidationMessage) {
       return false;
     }
 
