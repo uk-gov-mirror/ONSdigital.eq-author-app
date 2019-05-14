@@ -49,9 +49,9 @@ const Permission = styled.li`
   background: ${colors.darkGrey};
   font-weight: bold;
   line-height: 1.2;
-  padding: 0.2em 0.5em;
-  border-radius: 3px;
-  color: white};
+  padding: 0.2em 0.7em;
+  border-radius: 1em;
+  color: white;
   letter-spacing: 0.05em;
   font-size: 0.7em;
   text-transform: uppercase;

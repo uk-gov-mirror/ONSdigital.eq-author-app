@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { colors } from "constants/theme";
 import iconGuestAvatar from "App/UserProfile/icon-guest-avatar.svg";
 import iconClose from "./icon-close.svg";
-import { sortBy, capitalize } from "lodash";
+import { sortBy } from "lodash";
 
 import ScrollPane from "components/ScrollPane";
 
 const List = styled.ul`
   padding: 0;
-  margin: 0 0 1em;
+  margin: 0;
   list-style: none;
   color: ${colors.text};
   max-height: 10em;
@@ -67,7 +67,7 @@ const UserOwner = styled.span`
 `;
 
 const UserList = ({ users, onRemove, owner }) => (
-  <ScrollPane css={{ marginBottom: "1em" }}>
+  <ScrollPane css={{ marginBottom: "1em" }} permanentScrollBar={false}>
     <List>
       <ListItem key={owner.id}>
         {owner.picture ? (

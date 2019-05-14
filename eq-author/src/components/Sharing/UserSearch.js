@@ -13,10 +13,11 @@ import Downshift from "downshift";
 
 const maxListHeight = 6;
 
-const Margin = styled.div`
+const Container = styled.div`
   margin: 0 0 2em;
   background: #ebeef0;
   padding: 1em 1em 0;
+  height: 100%;
 `;
 
 const SearchInput = styled(UncontrolledInput)`
@@ -78,7 +79,7 @@ const highlighSearchTerm = (...args) =>
 
 const UserSearch = ({ users, existingUsers, onUserSelect }) => {
   return (
-    <Margin>
+    <Container>
       <Downshift
         initialIsOpen={false}
         onChange={onUserSelect}
@@ -135,7 +136,7 @@ const UserSearch = ({ users, existingUsers, onUserSelect }) => {
           </div>
         )}
       </Downshift>
-    </Margin>
+    </Container>
   );
 };
 

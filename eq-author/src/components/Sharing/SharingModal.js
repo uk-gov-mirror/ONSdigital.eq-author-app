@@ -33,7 +33,7 @@ const InlineField = styled(Field)`
 
 const CenteredHeading = styled(Heading)`
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
 `;
 
 const StyledModal = styled(Modal)`
@@ -66,6 +66,10 @@ const ShareButton = styled(Button)`
   }
 `;
 
+const ActionButtonGroup = styled(ButtonGroup)`
+  position: relative;
+`;
+
 const SharingModal = ({
   isOpen,
   onClose,
@@ -87,54 +91,52 @@ const SharingModal = ({
             Get shareable link
           </ShareButton>
         </CenteredHeading>
-
-        <InlineField>
-          <Label inline htmlFor="public">
-            Public
-            <br />
-            <LabelDescription>
-              When enabled, this questionnaire is publicly accessible to all
-              users in read-only mode. If turned off, then editors will still
-              have access.
-            </LabelDescription>
-          </Label>
-          <ToggleSwitch
-            id="public"
-            name="public"
-            onChange={togglePublic}
-            checked={isPublic}
-          />
-        </InlineField>
-
-        <InlineField>
-          <Label inline>
-            Editors
-            <br />
-            <LabelDescription>
-              Editors have full access to the questionnaire, including editing
-              content, adding other editors and deleting the questionnaire.
-            </LabelDescription>
-          </Label>
-        </InlineField>
-
-        <UserList users={editors} owner={owner} onRemove={removeUser} />
-        <UserSearch
-          users={users}
-          existingUsers={editors}
-          onUserSelect={addUser}
-        />
-
-        <ButtonGroup
-          horizontal
-          align="right"
-          css={{ position: "relative", height: "100%" }}
-        >
-          <Button variant="primary" onClick={onClose}>
-            Done
-          </Button>
-        </ButtonGroup>
       </Message>
     </DialogHeader>
+
+    <div>
+      <InlineField>
+        <Label inline htmlFor="public">
+          Public
+          <br />
+          <LabelDescription>
+            When enabled, this questionnaire is publicly accessible to all users
+            in read-only mode. If turned off, then editors will still have
+            access.
+          </LabelDescription>
+        </Label>
+        <ToggleSwitch
+          id="public"
+          name="public"
+          onChange={togglePublic}
+          checked={isPublic}
+        />
+      </InlineField>
+
+      <InlineField>
+        <Label inline>
+          Editors
+          <br />
+          <LabelDescription>
+            Editors have full access to the questionnaire, including editing
+            content, adding other editors and deleting the questionnaire.
+          </LabelDescription>
+        </Label>
+      </InlineField>
+
+      <UserList users={editors} owner={owner} onRemove={removeUser} />
+      <UserSearch
+        users={users}
+        existingUsers={editors}
+        onUserSelect={addUser}
+      />
+    </div>
+
+    <ActionButtonGroup horizontal align="right">
+      <Button variant="primary" onClick={onClose}>
+        Done
+      </Button>
+    </ActionButtonGroup>
   </StyledModal>
 );
 
