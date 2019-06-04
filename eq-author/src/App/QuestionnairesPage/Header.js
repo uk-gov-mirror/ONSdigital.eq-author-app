@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { colors } from "constants/theme";
-import config from "config";
 
 import { raiseToast } from "redux/toast/actions";
 
@@ -10,27 +9,22 @@ import PropTypes from "prop-types";
 import CustomPropTypes from "custom-prop-types";
 import { Link, withRouter } from "react-router-dom";
 
-import Button from "components/buttons/Button";
-import LinkButton from "components/buttons/Button/LinkButton";
 import UserProfile from "App/UserProfile";
 
 import { signOutUser } from "redux/auth/actions";
 
-import shareIcon from "components/Header/icon-share.svg?inline";
-import viewIcon from "components/Header/icon-view.svg?inline";
-
-import IconText from "components/IconText";
 import Truncated from "components/Truncated";
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 import { flowRight, get } from "lodash/fp";
 import { Routes } from "utils/UrlUtils";
 
+import Logo from "components/Logo";
+
 const StyledHeader = styled.header`
-  background-color: ${colors.primary};
+  background-color: ${colors.black};
   color: ${colors.white};
   font-weight: 400;
-  padding: 1em 1.5em;
 `;
 
 const Flex = styled.div`
@@ -39,23 +33,27 @@ const Flex = styled.div`
   align-items: center;
 `;
 
-const Subtitle = styled.div`
-  font-weight: bold;
+const PageTitle = styled.div`
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: pre;
+  flex: 1 1 auto;
 `;
 
-const ShareButton = styled(Button)`
-  margin-left: 0.5em;
+const TruncatedTitle = Truncated.withComponent("h1");
+const Title = styled(TruncatedTitle)`
+  font-size: 1.2em;
+  font-weight: 600;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  line-height: 1.3;
 `;
 
 export const StyledUserProfile = styled(UserProfile)`
   width: auto;
-  margin-left: 0.5em;
-`;
-
-export const UtilityBtns = styled.div`
-  display: flex;
-  flex: 1 0 25%;
-  justify-content: flex-end;
+  justify-self: flex-end;
 `;
 
 export class UnconnectedHeader extends React.Component {
@@ -63,7 +61,7 @@ export class UnconnectedHeader extends React.Component {
     questionnaire: CustomPropTypes.questionnaire,
     signOutUser: PropTypes.func.isRequired,
     raiseToast: PropTypes.func.isRequired,
-    title: PropTypes.string,
+    title: PropTypes.string.isRequired,
   };
 
   displayToast = () => {
@@ -74,59 +72,25 @@ export class UnconnectedHeader extends React.Component {
     this.props.signOutUser();
   };
 
-  getPreviewUrl(questionnaireId) {
-    return `${config.REACT_APP_LAUNCH_URL}/${questionnaireId}`;
-  }
-
-  handleShare = () => {
-    const textField = document.createElement("textarea");
-    textField.innerText = this.getPreviewUrl(this.props.questionnaire.id);
-    document.body.appendChild(textField);
-    textField.select();
-    document.execCommand("copy");
-    textField.remove();
-    this.displayToast();
-  };
-
   render() {
-    const { questionnaire, title, subtitle } = this.props;
+    const { title } = this.props;
     const currentUser = get("data.me", this.props);
 
     return (
       <StyledHeader>
         <Flex>
-          <Subtitle>
-            {questionnaire ? questionnaire.displayName : subtitle}
-          </Subtitle>
+          <Logo />
 
-          <UtilityBtns>
-            {questionnaire && (
-              <React.Fragment>
-                <LinkButton
-                  href={this.getPreviewUrl(this.props.questionnaire.id)}
-                  variant="tertiary-light"
-                  data-test="btn-preview"
-                  small
-                >
-                  <IconText icon={viewIcon}>View survey</IconText>
-                </LinkButton>
-                <ShareButton
-                  variant="tertiary-light"
-                  onClick={this.handleShare}
-                  data-test="btn-share"
-                  small
-                >
-                  <IconText icon={shareIcon}>Share</IconText>
-                </ShareButton>
-              </React.Fragment>
-            )}
-            {currentUser && (
-              <StyledUserProfile
-                user={currentUser}
-                onSignOut={this.handleSignOut}
-              />
-            )}
-          </UtilityBtns>
+          <PageTitle>
+            <Title>{title}</Title>
+          </PageTitle>
+
+          {currentUser && (
+            <StyledUserProfile
+              user={currentUser}
+              onSignOut={this.handleSignOut}
+            />
+          )}
         </Flex>
       </StyledHeader>
     );

@@ -184,11 +184,13 @@ export class UnwrappedSectionRoute extends React.Component {
 
     return (
       <EditorLayout
-        section={section}
+        page={section}
+        design
+        preview={hasIntroductionContent}
+        routing={false}
         onUpdate={this.props.onUpdateSection}
         onAddQuestionPage={this.handleAddPage}
         data-test="section-route"
-        preview={hasIntroductionContent}
       >
         {this.renderContent()}
       </EditorLayout>

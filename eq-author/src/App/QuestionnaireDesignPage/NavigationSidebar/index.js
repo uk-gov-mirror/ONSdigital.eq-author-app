@@ -8,6 +8,8 @@ import { flowRight } from "lodash";
 import { withRouter } from "react-router";
 import gql from "graphql-tag";
 
+import Logo from "components/Logo";
+
 import withUpdateQuestionnaire from "./withUpdateQuestionnaire";
 
 import SectionNav from "./SectionNav";
@@ -15,7 +17,7 @@ import NavigationHeader from "./NavigationHeader";
 import IntroductionNavItem from "./IntroductionNavItem";
 
 const Container = styled.div`
-  background: ${colors.darkBlue};
+  background: ${colors.black};
   color: ${colors.white};
   display: flex;
   flex-direction: column;
@@ -71,6 +73,8 @@ export class UnwrappedNavigationSidebar extends Component {
       <Container data-test="side-nav">
         {loading ? null : (
           <React.Fragment>
+            <Logo />
+
             <NavigationHeader
               questionnaire={questionnaire}
               onUpdateQuestionnaire={onUpdateQuestionnaire}

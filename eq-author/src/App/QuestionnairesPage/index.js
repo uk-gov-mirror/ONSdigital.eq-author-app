@@ -22,6 +22,7 @@ import withCreateQuestionnaire from "./withCreateQuestionnaire";
 import withDuplicateQuestionnaire from "./withDuplicateQuestionnaire";
 
 import { raiseToast } from "redux/toast/actions";
+import Header from "./Header";
 
 const QUESTIONNAIRES_QUERY = gql`
   query GetQuestionnaireList {
@@ -59,7 +60,8 @@ export class UnconnectedQuestionnairesPage extends React.PureComponent {
   render() {
     return (
       <Titled title={this.renderTitle}>
-        <BaseLayout title={"Your Questionnaires"}>
+        <BaseLayout>
+          <Header title="Your Questionnaires" />
           <ScrollPane permanentScrollBar>
             <MainCanvas>
               <Query

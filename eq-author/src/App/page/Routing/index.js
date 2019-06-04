@@ -59,8 +59,10 @@ export class UnwrappedQuestionRoutingRoute extends React.Component {
   }
 
   render() {
+    const { data, loading, error } = this.props;
+    const page = get(data, "page");
     return (
-      <EditorLayout design preview routing>
+      <EditorLayout design preview routing page={page}>
         {this.renderContent()}
       </EditorLayout>
     );

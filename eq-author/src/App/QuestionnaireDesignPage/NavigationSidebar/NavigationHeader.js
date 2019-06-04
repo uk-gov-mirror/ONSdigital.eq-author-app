@@ -20,7 +20,6 @@ import AddMenu from "./AddMenu";
 
 const IconList = styled.ul`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 0;
   margin: 0;
@@ -31,15 +30,23 @@ const IconList = styled.ul`
 const IconListItem = styled.li`
   display: flex;
   align-items: center;
+  margin-right: 1em;
 `;
 
 const HomeIconLink = styled(HomeIcon)`
   vertical-align: middle;
 `;
 
+const NavTitle = styled.div`
+  font-size: 0.8em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: bold;
+`;
+
 const NavigationHeaderRow = styled.div`
-  border-bottom: 1px solid #c3c3c3;
-  padding: 0.5em;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5em 1em;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -115,9 +122,7 @@ export class NavigationHeader extends React.Component {
           <IconList>
             <IconListItem>
               <RouteButton variant="tertiary-light" small to="/">
-                <IconText icon={HomeIconLink} hideText>
-                  Home
-                </IconText>
+                <IconText icon={HomeIconLink}>Home</IconText>
               </RouteButton>
             </IconListItem>
             <IconListItem>
@@ -161,6 +166,7 @@ export class NavigationHeader extends React.Component {
           </IconList>
         </NavigationHeaderRow>
         <NavigationHeaderRow>
+          <NavTitle>Questionnaire content</NavTitle>
           <StyledAddMenu
             addMenuOpen={this.state.addMenuOpen}
             onAddMenuToggle={this.handleAddMenuToggle}

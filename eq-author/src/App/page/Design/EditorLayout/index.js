@@ -12,7 +12,8 @@ import AddPage from "App/QuestionnaireDesignPage/icon-add-page.svg?inline";
 import SavingIndicator from "components/SavingIndicator";
 import { Grid, Column } from "components/Grid";
 
-import Tabs from "./Tabs";
+import Tabs, { TabsBody } from "./Tabs";
+import PageTitle from "components/PageTitle";
 
 const Centered = styled.div`
   display: flex;
@@ -24,6 +25,10 @@ const Margin = styled.div`
   margin-top: 2em;
 `;
 
+const Container = styled.div`
+  height: 100%;
+`;
+
 const EditorLayout = ({
   children,
   onAddQuestionPage,
@@ -33,35 +38,39 @@ const EditorLayout = ({
   routing,
   ...otherProps
 }) => (
-  <Grid {...otherProps}>
-    <Column cols={9} gutters={false}>
-      <ScrollPane permanentScrollBar>
-        <Margin>
-          <MainCanvas>
-            <SavingIndicator />
-            <Tabs design={design} preview={preview} routing={routing}>
-              {children}
-            </Tabs>
-          </MainCanvas>
-        </Margin>
-        {onAddQuestionPage && (
-          <Centered>
-            <Button
-              variant="tertiary"
-              small
-              onClick={onAddQuestionPage}
-              data-test="btn-add-page"
-            >
-              <IconText icon={AddPage}>Add question page</IconText>
-            </Button>
-          </Centered>
-        )}
-      </ScrollPane>
-    </Column>
-    <Column cols={3} gutters={false}>
-      <PropertiesPanel page={page} />
-    </Column>
-  </Grid>
+  <Container>
+    <PageTitle>{page && page.displayName}</PageTitle>
+
+    <Tabs design={design} preview={preview} routing={routing} />
+
+    <Grid {...otherProps}>
+      <Column cols={9} gutters={false}>
+        <ScrollPane permanentScrollBar>
+          <Margin>
+            <MainCanvas>
+              <SavingIndicator />
+              <TabsBody data-test="tabs-body">{children}</TabsBody>
+            </MainCanvas>
+          </Margin>
+          {onAddQuestionPage && (
+            <Centered>
+              <Button
+                variant="tertiary"
+                small
+                onClick={onAddQuestionPage}
+                data-test="btn-add-page"
+              >
+                <IconText icon={AddPage}>Add question page</IconText>
+              </Button>
+            </Centered>
+          )}
+        </ScrollPane>
+      </Column>
+      <Column cols={3} gutters={false}>
+        <PropertiesPanel page={page} />
+      </Column>
+    </Grid>
+  </Container>
 );
 
 EditorLayout.propTypes = {

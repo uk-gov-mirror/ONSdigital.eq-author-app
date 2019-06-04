@@ -45,6 +45,7 @@ const AddButton = styled(Button).attrs({
   variant: "tertiary-light",
   small: true,
 })`
+  border: 1px solid white;
   top: 1px; /* adjust for misalignment caused by PopoutContainer */
 `;
 
@@ -62,7 +63,9 @@ const AddMenu = ({
 }) => {
   const addBtn = (
     <AddButton data-test="btn-add">
-      <IconText icon={IconPlus}>Add</IconText>
+      <IconText icon={IconPlus} css={{ paddingRight: "1em" }}>
+        Add
+      </IconText>
     </AddButton>
   );
   return (
