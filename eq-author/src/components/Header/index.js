@@ -60,10 +60,8 @@ export const UtilityBtns = styled.div`
 
 export class UnconnectedHeader extends React.Component {
   static propTypes = {
-    questionnaire: CustomPropTypes.questionnaire,
     signOutUser: PropTypes.func.isRequired,
     raiseToast: PropTypes.func.isRequired,
-    title: PropTypes.string,
   };
 
   displayToast = () => {
@@ -80,7 +78,7 @@ export class UnconnectedHeader extends React.Component {
 
   handleShare = () => {
     const textField = document.createElement("textarea");
-    textField.innerText = this.getPreviewUrl(this.props.questionnaire.id);
+    textField.innerText = this.getPreviewUrl(this.props.data.questionnaire.id);
     document.body.appendChild(textField);
     textField.select();
     document.execCommand("copy");
@@ -89,52 +87,59 @@ export class UnconnectedHeader extends React.Component {
   };
 
   render() {
-    const { questionnaire, title, subtitle } = this.props;
+    const { data, loading, error, children } = this.props;
     const currentUser = get("data.me", this.props);
+    const { questionnaire } = data;
 
     return (
-      <StyledHeader>
-        <Flex>
-          <Subtitle>
-            {questionnaire ? questionnaire.displayName : subtitle}
-          </Subtitle>
+      <div>
+        <StyledHeader>
+          <Flex>
+            <Subtitle>{questionnaire && questionnaire.displayName}</Subtitle>
 
-          <UtilityBtns>
-            {questionnaire && (
-              <React.Fragment>
-                <LinkButton
-                  href={this.getPreviewUrl(this.props.questionnaire.id)}
-                  variant="tertiary-light"
-                  data-test="btn-preview"
-                  small
-                >
-                  <IconText icon={viewIcon}>View survey</IconText>
-                </LinkButton>
-                <ShareButton
-                  variant="tertiary-light"
-                  onClick={this.handleShare}
-                  data-test="btn-share"
-                  small
-                >
-                  <IconText icon={shareIcon}>Share</IconText>
-                </ShareButton>
-              </React.Fragment>
-            )}
-            {currentUser && (
-              <StyledUserProfile
-                user={currentUser}
-                onSignOut={this.handleSignOut}
-              />
-            )}
-          </UtilityBtns>
-        </Flex>
-      </StyledHeader>
+            <UtilityBtns>
+              {questionnaire && (
+                <React.Fragment>
+                  <LinkButton
+                    href={this.getPreviewUrl(questionnaire.id)}
+                    variant="tertiary-light"
+                    data-test="btn-preview"
+                    small
+                  >
+                    <IconText icon={viewIcon}>View survey</IconText>
+                  </LinkButton>
+                  <ShareButton
+                    variant="tertiary-light"
+                    onClick={this.handleShare}
+                    data-test="btn-share"
+                    small
+                  >
+                    <IconText icon={shareIcon}>Share</IconText>
+                  </ShareButton>
+                </React.Fragment>
+              )}
+              {currentUser && (
+                <StyledUserProfile
+                  user={currentUser}
+                  onSignOut={this.handleSignOut}
+                />
+              )}
+            </UtilityBtns>
+          </Flex>
+        </StyledHeader>
+
+        {children}
+      </div>
     );
   }
 }
 
-const CURRENT_USER_QUERY = gql`
-  query GetCurrentUser {
+const QUESTIONNAIRE_QUERY = gql`
+  query GetQuestionnaire($input: QueryInput!) {
+    questionnaire(input: $input) {
+      id
+      displayName
+    }
     me {
       id
       name
@@ -145,16 +150,20 @@ const CURRENT_USER_QUERY = gql`
 `;
 
 export const withCurrentUser = Component => {
-  const Comp = props =>
-    props.match.path !== Routes.SIGN_IN ? (
-      <Query query={CURRENT_USER_QUERY} fetchPolicy="network-only">
-        {innerProps => {
-          return <Component {...innerProps} {...props} />;
-        }}
-      </Query>
-    ) : (
-      <Component {...props} />
-    );
+  const Comp = props => (
+    <Query
+      query={QUESTIONNAIRE_QUERY}
+      variables={{
+        input: {
+          questionnaireId: props.match.params.questionnaireId,
+        },
+      }}
+    >
+      {innerProps => {
+        return <Component {...innerProps} {...props} />;
+      }}
+    </Query>
+  );
   Comp.propTypes = {
     match: PropTypes.shape({
       path: PropTypes.string.isRequired,

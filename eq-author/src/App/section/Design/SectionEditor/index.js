@@ -124,23 +124,23 @@ class SectionEditor extends React.Component {
           {this.renderMoveSectionModal}
         </MoveSectionQuery>
         <Padding>
-          {section.questionnaire.navigation && (
-            <RichTextEditor
-              id="section-title"
-              name="title"
-              label={
-                <DescribedText description="Displayed in section navigation">
-                  Section title
-                </DescribedText>
-              }
-              value={section.title}
-              onUpdate={handleUpdate}
-              controls={titleControls}
-              size="large"
-              testSelector="txt-section-title"
-              autoFocus={autoFocusTitle}
-            />
-          )}
+          <RichTextEditor
+            id="section-title"
+            name="title"
+            label={
+              <DescribedText description="Displayed in section navigation">
+                Section title
+              </DescribedText>
+            }
+            value={section.title}
+            onUpdate={handleUpdate}
+            controls={titleControls}
+            size="large"
+            testSelector="txt-section-title"
+            autoFocus={autoFocusTitle}
+            disabled={!section.questionnaire.navigation}
+          />
+
           <Label>
             <DescribedText description="If you do not want an introduction page, leave these blank">
               Section introduction

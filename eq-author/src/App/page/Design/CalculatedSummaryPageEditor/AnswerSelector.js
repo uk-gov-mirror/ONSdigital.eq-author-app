@@ -154,7 +154,6 @@ const SelectButton = styled(Button)`
 `;
 
 const Empty = styled.div`
-  color: #7a7a7a;
   text-align: center;
   padding: 1em 2em 2em;
 

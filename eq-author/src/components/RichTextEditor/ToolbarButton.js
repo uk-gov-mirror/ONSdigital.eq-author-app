@@ -18,7 +18,7 @@ const StyledToolbarButton = styled.button.attrs({ type: "button" })`
   font-size: 1rem;
   margin: 0;
   background: transparent;
-  color: ${colors.darkGrey};
+  color: ${colors.text};
   transition: background-color 100ms ease-in;
   cursor: pointer;
 

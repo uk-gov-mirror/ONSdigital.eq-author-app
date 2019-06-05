@@ -15,6 +15,8 @@ import { Grid, Column } from "components/Grid";
 import Tabs, { TabsBody } from "./Tabs";
 import PageTitle from "components/PageTitle";
 
+import Header from "components/Header";
+
 const Centered = styled.div`
   display: flex;
   justify-content: center;
@@ -26,7 +28,9 @@ const Margin = styled.div`
 `;
 
 const Container = styled.div`
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 `;
 
 const EditorLayout = ({
@@ -39,37 +43,39 @@ const EditorLayout = ({
   ...otherProps
 }) => (
   <Container>
-    <PageTitle>{page && page.displayName}</PageTitle>
-
-    <Tabs design={design} preview={preview} routing={routing} />
-
-    <Grid {...otherProps}>
-      <Column cols={9} gutters={false}>
-        <ScrollPane permanentScrollBar>
-          <Margin>
-            <MainCanvas>
-              <SavingIndicator />
-              <TabsBody data-test="tabs-body">{children}</TabsBody>
-            </MainCanvas>
-          </Margin>
-          {onAddQuestionPage && (
-            <Centered>
-              <Button
-                variant="tertiary"
-                small
-                onClick={onAddQuestionPage}
-                data-test="btn-add-page"
-              >
-                <IconText icon={AddPage}>Add question page</IconText>
-              </Button>
-            </Centered>
-          )}
-        </ScrollPane>
-      </Column>
-      <Column cols={3} gutters={false}>
-        <PropertiesPanel page={page} />
-      </Column>
-    </Grid>
+    <Header>
+      <PageTitle>{page && page.displayName}</PageTitle>
+      <Tabs design={design} preview={preview} routing={routing} />
+    </Header>
+    <div css={{ flex: "1", minHeight: 0 }}>
+      <Grid {...otherProps} fillHeight>
+        <Column cols={9} gutters={false}>
+          <ScrollPane permanentScrollBar>
+            <Margin>
+              <MainCanvas>
+                <SavingIndicator />
+                <TabsBody data-test="tabs-body">{children}</TabsBody>
+              </MainCanvas>
+            </Margin>
+            {onAddQuestionPage && (
+              <Centered>
+                <Button
+                  variant="tertiary"
+                  small
+                  onClick={onAddQuestionPage}
+                  data-test="btn-add-page"
+                >
+                  <IconText icon={AddPage}>Add question page</IconText>
+                </Button>
+              </Centered>
+            )}
+          </ScrollPane>
+        </Column>
+        <Column cols={3} gutters={false}>
+          <PropertiesPanel page={page} />
+        </Column>
+      </Grid>
+    </div>
   </Container>
 );
 

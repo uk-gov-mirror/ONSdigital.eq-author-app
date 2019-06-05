@@ -31,7 +31,7 @@ const PageSegment = styled.div`
 
 const SelectorTitle = styled.h2`
   font-size: 1em;
-  color: ${colors.darkGrey};
+  color: ${colors.text};
   margin: 0 0 0.4em;
 `;
 

@@ -32,7 +32,6 @@ import withCreateQuestionConfirmation from "./withCreateQuestionConfirmation";
 import NavigationSidebar from "./NavigationSidebar";
 
 import { ERR_PAGE_NOT_FOUND } from "constants/error-codes";
-import Header from "components/Header";
 
 export class UnwrappedQuestionnaireDesignPage extends Component {
   static propTypes = {
@@ -221,7 +220,6 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
               />
             </Column>
             <Column cols={9} gutters={false}>
-              <Header questionnaire={questionnaire} title={this.getTitle()} />
               <Switch location={location}>
                 {[
                   ...pageRoutes,

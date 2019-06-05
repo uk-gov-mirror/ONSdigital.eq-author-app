@@ -17,7 +17,7 @@ const Content = styled.div`
 `;
 
 const Label = styled.div`
-  color: ${colors.darkGrey};
+  color: ${colors.text};
   font-weight: bold;
   margin-bottom: 0.5em;
 `;

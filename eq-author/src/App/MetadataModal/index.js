@@ -24,7 +24,7 @@ import { colors } from "constants/theme";
 const CenteredHeading = styled(Heading)`
   text-align: center;
   margin: 2em 0 5em;
-  color: ${colors.darkGrey};
+  color: ${colors.text};
 `;
 
 const Info = styled(IconText)`

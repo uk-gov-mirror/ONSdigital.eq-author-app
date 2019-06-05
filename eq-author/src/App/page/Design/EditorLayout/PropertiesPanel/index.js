@@ -23,7 +23,7 @@ const PropertiesPane = styled.div`
   height: 100%;
   padding: 0;
   margin: 0;
-  border-left: 2px solid #eee;
+  border-left: 1px solid ${colors.bordersLight};
   font-size: 1em;
 `;
 

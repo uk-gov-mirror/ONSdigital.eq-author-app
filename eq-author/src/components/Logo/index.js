@@ -5,12 +5,17 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 import logo from "components/Header/logo.svg";
+import { colors } from "constants/theme";
 
 export const Logo = styled(Link)`
-  width: 5.5em;
+  width: 6.5em;
   display: flex;
   align-items: center;
-  margin: 1.5em 1em;
+  margin: 1em 0.5em;
+  padding: 0.5em;
+  &:focus {
+    outline: 3px solid ${colors.tertiary};
+  }
 `;
 
 const LogoImg = styled.img`

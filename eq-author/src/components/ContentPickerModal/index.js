@@ -32,7 +32,7 @@ const HeaderSegment = styled.div`
 `;
 
 const Title = styled.h1`
-  color: ${colors.darkGrey};
+  color: ${colors.text};
   font-weight: bold;
   font-size: 1.3em;
   margin: 1em 0;
@@ -57,7 +57,7 @@ const NavigationHeader = styled.div`
 export const TabButton = styled.button`
   text-transform: uppercase;
   border: 0;
-  color: ${colors.darkGrey};
+  color: ${colors.text};
   cursor: pointer;
   font-size: 0.9em;
   font-weight: bold;
@@ -101,7 +101,7 @@ const ContentWrapper = styled.div`
 
 const ErrorText = styled.span`
   align-items: center;
-  color: ${colors.darkGrey};
+  color: ${colors.text};
   display: flex;
   font-size: 1.2em;
   height: 100%;

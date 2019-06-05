@@ -46,7 +46,7 @@ const SidebarButton = styled.button`
 
 export const Title = styled.span`
   display: block;
-  color: ${colors.darkGrey};
+  color: ${colors.text};
   font-size: 0.9em;
 
   &:not(:only-child) {

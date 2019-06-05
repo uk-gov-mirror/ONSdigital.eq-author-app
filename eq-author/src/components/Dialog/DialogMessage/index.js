@@ -15,7 +15,7 @@ export const Message = styled.div`
 
 export const Heading = styled.h2`
   font-size: 1.2em;
-  color: ${colors.darkGrey};
+  color: ${colors.text};
   margin: 0 0 0.3em;
 `;
 

@@ -102,9 +102,8 @@ UnwrappedTabs.propTypes = {
   design: PropTypes.bool,
   preview: PropTypes.bool,
   routing: PropTypes.bool,
-
   match: CustomPropTypes.match,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 export default withRouter(UnwrappedTabs);
