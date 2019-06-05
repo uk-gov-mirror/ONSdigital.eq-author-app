@@ -7,7 +7,7 @@ import { raiseToast } from "redux/toast/actions";
 
 import PropTypes from "prop-types";
 import CustomPropTypes from "custom-prop-types";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import UserProfile from "App/UserProfile";
 
@@ -62,10 +62,6 @@ export class UnconnectedHeader extends React.Component {
     signOutUser: PropTypes.func.isRequired,
     raiseToast: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
-  };
-
-  displayToast = () => {
-    this.props.raiseToast("ShareToast", "Link copied to clipboard");
   };
 
   handleSignOut = () => {
