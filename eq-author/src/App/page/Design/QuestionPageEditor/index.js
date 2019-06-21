@@ -35,7 +35,7 @@ const QuestionSegment = styled.div`
 `;
 
 const AddAnswerSegment = styled.div`
-  padding: 1em 2em 2em;
+  padding: 0 2em 2em;
 `;
 
 export class UnwrappedQuestionPageEditor extends React.Component {
@@ -114,11 +114,13 @@ export class UnwrappedQuestionPageEditor extends React.Component {
 
         <AddAnswerSegment>
           <AnswerTypeSelector
+            invalid
             answerCount={answers.length}
             onSelect={this.handleAddAnswer}
             data-test="add-answer"
           />
         </AddAnswerSegment>
+
         <QuestionSegment>
           <AdditionalInfo
             onChange={onChange}
