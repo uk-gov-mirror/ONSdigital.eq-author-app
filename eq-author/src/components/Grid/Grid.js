@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Grid = styled.div`
   display: flex;
   width: 100%;
-  height: 100%;
+  height: ${({ fillHeight }) => (fillHeight ? "100%" : "auto")};
   flex: ${({ fillHeight }) => (fillHeight ? 1 : 0)} 1 auto;
   flex-direction: row;
   align-items: ${({ align }) => alignOptions[align]};

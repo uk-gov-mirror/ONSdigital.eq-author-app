@@ -28,11 +28,10 @@ const Main = styled.main`
   min-height: 0;
 `;
 
-const BaseLayout = ({ children, title, questionnaire }) => (
+const BaseLayout = ({ children, title }) => (
   <Titled title={() => title}>
     <App>
       <Wrapper>
-        <Header questionnaire={questionnaire} title={title} />
         <ConnectedOfflineBanner />
         <Main>{children}</Main>
         {ReactDOM.createPortal(

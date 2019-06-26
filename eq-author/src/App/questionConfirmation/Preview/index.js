@@ -43,7 +43,7 @@ const Container = styled.div`
 `;
 
 const Replay = styled.div`
-  background-color: ${colors.darkBlue};
+  background-color: ${colors.previewError};
   color: ${colors.white};
   width: auto;
   min-width: 20em;

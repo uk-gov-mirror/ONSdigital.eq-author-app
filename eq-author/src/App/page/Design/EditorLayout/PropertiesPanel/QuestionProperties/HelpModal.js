@@ -28,7 +28,7 @@ const Title = styled.h1`
   letter-spacing: 0.05em;
   text-align: center;
   margin: 1em auto 2em;
-  color: ${colors.darkGrey};
+  color: ${colors.text};
 `;
 
 const StyledModal = styled(ModalFullScreen)`

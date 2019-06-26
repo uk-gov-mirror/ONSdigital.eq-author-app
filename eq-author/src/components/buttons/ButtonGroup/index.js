@@ -6,7 +6,7 @@ const VerticalGroup = css`
   flex-direction: column;
 
   > :not(:last-child) {
-    margin-bottom: 1.5em;
+    margin-bottom: ${props => props.margin || "1.5em"};
   }
 `;
 
@@ -14,7 +14,7 @@ const HorizontalGroup = css`
   flex-direction: row;
 
   > :not(:last-child) {
-    margin-right: 1em;
+    margin-right: ${props => props.margin || "1em"};
   }
 `;
 
@@ -36,6 +36,7 @@ const ButtonGroup = ({ children, ...otherProps }) => (
 
 ButtonGroup.propTypes = {
   children: PropTypes.node,
+  margin: PropTypes.string,
 };
 
 export default ButtonGroup;

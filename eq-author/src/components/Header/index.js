@@ -7,93 +7,65 @@ import config from "config";
 import { raiseToast } from "redux/toast/actions";
 
 import PropTypes from "prop-types";
-import CustomPropTypes from "custom-prop-types";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
+import PageTitle from "components/PageTitle";
 import Button from "components/buttons/Button";
 import LinkButton from "components/buttons/Button/LinkButton";
 import UserProfile from "App/UserProfile";
 
 import { signOutUser } from "redux/auth/actions";
 
-import logo from "components/Header/logo.svg";
-
 import shareIcon from "components/Header/icon-share.svg?inline";
 import viewIcon from "components/Header/icon-view.svg?inline";
 
 import IconText from "components/IconText";
-import Truncated from "components/Truncated";
+
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 import { flowRight, get } from "lodash/fp";
-import { Routes } from "utils/UrlUtils";
+import SettingsIcon from "./icon-cog.svg?inline";
+import QuestionnaireSettingsModal from "App/QuestionnaireSettingsModal";
+
+import pipeP from "utils/pipeP";
+import SavingIndicator from "components/SavingIndicator";
+import ButtonGroup from "components/buttons/ButtonGroup";
 
 const StyledHeader = styled.header`
+  color: ${colors.white};
+  background: ${colors.primary};
+  font-weight: 400;
+  position: relative;
+`;
+
+const Flex = styled.div`
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  background-color: ${colors.black};
-  color: ${colors.white};
-  font-weight: 400;
   padding: 1em 1.5em;
-  height: 4em;
 `;
 
-const QuestionnaireTitle = styled.div`
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  white-space: pre;
-`;
-
-const TruncatedTitle = Truncated.withComponent("h1");
-const Title = styled(TruncatedTitle)`
-  font-size: 1em;
-  font-weight: 600;
-  margin: 0 2em;
-  width: 100%;
-  text-align: center;
-  line-height: 1.3;
-`;
-
-const ShareButton = styled(Button)`
-  margin-left: 0.5em;
-`;
-
-export const StyledUserProfile = styled(UserProfile)`
-  width: auto;
-  margin-left: 0.5em;
-`;
-
-const LogoContainer = styled.div`
-  flex: 1 0 25%;
-`;
-
-export const Logo = styled(Link)`
-  padding: 0.5em;
-  width: 6.5em;
-  display: flex;
-  align-items: center;
-`;
-
-const LogoImg = styled.img`
-  display: inline-block;
-  width: 100%;
-  height: auto;
+const Subtitle = styled.div`
+  font-weight: bold;
 `;
 
 export const UtilityBtns = styled.div`
   display: flex;
   flex: 1 0 25%;
   justify-content: flex-end;
+  margin-right: -1.5em;
+`;
+
+const SavingContainer = styled.div`
+  position: absolute;
+  right: 1em;
+  bottom: 0.5em;
 `;
 
 export class UnconnectedHeader extends React.Component {
   static propTypes = {
-    questionnaire: CustomPropTypes.questionnaire,
     signOutUser: PropTypes.func.isRequired,
     raiseToast: PropTypes.func.isRequired,
-    title: PropTypes.string,
   };
 
   displayToast = () => {
@@ -110,7 +82,7 @@ export class UnconnectedHeader extends React.Component {
 
   handleShare = () => {
     const textField = document.createElement("textarea");
-    textField.innerText = this.getPreviewUrl(this.props.questionnaire.id);
+    textField.innerText = this.getPreviewUrl(this.props.data.questionnaire.id);
     document.body.appendChild(textField);
     textField.select();
     document.execCommand("copy");
@@ -118,58 +90,69 @@ export class UnconnectedHeader extends React.Component {
     this.displayToast();
   };
 
+  handleSettingsModalOpen = () => this.setState({ isSettingsModalOpen: true });
+
+  handleSettingsModalClose = () =>
+    this.setState({ isSettingsModalOpen: false });
+
   render() {
-    const { questionnaire, title } = this.props;
+    const { data, children, title } = this.props;
     const currentUser = get("data.me", this.props);
+    const { questionnaire } = data;
 
     return (
       <StyledHeader>
-        <LogoContainer>
-          <Logo to="/" data-test="logo">
-            <LogoImg src={logo} alt="Author" width={20} />
-          </Logo>
-        </LogoContainer>
-        <QuestionnaireTitle>
-          <Title data-test="questionnaire-title">
-            {questionnaire ? questionnaire.displayName : title}
-          </Title>
-        </QuestionnaireTitle>
+        <Flex>
+          <Subtitle>{questionnaire && questionnaire.displayName}</Subtitle>
+          <UtilityBtns>
+            {questionnaire && (
+              <ButtonGroup horizontal align="right" margin="0.5em">
+                <Button data-test="settings-btn" variant="tertiary-light" small>
+                  <IconText icon={SettingsIcon}>Settings</IconText>
+                </Button>
+                <LinkButton
+                  href={this.getPreviewUrl(questionnaire.id)}
+                  variant="tertiary-light"
+                  data-test="btn-preview"
+                  small
+                >
+                  <IconText icon={viewIcon}>View survey</IconText>
+                </LinkButton>
+                <Button
+                  variant="tertiary-light"
+                  onClick={this.handleShare}
+                  data-test="btn-share"
+                  small
+                >
+                  <IconText icon={shareIcon}>Share</IconText>
+                </Button>
+                {currentUser && (
+                  <UserProfile
+                    user={currentUser}
+                    onSignOut={this.handleSignOut}
+                  />
+                )}
+              </ButtonGroup>
+            )}
+          </UtilityBtns>
+        </Flex>
 
-        <UtilityBtns>
-          {questionnaire && (
-            <React.Fragment>
-              <LinkButton
-                href={this.getPreviewUrl(this.props.questionnaire.id)}
-                variant="tertiary-light"
-                data-test="btn-preview"
-                small
-              >
-                <IconText icon={viewIcon}>View survey</IconText>
-              </LinkButton>
-              <ShareButton
-                variant="tertiary-light"
-                onClick={this.handleShare}
-                data-test="btn-share"
-                small
-              >
-                <IconText icon={shareIcon}>Share</IconText>
-              </ShareButton>
-            </React.Fragment>
-          )}
-          {currentUser && (
-            <StyledUserProfile
-              user={currentUser}
-              onSignOut={this.handleSignOut}
-            />
-          )}
-        </UtilityBtns>
+        <PageTitle>{title}</PageTitle>
+        {children}
+        <SavingContainer>
+          <SavingIndicator />
+        </SavingContainer>
       </StyledHeader>
     );
   }
 }
 
-const CURRENT_USER_QUERY = gql`
-  query GetCurrentUser {
+const QUESTIONNAIRE_QUERY = gql`
+  query GetQuestionnaire($input: QueryInput!) {
+    questionnaire(input: $input) {
+      id
+      displayName
+    }
     me {
       id
       name
@@ -180,16 +163,20 @@ const CURRENT_USER_QUERY = gql`
 `;
 
 export const withCurrentUser = Component => {
-  const Comp = props =>
-    props.match.path !== Routes.SIGN_IN ? (
-      <Query query={CURRENT_USER_QUERY} fetchPolicy="network-only">
-        {innerProps => {
-          return <Component {...innerProps} {...props} />;
-        }}
-      </Query>
-    ) : (
-      <Component {...props} />
-    );
+  const Comp = props => (
+    <Query
+      query={QUESTIONNAIRE_QUERY}
+      variables={{
+        input: {
+          questionnaireId: props.match.params.questionnaireId,
+        },
+      }}
+    >
+      {innerProps => {
+        return <Component {...innerProps} {...props} />;
+      }}
+    </Query>
+  );
   Comp.propTypes = {
     match: PropTypes.shape({
       path: PropTypes.string.isRequired,

@@ -35,7 +35,8 @@ export const LogoutButton = styled(Button)`
     background: ${colors.white};
     color: ${colors.text};
   }
-  QuestionnairesTable/index.test.js &:focus {
+
+  &:focus {
     box-shadow: 0 0 0 3px ${colors.tertiary};
     outline: none;
   }

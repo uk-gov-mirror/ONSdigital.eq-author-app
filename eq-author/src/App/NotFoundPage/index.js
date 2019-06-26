@@ -7,6 +7,8 @@ import brokenPencil from "App/NotFoundPage/broken-pencil.min.svg";
 import styled from "styled-components";
 import { Titled } from "react-titled";
 
+import SmallHeader from "components/Header/SmallHeader";
+
 const CenteredPane = styled.div`
   display: flex;
   flex-direction: column;
@@ -31,6 +33,7 @@ const getTitle = title => `Page not found - ${title}`;
 const NotFound = () => {
   return (
     <BaseLayout>
+      <SmallHeader title="Page not found" />
       <Titled title={getTitle}>
         <Grid>
           <Column cols={6} offset={3}>

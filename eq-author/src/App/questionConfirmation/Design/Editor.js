@@ -12,7 +12,8 @@ import withEntityEditor from "components/withEntityEditor";
 import ConfirmationOption from "./ConfirmationOption";
 
 const Wrapper = styled.div`
-  padding: 1em 2em 2em;
+  margin-top: -1em;
+  padding: 0 2em 2em;
 `;
 
 const OptionsWrapper = styled.div`

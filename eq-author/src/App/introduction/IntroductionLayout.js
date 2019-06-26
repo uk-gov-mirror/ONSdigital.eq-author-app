@@ -15,7 +15,7 @@ const setTitle = title => `Introduction — ${title}`;
 
 const IntroductionLayout = ({ children }) => (
   <Titled title={setTitle}>
-    <EditorLayout preview>
+    <EditorLayout preview page={{ displayName: "Questionnaire Introduction" }}>
       <Padding>{children}</Padding>
     </EditorLayout>
   </Titled>

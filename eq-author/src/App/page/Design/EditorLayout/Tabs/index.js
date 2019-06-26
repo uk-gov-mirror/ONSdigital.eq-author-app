@@ -3,7 +3,6 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { NavLink, withRouter } from "react-router-dom";
 
-import IconText from "components/IconText";
 import { colors, radius } from "constants/theme";
 import CustomPropTypes from "custom-prop-types";
 import {
@@ -12,39 +11,27 @@ import {
   buildDesignPath,
 } from "utils/UrlUtils";
 
-import IconPreview from "./icon-preview.svg?inline";
-import IconDesign from "./icon-design.svg?inline";
-import IconRouting from "./icon-route.svg?inline";
-
 export const activeClassName = "active";
 
 export const TabsContainer = styled.nav`
   display: flex;
-  justify-content: center;
-  padding: 0;
-  position: relative;
-  bottom: -1px;
+  background: ${colors.primary};
+  padding: 0 1em;
 `;
 
 export const Tab = styled(NavLink)`
   --color-text: ${colors.white};
-
   font-size: 1em;
   font-weight: bold;
   color: var(--color-text);
-  padding: 0 0.4em 0 0.2em;
-  border: 1px solid ${colors.secondary};
-  border-bottom: none;
-  background-color: ${colors.secondary};
+  padding: 0.5em;
   text-decoration: none;
-  border-radius: ${radius} ${radius} 0 0;
-  margin: 0 0.25em 0 0;
+  border-bottom: 5px solid rgb(255, 255, 255, 0);
+
+  transition: opacity 300ms ease-in-out;
 
   &.${activeClassName} {
-    --color-text: ${colors.secondary};
-    background: ${colors.white};
-    border: 1px solid ${colors.bordersLight};
-    border-bottom: none;
+    border-bottom: 5px solid rgb(255, 255, 255, 1);
   }
 
   &:focus {
@@ -52,37 +39,36 @@ export const Tab = styled(NavLink)`
   }
 `;
 
-const TabsBody = styled.div`
+export const TabsBody = styled.div`
   background: ${colors.white};
   border: 1px solid ${colors.bordersLight};
   border-radius: ${radius};
 `;
 
 const DisabledTab = styled(Tab.withComponent("span"))`
-  opacity: 0.5;
-  color: ${colors.lightGrey};
+  opacity: 0.2;
 `;
 
 const TABS = [
   {
     key: "design",
-    children: <IconText icon={IconDesign}>Design</IconText>,
+    children: "Design",
     url: match => buildDesignPath(match.params),
   },
   {
     key: "preview",
-    children: <IconText icon={IconPreview}>Preview</IconText>,
+    children: "Preview",
     url: match => buildPreviewPath(match.params),
   },
   {
     key: "routing",
-    children: <IconText icon={IconRouting}>Routing</IconText>,
+    children: "Routing",
     url: match => buildRoutingPath(match.params),
   },
 ];
 
 export const UnwrappedTabs = props => {
-  const { match, children } = props;
+  const { match } = props;
   return (
     <div>
       <TabsContainer data-test="tabs-nav">
@@ -101,7 +87,6 @@ export const UnwrappedTabs = props => {
           );
         })}
       </TabsContainer>
-      <TabsBody data-test="tabs-body">{children}</TabsBody>
     </div>
   );
 };
@@ -116,9 +101,8 @@ UnwrappedTabs.propTypes = {
   design: PropTypes.bool,
   preview: PropTypes.bool,
   routing: PropTypes.bool,
-
   match: CustomPropTypes.match,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 export default withRouter(UnwrappedTabs);

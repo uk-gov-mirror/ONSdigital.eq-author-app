@@ -6,16 +6,14 @@ import { colors } from "constants/theme";
 import Modal, { CloseButton } from "components/modals/Modal";
 import ScrollPane from "components/ScrollPane";
 
-const topOffset = "4em"; //Header height
-
 const StyledModal = styled(Modal)`
   .Overlay {
     background-color: transparent;
   }
   .Modal {
     width: 100%;
-    top: ${topOffset};
-    height: calc(100% - ${topOffset});
+    height: 100%;
+    top: 0;
     background: ${colors.lighterGrey};
     padding: 0;
   }

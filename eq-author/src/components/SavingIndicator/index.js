@@ -10,9 +10,7 @@ import { TransitionGroup } from "react-transition-group";
 import IconText from "components/IconText";
 
 const Container = styled.div`
-  position: absolute;
-  right: 0;
-  top: 0;
+  --color-text: white;
 `;
 
 const rotate360 = keyframes`
@@ -73,7 +71,7 @@ export class UnconnectedSavingIndicator extends React.Component {
       <FadeTransition>
         <Container>
           <IconText icon={Icon} data-test="saving-indicator">
-            Saving&hellip;
+            Saving
           </IconText>
         </Container>
       </FadeTransition>

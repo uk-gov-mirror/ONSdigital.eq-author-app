@@ -219,7 +219,7 @@ export class UnwrappedQuestionnaireDesignPage extends Component {
                 onAddQuestionConfirmation={this.handleAddQuestionConfirmation}
               />
             </Column>
-            <Column cols={9}>
+            <Column cols={9} gutters={false}>
               <Switch location={location}>
                 {[
                   ...pageRoutes,
