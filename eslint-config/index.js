@@ -60,6 +60,5 @@ module.exports = {
     "import/no-named-as-default-member": "error",
     "import/no-duplicates": "error",
     "import/unambiguous": "error",
-    "import/no-unused-modules": ["error", { unusedExports: true }],
   },
 };

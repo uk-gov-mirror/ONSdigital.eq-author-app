@@ -7,9 +7,6 @@ module.exports = {
     "../eslint-config/graphql.js",
   ],
   settings: {
-    react: {
-      version: "latest",
-    },
     "import/resolver": {
       webpack: {
         config: {
