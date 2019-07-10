@@ -72,10 +72,10 @@ describe("Number", () => {
   it("should trigger change and then blur when blurred", () => {
     number.find("[data-test='number-input']").simulate("change", { value: 5 });
     number.find("[data-test='number-input']").simulate("blur");
-    expect(handleChange).toBeCalled();
-    expect(handleBlur).not.toBeCalled();
+    expect(handleChange).toHaveBeenCalled();
+    expect(handleBlur).not.toHaveBeenCalled();
     jest.runAllTimers();
-    expect(handleBlur).toBeCalled();
+    expect(handleBlur).toHaveBeenCalled();
   });
 
   it("should not call blur if blur not provided", () => {
@@ -83,7 +83,7 @@ describe("Number", () => {
       .find("[data-test='number-input']")
       .simulate("change", { value: 5 });
     numberWithMinMax.find("[data-test='number-input']").simulate("blur");
-    expect(handleChange).toBeCalled();
+    expect(handleChange).toHaveBeenCalled();
     expect(() => {
       jest.runAllTimers();
     }).not.toThrow();
@@ -95,7 +95,7 @@ describe("Number", () => {
         .find("[data-test='number-input']")
         .simulate("change", { value: 101 });
       numberWithMinMax.find("[data-test='number-input']").simulate("blur");
-      expect(handleChange).toBeCalledWith({
+      expect(handleChange).toHaveBeenCalledWith({
         name: "number",
         value: 100,
       });
@@ -106,7 +106,7 @@ describe("Number", () => {
         .find("[data-test='number-input']")
         .simulate("change", { value: -1 });
       numberWithMinMax.find("[data-test='number-input']").simulate("blur");
-      expect(handleChange).toBeCalledWith({
+      expect(handleChange).toHaveBeenCalledWith({
         name: "number",
         value: 0,
       });
@@ -117,7 +117,7 @@ describe("Number", () => {
         .find("[data-test='number-input']")
         .simulate("change", { value: " " });
       numberWithMinMax.find("[data-test='number-input']").simulate("blur");
-      expect(handleChange).toBeCalledWith({
+      expect(handleChange).toHaveBeenCalledWith({
         name: "number",
         value: 0,
       });

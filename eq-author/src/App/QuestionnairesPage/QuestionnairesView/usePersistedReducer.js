@@ -27,6 +27,6 @@ export default (
       storageKey,
       JSON.stringify(pick(state, storedKeys))
     );
-  }, Object.values(pick(state, storedKeys)));
+  }, [state, storageKey, storedKeys]);
   return [state, dispatch];
 };

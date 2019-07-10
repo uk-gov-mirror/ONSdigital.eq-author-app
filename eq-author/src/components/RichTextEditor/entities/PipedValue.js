@@ -32,6 +32,7 @@ PipedValueSerialized.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
+    pipingType: PropTypes.string.isRequired,
   }).isRequired,
 };
 

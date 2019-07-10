@@ -16,7 +16,7 @@ describe("fsm", () => {
     });
 
     it("throws if unrecognised initial state", () => {
-      expect(() => fsm({}, "foo")).toThrowError();
+      expect(() => fsm({}, "foo")).toThrow();
     });
   });
 

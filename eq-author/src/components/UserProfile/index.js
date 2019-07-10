@@ -84,12 +84,13 @@ const UserProfile = ({
 UserProfile.propTypes = {
   signOutUser: PropTypes.func.isRequired,
   data: PropTypes.shape({
-    user: CustomPropTypes.user,
+    me: CustomPropTypes.user,
   }),
   client: PropTypes.shape({
     resetStore: PropTypes.func.isRequired,
   }).isRequired,
   loading: PropTypes.bool.isRequired,
+
   error: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
