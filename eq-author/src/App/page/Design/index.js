@@ -36,6 +36,12 @@ export class UnwrappedPageRoute extends React.Component {
     error: PropTypes.object, // eslint-disable-line
     loading: PropTypes.bool.isRequired,
     page: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      position: PropTypes.number.isRequired,
+      pageType: PropTypes.oneOf(["QuestionPage", "CalculatedSummaryPage"]),
+      section: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+      }),
       questionPage: propType(QuestionPageEditor.fragments.QuestionPage),
     }),
   };

@@ -81,7 +81,7 @@ describe("AnswerValidation", () => {
     const NUMBER_TYPES = [PERCENTAGE, NUMBER, CURRENCY, UNIT];
     const VALIDATIONS = ["maxValue", "minValue"];
     VALIDATIONS.forEach(validation => {
-      describe(validation, () => {
+      describe(`${validation}`, () => {
         it("should render custom values", () => {
           const wrapper = type => {
             const properties = {};

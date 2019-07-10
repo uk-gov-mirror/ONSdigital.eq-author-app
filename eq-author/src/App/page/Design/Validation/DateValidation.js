@@ -209,10 +209,11 @@ UnwrappedDateValidation.propTypes = {
     entityType: PropTypes.oneOf(Object.values(entityTypes)).isRequired,
   }).isRequired,
   answer: PropTypes.shape({
-    id: PropTypes.string.required,
+    id: PropTypes.string.isRequired,
     properties: PropTypes.shape({
       format: PropTypes.string,
     }).isRequired,
+    type: PropTypes.string.isRequired,
   }).isRequired,
   onToggleValidationRule: PropTypes.func.isRequired,
   onChangeUpdate: PropTypes.func.isRequired,

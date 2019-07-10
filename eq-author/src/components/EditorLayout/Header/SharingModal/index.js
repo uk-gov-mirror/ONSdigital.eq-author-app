@@ -199,6 +199,7 @@ SharingModal.propTypes = {
   questionnaire: PropTypes.shape({
     createdBy: PropTypes.object.isRequired,
     editors: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+    isPublic: PropTypes.bool.isRequired,
   }).isRequired,
   previewUrl: PropTypes.string.isRequired,
   raiseToast: PropTypes.func.isRequired,

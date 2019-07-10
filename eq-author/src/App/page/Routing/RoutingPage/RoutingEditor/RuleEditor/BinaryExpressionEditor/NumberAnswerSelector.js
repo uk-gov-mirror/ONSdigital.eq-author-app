@@ -38,6 +38,7 @@ class NumberAnswerSelector extends React.Component {
       right: PropTypes.shape({
         number: PropTypes.number.isRequired,
       }),
+      condition: PropTypes.string,
     }).isRequired,
     onRightChange: PropTypes.func.isRequired,
     onConditionChange: PropTypes.func.isRequired,

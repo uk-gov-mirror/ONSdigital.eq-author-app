@@ -167,6 +167,7 @@ PageHeader.propTypes = {
     params: PropTypes.shape({
       questionnaireId: PropTypes.string.isRequired,
       pageId: PropTypes.string.isRequired,
+      sectionId: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
   isMoveDisabled: PropTypes.bool,

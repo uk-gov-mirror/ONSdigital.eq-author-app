@@ -46,7 +46,7 @@ DurationValidation.propTypes = {
     }),
   }),
   answer: PropTypes.shape({
-    id: PropTypes.string.required,
+    id: PropTypes.string.isRequired,
     properties: PropTypes.shape({
       format: PropTypes.string,
     }),
