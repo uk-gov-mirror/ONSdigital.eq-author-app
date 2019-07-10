@@ -10,7 +10,7 @@
     "build:fragmentTypes": "node scripts/buildFragmentTypes.js src/apollo/fragmentTypes.json",
     "test": "node scripts/test.js",
     "lint": "yarn lint:js && yarn lint:css",
-    "lint:js": "yarn build:fragmentTypes && eslint src --ext .graphql --ext .js --max-warnings=0",
+    "lint:js": "yarn build:fragmentTypes && ../node_modules/.bin/eslint src --ext .graphql --ext .js --max-warnings=0",
     "lint:css": "stylelint './src/**/*.js'",
     "serve": "serve -l 3000 build/",
     "coverage": "yarn test -- --coverage"
@@ -38,8 +38,6 @@
     "dotenv-expand": "latest",
     "enzyme": "latest",
     "enzyme-adapter-react-16": "latest",
-    "eslint": "latest",
-    "eslint-config-eq-author": "../eslint-config-eq-author",
     "eslint-import-resolver-webpack": "latest",
     "eslint-loader": "latest",
     "file-loader": "latest",

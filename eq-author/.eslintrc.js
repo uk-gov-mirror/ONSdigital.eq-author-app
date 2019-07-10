@@ -1,11 +1,10 @@
 const path = require("path");
-const schema = require("../eq-author-api/schema/typeDefs");
 
 module.exports = {
   extends: [
-    "eslint-config-eq-author",
-    "eslint-config-eq-author/react",
-    "eslint-config-eq-author/graphql",
+    "../eslint-config",
+    "../eslint-config/react",
+    "../eslint-config/graphql",
   ],
   settings: {
     react: {
