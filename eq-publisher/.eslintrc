@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint-config-eq-author"],
+  "extends": ["../eslint-config/index.js"],
   "env": {
     "es6": true,
     "node": true
