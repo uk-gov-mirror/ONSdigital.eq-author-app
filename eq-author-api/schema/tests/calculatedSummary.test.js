@@ -297,7 +297,7 @@ describe("calculated Summary", () => {
         id: calSumPage.id,
         summaryAnswers: [answersPage.answers[0].id],
       })
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       "Radio answers are not suitable for a calculated summary page"
     );
   });
@@ -339,7 +339,7 @@ describe("calculated Summary", () => {
         id: calSumPage.id,
         summaryAnswers: [answersPage.answers[1].id],
       })
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       "Answer types must be consistent on a calculated summary"
     );
   });

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "start:dev": "ENABLE_OPENTRACING=true NODE_ENV=development nodemon --ignore 'data/ migrations/' --inspect=0.0.0.0:5858",
-    "lint": "eslint .",
+    "lint": "../node_modules/.bin/eslint .",
     "test": "./scripts/test.sh",
     "test:breakingChanges": "node scripts/checkForBreakingChanges.js",
     "dynamodb-admin": "AWS_ACCESS_KEY_ID=dummy AWS_SECRET_ACCESS_KEY=dummy DYNAMO_ENDPOINT=http://localhost:8050 dynamodb-admin",
@@ -69,8 +69,6 @@
   "devDependencies": {
     "commander": "latest",
     "dynamodb-admin": "latest",
-    "eslint": "latest",
-    "eslint-config-eq-author": "latest",
     "jest": "latest",
     "nodemon": "latest",
     "supertest": "latest"

@@ -55,13 +55,13 @@ describe("Permissions", () => {
             id: ctx.questionnaire.id,
             title: "Title updated",
           })
-        ).rejects.toThrowError(/User does not have write permission/);
+        ).rejects.toThrow(/User does not have write permission/);
       });
 
       it("should fail to delete the questionnaire", async () => {
-        expect(
-          deleteQuestionnaire(ctx, ctx.questionnaire.id)
-        ).rejects.toThrowError(/User does not have write permission/);
+        expect(deleteQuestionnaire(ctx, ctx.questionnaire.id)).rejects.toThrow(
+          /User does not have write permission/
+        );
       });
     });
 
@@ -98,7 +98,7 @@ describe("Permissions", () => {
             id: ctx.questionnaire.id,
             title: "Title updated",
           })
-        ).rejects.toThrowError(/User does not have write permission/);
+        ).rejects.toThrow(/User does not have write permission/);
       });
     });
   });

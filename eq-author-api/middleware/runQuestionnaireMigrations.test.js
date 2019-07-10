@@ -83,7 +83,7 @@ describe("runQuestionnaireMigrations", () => {
     expect(next).toHaveBeenCalledWith(err);
     expect(migrationOne).not.toHaveBeenCalled();
     expect(migrationTwo).toHaveBeenCalled();
-    expect(migrationThree).toThrowError();
+    expect(migrationThree).toThrow();
     expect(logger.info).toHaveBeenCalledTimes(2);
     expect(logger.error).toHaveBeenCalledTimes(1);
     expect(req.questionnaire.version).toEqual(1);
