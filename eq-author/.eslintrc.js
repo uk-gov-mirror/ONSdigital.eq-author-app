@@ -2,9 +2,9 @@ const path = require("path");
 
 module.exports = {
   extends: [
-    "../eslint-config",
-    "../eslint-config/react",
-    "../eslint-config/graphql",
+    "../eslint-config/index.js",
+    "../eslint-config/react.js",
+    "../eslint-config/graphql.js",
   ],
   settings: {
     react: {
