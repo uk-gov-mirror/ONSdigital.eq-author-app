@@ -12,6 +12,14 @@ import {
 describe("PipingMenu", () => {
   let handleItemChosen, answerData, metadataData;
 
+  const createMatch = (questionnaireId, sectionId, pageId) => ({
+    params: {
+      questionnaireId,
+      sectionId,
+      pageId,
+    },
+  });
+
   const render = (props = {}) => {
     return shallow(
       <Menu
@@ -25,14 +33,6 @@ describe("PipingMenu", () => {
       />
     );
   };
-
-  const createMatch = (questionnaireId, sectionId, pageId) => ({
-    params: {
-      questionnaireId,
-      sectionId,
-      pageId,
-    },
-  });
 
   beforeEach(() => {
     handleItemChosen = jest.fn();

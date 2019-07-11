@@ -1,6 +1,12 @@
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
+const alignOptions = {
+  center: "center",
+  top: "stretch",
+  bottom: "flex-end",
+};
+
 const Grid = styled.div`
   display: flex;
   width: 100%;
@@ -9,12 +15,6 @@ const Grid = styled.div`
   flex-direction: row;
   align-items: ${({ align }) => alignOptions[align]};
 `;
-
-const alignOptions = {
-  center: "center",
-  top: "stretch",
-  bottom: "flex-end",
-};
 
 Grid.propTypes = {
   align: PropTypes.oneOf(Object.keys(alignOptions)),

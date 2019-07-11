@@ -11,7 +11,7 @@ import { WRITE } from "constants/questionnaire-permissions";
 jest.mock("redux/toast/actions");
 
 describe("Sharing Modal", () => {
-  let props;
+  let props, jsdomWindowConfirm;
   const BETH_SMITH = {
     id: "11",
     name: "Beth Smith",
@@ -49,9 +49,11 @@ describe("Sharing Modal", () => {
       currentUser: { id: "1" },
       history: { push: jest.fn() },
     };
+    jsdomWindowConfirm = window.confirm;
   });
   afterEach(async () => {
     await flushPromises();
+    window.confirm = jsdomWindowConfirm;
   });
 
   it("should list the owner and editors", async () => {
@@ -152,7 +154,6 @@ describe("Sharing Modal", () => {
       expect(queryByText("Babs")).toBeFalsy();
     });
     it("should display a confirmation before removing yourself as editor", async () => {
-      const jsdomWindowConfirm = window.confirm;
       window.confirm = jest.fn(() => true);
 
       props.currentUser.id = "2";
@@ -171,7 +172,6 @@ describe("Sharing Modal", () => {
 
       expect(window.confirm).toHaveBeenCalled();
       expect(history.location.pathname).toEqual("/");
-      window.confirm = jsdomWindowConfirm;
     });
   });
   describe("adding editors", () => {

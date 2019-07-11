@@ -2,7 +2,11 @@ module.exports = {
   extends: ["eslint:recommended", "prettier", "plugin:jest/recommended"],
   plugins: ["jest", "import"],
   env: {
+    browser: true,
+    commonjs: true,
+    es6: true,
     jest: true,
+    node: true,
   },
   rules: {
     eqeqeq: "error",
@@ -51,6 +55,9 @@ module.exports = {
     "no-script-url": "error",
     "no-self-compare": "error",
     "no-unmodified-loop-condition": "error",
+    "no-prototype-builtins": "off",
+    // Too many false positives
+    "require-atomic-updates": "off",
 
     "import/no-unresolved": "error",
     "import/named": "error",

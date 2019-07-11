@@ -6,6 +6,14 @@ import { raiseToast } from "redux/toast/actions";
 import deleteQuestionnaire from "graphql/deleteQuestionnaire.graphql";
 import getQuestionnaireList from "graphql/getQuestionnaireList.graphql";
 
+export const displayToast = (ownProps, questionnaireId) => {
+  ownProps.raiseToast(
+    `Questionnaire${questionnaireId}`,
+    "Questionnaire deleted",
+    { questionnaireId }
+  );
+};
+
 export const mapMutateToProps = ({ ownProps, mutate }) => ({
   onDeleteQuestionnaire(questionnaireId) {
     const mutation = mutate({
@@ -30,14 +38,6 @@ export const mapMutateToProps = ({ ownProps, mutate }) => ({
       .then(() => mutation);
   },
 });
-
-export const displayToast = (ownProps, questionnaireId) => {
-  ownProps.raiseToast(
-    `Questionnaire${questionnaireId}`,
-    "Questionnaire deleted",
-    { questionnaireId }
-  );
-};
 
 export const handleUpdate = (proxy, { data: { deleteQuestionnaire } }) => {
   const data = proxy.readQuery({ query: getQuestionnaireList });
