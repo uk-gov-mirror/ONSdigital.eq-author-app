@@ -57,14 +57,12 @@ const verifyToken = (accessToken, header, userId, logger) => {
 
 module.exports = async function(accessToken, header, userId, logger) {
   // Verify against Google public keys
-  return new Promise(async resolve => {
-    let isVerified = verifyToken(accessToken, header, userId, logger);
+  let isVerified = verifyToken(accessToken, header, userId, logger);
 
-    if (!isVerified || googlePublicKeys.error) {
-      //Reload keys in case keys have been rotated
-      await fetchUpdatedKeys(logger);
-      isVerified = verifyToken(accessToken, header, userId, logger);
-    }
-    resolve(isVerified);
-  });
+  if (!isVerified || googlePublicKeys.error) {
+    //Reload keys in case keys have been rotated
+    await fetchUpdatedKeys(logger);
+    isVerified = verifyToken(accessToken, header, userId, logger);
+  }
+  return Boolean(isVerified);
 };

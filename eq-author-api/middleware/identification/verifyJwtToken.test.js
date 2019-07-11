@@ -1,8 +1,5 @@
 const fs = require("fs");
 const verifyJwtToken = require("./verifyJwtToken");
-const {
-  VERIFY_VALIDITY_OPTIONS,
-} = require("../../constants/googleServiceKeys");
 const { createSignedToken } = require("../../tests/utils/createSignedToken");
 
 const mockKid = "MY_SECRET_KEY";
@@ -38,22 +35,12 @@ describe("verify Jwt token", () => {
     beforeEach(() => {
       fetch.mockImplementation(() => {
         return {
-          json: () => {
-            return new Promise(async resolve => {
-              resolve(mockGoogleFetchError);
-            });
-          },
+          json: () => Promise.resolve(mockGoogleFetchError),
         };
       });
     });
 
     it("should log error google public keys fetching error but still decode token", async () => {
-      const payload = {
-        sub: mockUserId,
-        aud: process.env.FIREBASE_PROJECT_ID,
-        iss: VERIFY_VALIDITY_OPTIONS.issuer,
-      };
-
       const accessToken = createSignedToken(mockUserId);
 
       const validToken = await verifyJwtToken(
@@ -70,7 +57,7 @@ describe("verify Jwt token", () => {
         mockGoogleFetchError.error
       );
 
-      expect(validToken).toMatchObject(payload);
+      expect(validToken).toEqual(true);
     });
   });
 
@@ -78,22 +65,12 @@ describe("verify Jwt token", () => {
     beforeEach(() => {
       fetch.mockImplementation(() => {
         return {
-          json: () => {
-            return new Promise(async (resolve, reject) => {
-              reject(mockGoogleFetchError);
-            });
-          },
+          json: () => Promise.resolve(mockGoogleFetchError),
         };
       });
     });
 
     it("should log error google public keys fetching 404 but still decode token", async () => {
-      const payload = {
-        sub: mockUserId,
-        aud: process.env.FIREBASE_PROJECT_ID,
-        iss: VERIFY_VALIDITY_OPTIONS.issuer,
-      };
-
       const accessToken = createSignedToken(mockUserId);
 
       const validToken = await verifyJwtToken(
@@ -110,7 +87,7 @@ describe("verify Jwt token", () => {
         mockGoogleFetchError.error
       );
 
-      expect(validToken).toMatchObject(payload);
+      expect(validToken).toEqual(true);
     });
   });
 
@@ -118,22 +95,12 @@ describe("verify Jwt token", () => {
     beforeEach(() => {
       fetch.mockImplementation(() => {
         return {
-          json: () => {
-            return new Promise(async resolve => {
-              resolve(mockGoogleKeys);
-            });
-          },
+          json: () => Promise.resolve(mockGoogleKeys),
         };
       });
     });
 
     it("should return resolved promise if called with valid token", async () => {
-      const payload = {
-        sub: mockUserId,
-        aud: process.env.FIREBASE_PROJECT_ID,
-        iss: VERIFY_VALIDITY_OPTIONS.issuer,
-      };
-
       const accessToken = createSignedToken(mockUserId);
 
       const validToken = await verifyJwtToken(
@@ -145,7 +112,7 @@ describe("verify Jwt token", () => {
         logger
       );
 
-      expect(validToken).toMatchObject(payload);
+      expect(validToken).toEqual(true);
     });
 
     it("should return false if called with invalid kid identifier", async () => {
