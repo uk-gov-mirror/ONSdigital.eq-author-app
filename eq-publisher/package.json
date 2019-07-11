@@ -17,6 +17,7 @@
     "express-pino-logger": "latest",
     "graphql": "latest",
     "helmet": "latest",
+    "js-yaml": "latest",
     "jsonwebtoken": "latest",
     "lodash": "latest",
     "nodemon": "latest",
