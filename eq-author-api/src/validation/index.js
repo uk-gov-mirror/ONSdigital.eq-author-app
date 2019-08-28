@@ -20,6 +20,7 @@ const validate = ajv.addSchema(schemas.slice(1)).compile(schemas[0]);
 
 const convertObjectType = objectType => {
   switch (objectType) {
+    case "validation":
     case "additionalAnswer":
       return ANSWERS;
 
@@ -58,6 +59,11 @@ module.exports = questionnaire => {
       const fieldname = dataPath.pop();
 
       let objectType = dataPath[dataPath.length - 1];
+
+      if (objectType === "validation") {
+        dataPath.push(fieldname);
+      }
+
       if (!isNaN(objectType)) {
         // Must be in array of object type so get object type
         // e.g. /sections/0/pages/0/answers/0/options/0/label
@@ -65,7 +71,6 @@ module.exports = questionnaire => {
       }
 
       const contextPath = dataPath.slice(1).join(".");
-
       const contextObj = get(questionnaire, contextPath);
       return {
         id: `${objectType}-${contextObj.id}-${fieldname}`,

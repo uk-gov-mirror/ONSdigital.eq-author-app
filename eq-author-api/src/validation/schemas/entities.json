@@ -159,6 +159,18 @@
           "id": { "type": "string" },
           "label": {
             "$ref": "definitions.json#/definitions/populatedString"
+          },
+          "validation": {
+            "properties": {
+              "minValue": {
+                "type": "object",
+                "isValidPreviousReference": { "$data": "/sections" }
+              },
+              "maxValue": {
+                "type": "object",
+                "isValidPreviousReference": { "$data": "/sections" }
+              }
+            }
           }
         },
         "required": ["id", "label"]
