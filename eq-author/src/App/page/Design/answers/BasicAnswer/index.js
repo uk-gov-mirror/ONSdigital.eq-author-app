@@ -114,6 +114,9 @@ StatelessBasicAnswer.fragments = {
             enabled
             ...MaxValueValidationRule
           }
+          validationErrorInfo {
+            ...ValidationErrorInfo
+          }
         }
         ... on DateValidation {
           earliestDate {
