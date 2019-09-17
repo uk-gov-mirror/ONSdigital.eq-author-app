@@ -63,6 +63,7 @@ const {
   SECTIONS,
   CONFIRMATION,
   CONFIRMATION_OPTION,
+  VALIDATION,
 } = require("../../constants/validationErrorTypes");
 
 const {
@@ -715,6 +716,12 @@ const Resolvers = {
   NumberValidation: {
     minValue: answer => answer.validation.minValue,
     maxValue: answer => answer.validation.maxValue,
+    validationErrorInfo: ({ id, validation }, args, ctx) =>
+      ctx.validationErrorInfo[VALIDATION][validation.minValue.id] || {
+        id,
+        errors: [],
+        totalCount: 0,
+      },
   },
 
   DateValidation: {

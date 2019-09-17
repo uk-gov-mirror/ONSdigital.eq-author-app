@@ -1,4 +1,10 @@
-const { BASIC_ANSWERS, NUMBER } = require("../../constants/answerTypes");
+const {
+  BASIC_ANSWERS,
+  CURRENCY,
+  NUMBER,
+  UNIT,
+  PERCENTAGE,
+} = require("../../constants/answerTypes");
 
 const validation = require(".");
 
@@ -133,6 +139,63 @@ describe("schema validation", () => {
 
             const errors2 = validation(questionnaire);
             expect(errors2.answers[answer.id]).toBeUndefined();
+          });
+        });
+      });
+      describe("currency, number, percentage and unit answers", () => {
+        it("should ensure that max value is always larger than min value", () => {
+          [CURRENCY, NUMBER, UNIT, PERCENTAGE].forEach(type => {
+            const answer = {
+              id: "a1",
+              type,
+              label: "some answer",
+              validation: {
+                minValue: {
+                  id: "minid",
+                  enabled: true,
+                  custom: 50,
+                  inclusive: true,
+                  entityType: "Custom",
+                  previousAnswer: null,
+                },
+                maxValue: {
+                  id: "maxid",
+                  enabled: true,
+                  custom: 40,
+                  inclusive: true,
+                  entityType: "Custom",
+                  previousAnswer: null,
+                },
+              },
+            };
+
+            const questionnaire = {
+              id: "q1",
+              sections: [
+                {
+                  id: "s1",
+                  pages: [
+                    {
+                      id: "p1",
+                      answers: [answer],
+                    },
+                  ],
+                },
+              ],
+            };
+            const errors = validation(questionnaire);
+            console.log(errors);
+            // expect(errors.answers[answer.id].errors).toHaveLength(1);
+            // expect(errors.validation).toMatchObject({
+            //   errorCode: "ERR_MIN_LARGER_THAN_MAX",
+            // });
+            expect(errors.totalCount).toBe(1);
+            // expect(errors.pages.p1.totalCount).toBe(1);
+
+            answer.validation.maxValue.custom = 80;
+
+            // const errors2 = validation(questionnaire);
+            // expect(errors2.answers[answer.id]).toBeUndefined();
           });
         });
       });

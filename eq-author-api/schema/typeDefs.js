@@ -261,6 +261,7 @@ enum ValidationRuleEntityType {
 type NumberValidation {
   minValue: MinValueValidationRule!
   maxValue: MaxValueValidationRule!
+  validationErrorInfo: ValidationErrorInfo
 }
 
 type DateValidation {

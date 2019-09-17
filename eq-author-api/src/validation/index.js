@@ -9,6 +9,9 @@ const {
   SECTIONS,
   CONFIRMATION,
   CONFIRMATION_OPTION,
+  VALIDATION,
+  MIN_VALUE,
+  MAX_VALUE,
 } = require("../../constants/validationErrorTypes");
 
 const ajv = new Ajv({ allErrors: true, jsonPointers: true, $data: true });
@@ -22,6 +25,10 @@ const convertObjectType = objectType => {
   switch (objectType) {
     case "additionalAnswer":
       return ANSWERS;
+
+    case MIN_VALUE:
+    case MAX_VALUE:
+      return VALIDATION;
 
     case "positive":
     case "negative":
@@ -43,6 +50,7 @@ module.exports = questionnaire => {
       [SECTIONS]: {},
       [CONFIRMATION]: {},
       [CONFIRMATION_OPTION]: {},
+      [VALIDATION]: {},
       totalCount: 0,
     };
   }
@@ -135,6 +143,7 @@ module.exports = questionnaire => {
         [SECTIONS]: {},
         [CONFIRMATION]: {},
         [CONFIRMATION_OPTION]: {},
+        [VALIDATION]: {},
         totalCount: errorMessages.length,
       }
     );
