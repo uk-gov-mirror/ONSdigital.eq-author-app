@@ -68,6 +68,10 @@ export const UnwrappedGroupedAnswerProperties = ({
     let groupValidations = null;
     const answers = answersByType[answerType];
 
+    const errorType = answers.map(
+      ({ validation }) => validation.validationErrorInfo.errors[0].errorCode
+    );
+
     if (isNumeric(answerType)) {
       const id = kebabCase(`${answerType} decimals`);
       groupedFields = (
@@ -142,7 +146,7 @@ export const UnwrappedGroupedAnswerProperties = ({
                 {answer.displayName}
               </AnswerTitle>
               <AnswerProperties answer={answer} />
-              <AnswerValidation answer={answer} />
+              <AnswerValidation answer={answer} errorType={errorType} />
             </Padding>
           </AnswerPropertiesContainer>
         ))}
