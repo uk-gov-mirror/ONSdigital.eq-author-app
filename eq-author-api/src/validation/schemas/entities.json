@@ -149,15 +149,7 @@
       "if": {
         "properties": {
           "type": {
-            "enum": [
-              "TextField",
-              "TextArea",
-              "Number",
-              "Percentage",
-              "Currency",
-              "Unit",
-              "Duration"
-            ]
+            "enum": ["TextField", "TextArea", "Duration"]
           }
         }
       },
@@ -171,7 +163,46 @@
         },
         "required": ["id", "label"]
       },
-      "else": false
+      "else": {
+        "if": {
+          "properties": {
+            "type": {
+              "enum": ["Number", "Percentage", "Currency", "Unit"]
+            }
+          }
+        },
+        "then": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "label": {
+              "$ref": "definitions.json#/definitions/populatedString"
+            },
+            "validation": {
+              "properties": {
+                "minValue": {
+                  "properties": {
+                    "custom": {
+                      "maximum": { "$data": "2/maxValue/custom" },
+                      "errorMessage": "ERR_MIN_LARGER_THAN_MAX"
+                    }
+                  }
+                },
+                "maxValue": {
+                  "properties": {
+                    "custom": {
+                      "minimum": { "$data": "2/minValue/custom" },
+                      "errorMessage": "ERR_MIN_LARGER_THAN_MAX"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": ["id", "label"]
+        },
+        "else": false
+      }
     },
     "multipleChoiceAnswer": {
       "if": {
