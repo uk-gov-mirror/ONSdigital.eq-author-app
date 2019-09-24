@@ -746,6 +746,12 @@ const Resolvers = {
       isNil(previousAnswer) ? null : getAnswerById(ctx, previousAnswer),
     availablePreviousAnswers: ({ id }, args, ctx) =>
       getAvailablePreviousAnswersForValidation(ctx, id),
+    validationErrorInfo: ({ id }, args, ctx) =>
+      ctx.validationErrorInfo[VALIDATION][id] || {
+        id,
+        errors: [],
+        totalCount: 0,
+      },
   },
 
   MaxValueValidationRule: {
@@ -780,12 +786,6 @@ const Resolvers = {
       getAvailablePreviousAnswersForValidation(ctx, id),
     availableMetadata: ({ id }, args, ctx) =>
       getAvailableMetadataForValidation(ctx, id),
-    validationErrorInfo: ({ id }, args, ctx) =>
-      ctx.validationErrorInfo[VALIDATION][id] || {
-        id,
-        errors: [],
-        totalCount: 0,
-      },
   },
 
   LatestDateValidationRule: {

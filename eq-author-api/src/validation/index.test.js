@@ -145,7 +145,7 @@ describe("schema validation", () => {
     });
   });
 
-  describe.only("currency, number, percentage and unit answers", () => {
+  describe("currency, number, percentage and unit answers", () => {
     it("should ensure that max value is always larger than min value", () => {
       [CURRENCY, NUMBER, UNIT, PERCENTAGE].forEach(type => {
         const answer = {
@@ -187,7 +187,7 @@ describe("schema validation", () => {
           ],
         };
         const errors = validation(questionnaire);
-        console.log(errors);
+
         // expect(errors.answers[answer.id].errors).toHaveLength(1);
         // expect(errors.validation).toMatchObject({
         //   errorCode: "ERR_MIN_LARGER_THAN_MAX",

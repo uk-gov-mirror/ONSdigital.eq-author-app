@@ -1,5 +1,5 @@
 const Ajv = require("ajv");
-const { get, uniqBy, map } = require("lodash");
+const { get, uniqBy, reduce, map, groupBy, sum } = require("lodash");
 
 const schemas = require("./schemas");
 const {
@@ -40,6 +40,42 @@ const convertObjectType = objectType => {
 };
 
 module.exports = questionnaire => {
+  //These are errors that are reported in two or more places however we only want to add to the total count once.
+  const duplicatedErrorMessages = {
+    ERR_MIN_LARGER_THAN_MAX: { occurrencesPerError: 2 },
+  };
+  const topLevelEntities = [PAGES, CONFIRMATION, SECTIONS];
+
+  const entitiesWithChildren = [PAGES];
+  const removeDuplicateCounts = object => {
+    map(object, (entity, key) => {
+      if (entitiesWithChildren.includes(key)) {
+        map(entity, item => {
+          const groupedErrors = groupBy(item.errors, error => error.errorCode);
+          const totalErrors = sum(
+            map(groupedErrors, (errors, errorCode) => {
+              if (duplicatedErrorMessages[errorCode]) {
+                return (
+                  errors.length /
+                  duplicatedErrorMessages[errorCode].occurrencesPerError
+                );
+              }
+              return errors.length;
+            })
+          );
+          item.totalCount = totalErrors;
+        });
+      }
+    });
+    const totalErrors = sum(
+      map(topLevelEntities, entityKey =>
+        sum(map(object[entityKey], item => item.totalCount))
+      )
+    );
+    object.totalCount = totalErrors;
+
+    return object;
+  };
   validate(questionnaire);
 
   if (!validate.errors) {
@@ -58,8 +94,6 @@ module.exports = questionnaire => {
   const errorMessages = validate.errors.filter(
     err => err.keyword === "errorMessage"
   );
-
-  console.log(errorMessages);
 
   const transformedMessages = uniqBy(errorMessages, "dataPath")
     .map(error => {
@@ -110,13 +144,17 @@ module.exports = questionnaire => {
           const pageIndex = parseInt(dataPath[3], 10);
 
           const page = questionnaire.sections[sectionIndex].pages[pageIndex];
-
+          const existingPageErrors = get(
+            structure,
+            `${PAGES}.${page.id}.errors`
+          );
           let errorInfo = {
             id: page.id,
-            totalCount: 0,
-            errors: [],
-          };
 
+            errors: existingPageErrors
+              ? [...structure[PAGES][page.id].errors, error]
+              : [error],
+          };
           let pageType = PAGES;
           let pageId = page.id;
 
@@ -126,22 +164,10 @@ module.exports = questionnaire => {
             errorInfo.id = pageId;
           }
 
-          if (structure[pageType][pageId]) {
-            errorInfo = structure[pageType][pageId];
-          }
-
           structure[pageType][pageId] = {
             ...errorInfo,
-            totalCount: errorInfo.totalCount + 1,
           };
         }
-
-        map(structure[VALIDATION], ({ errors }) => {
-          if (errors.message === "ERR_MIN_LARGER_THAN_MAX") {
-            structure.totalCount = structure.totalCount - 0.5;
-          }
-        });
-
         return structure;
       },
       {
@@ -155,5 +181,6 @@ module.exports = questionnaire => {
         totalCount: errorMessages.length,
       }
     );
-  return transformedMessages;
+  console.log(removeDuplicateCounts(transformedMessages));
+  return removeDuplicateCounts(transformedMessages);
 };
