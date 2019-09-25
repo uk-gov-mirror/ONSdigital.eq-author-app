@@ -1,5 +1,5 @@
 const Ajv = require("ajv");
-const { get, uniqBy, reduce, map, groupBy, sum } = require("lodash");
+const { get, uniqBy, map, groupBy, sum } = require("lodash");
 
 const schemas = require("./schemas");
 const {
@@ -181,6 +181,5 @@ module.exports = questionnaire => {
         totalCount: errorMessages.length,
       }
     );
-  console.log(removeDuplicateCounts(transformedMessages));
   return removeDuplicateCounts(transformedMessages);
 };
