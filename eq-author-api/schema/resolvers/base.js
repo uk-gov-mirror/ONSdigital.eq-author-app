@@ -721,8 +721,8 @@ const Resolvers = {
   },
 
   NumberValidation: {
-    minValue: answer => answer.validation.minValue,
-    maxValue: answer => answer.validation.maxValue,
+    minValue: answer => answer.validation,
+    maxValue: answer => answer.validation,
   },
 
   DateValidation: {
@@ -738,37 +738,45 @@ const Resolvers = {
   },
 
   MinValueValidationRule: {
-    enabled: ({ enabled }) => enabled,
-    inclusive: ({ inclusive }) => inclusive,
-    custom: ({ custom }) => custom,
-    entityType: ({ entityType }) => entityType,
-    previousAnswer: ({ previousAnswer }, args, ctx) =>
-      isNil(previousAnswer) ? null : getAnswerById(ctx, previousAnswer),
-    availablePreviousAnswers: ({ id }, args, ctx) =>
-      getAvailablePreviousAnswersForValidation(ctx, id),
-    validationErrorInfo: ({ id }, args, ctx) =>
-      ctx.validationErrorInfo[VALIDATION][id] || {
-        id,
+    id: ({ minValue }) => minValue.id,
+    enabled: ({ minValue }) => minValue.enabled,
+    inclusive: ({ minValue }) => minValue.inclusive,
+    custom: ({ minValue }) => minValue.custom,
+    entityType: ({ minValue }) => minValue.entityType,
+    previousAnswer: ({ minValue }, args, ctx) =>
+      isNil(minValue.previousAnswer)
+        ? null
+        : getAnswerById(ctx, minValue.previousAnswer),
+    availablePreviousAnswers: ({ minValue }, args, ctx) =>
+      getAvailablePreviousAnswersForValidation(ctx, minValue.id),
+    validationErrorInfo: ({ minValue }, args, ctx) =>
+      ctx.validationErrorInfo[VALIDATION][minValue.id] || {
+        id: minValue.id,
         errors: [],
         totalCount: 0,
       },
+    maxValue: ({ maxValue }) => maxValue,
   },
 
   MaxValueValidationRule: {
-    enabled: ({ enabled }) => enabled,
-    inclusive: ({ inclusive }) => inclusive,
-    custom: ({ custom }) => custom,
-    entityType: ({ entityType }) => entityType,
-    previousAnswer: ({ previousAnswer }, args, ctx) =>
-      isNil(previousAnswer) ? null : getAnswerById(ctx, previousAnswer),
-    availablePreviousAnswers: ({ id }, args, ctx) =>
-      getAvailablePreviousAnswersForValidation(ctx, id),
-    validationErrorInfo: ({ id }, args, ctx) =>
-      ctx.validationErrorInfo[VALIDATION][id] || {
-        id,
+    id: ({ maxValue }) => maxValue.id,
+    enabled: ({ maxValue }) => maxValue.enabled,
+    inclusive: ({ maxValue }) => maxValue.inclusive,
+    custom: ({ maxValue }) => maxValue.custom,
+    entityType: ({ maxValue }) => maxValue.entityType,
+    previousAnswer: ({ maxValue }, args, ctx) =>
+      isNil(maxValue.previousAnswer)
+        ? null
+        : getAnswerById(ctx, maxValue.previousAnswer),
+    availablePreviousAnswers: ({ maxValue }, args, ctx) =>
+      getAvailablePreviousAnswersForValidation(ctx, maxValue.id),
+    validationErrorInfo: ({ maxValue }, args, ctx) =>
+      ctx.validationErrorInfo[VALIDATION][maxValue.id] || {
+        id: maxValue.id,
         errors: [],
         totalCount: 0,
       },
+    minValue: ({ minValue }) => minValue,
   },
 
   EarliestDateValidationRule: {
