@@ -42,6 +42,7 @@ import {
   buildQcodesPath,
   buildMetadataPath,
   buildHistoryPath,
+  buildSharingPath,
 } from "utils/UrlUtils";
 
 const StyledMainNavigation = styled.div`
@@ -155,7 +156,20 @@ export const UnwrappedMainNavigation = props => {
                     Settings
                   </IconText>
                 </Button>
-                <Button
+                <RouteButton
+                  variant={
+                    (whatPageAreWeOn === "sharing" && "navigation-on") ||
+                    "navigation"
+                  }
+                  small
+                  data-test="btn-sharing"
+                  to={buildSharingPath(match.params)}
+                >
+                  <IconText nav icon={shareIcon}>
+                    Sharing
+                  </IconText>
+                </RouteButton>
+                {/* <Button
                   variant="navigation-modal"
                   onClick={() => setSharingModalOpen(true)}
                   data-test="btn-share"
@@ -164,7 +178,7 @@ export const UnwrappedMainNavigation = props => {
                   <IconText nav icon={shareIcon}>
                     Sharing
                   </IconText>
-                </Button>
+                </Button> */}
 
                 <RouteButton
                   variant={

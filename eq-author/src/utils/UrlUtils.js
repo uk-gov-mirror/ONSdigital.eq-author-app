@@ -10,6 +10,7 @@ import {
   HISTORY,
   PUBLISH,
   QCODES,
+  SHARING,
 } from "../constants/entities";
 
 export const Routes = {
@@ -102,6 +103,12 @@ export const buildQcodesPath = ({ questionnaireId }) => {
   return generatePath(Routes.QUESTIONNAIRE)({
     questionnaireId,
     entityName: QCODES,
+  });
+};
+export const buildSharingPath = ({ questionnaireId }) => {
+  return generatePath(Routes.QUESTIONNAIRE)({
+    questionnaireId,
+    entityName: SHARING,
   });
 };
 
