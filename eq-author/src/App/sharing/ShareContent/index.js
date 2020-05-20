@@ -1,13 +1,16 @@
 import React from "react";
 import { Field } from "components/Forms";
+import { flowRight } from "lodash";
 import { withApollo, Query, useMutation } from "react-apollo";
 import GET_QUESTIONNAIRE from "../graphql/GetQuestionnaire.graphql";
 import TOGGLE_PUBLIC_MUTATION from "../graphql/TogglePublicMutation.graphql";
+import config from "config";
 
 import Loading from "components/Loading";
 import Error from "components/Error";
 import ToggleSwitch from "components/buttons/ToggleSwitch";
 
+import { withShowToast } from "components/Toasts";
 import {
   ShareLayout,
   PageTitle,
@@ -27,18 +30,34 @@ const ToggleLabelComp = ({ text, isActive }) => (
   <ToggleLabel isActive={isActive}>{text}</ToggleLabel>
 );
 
-const Share = ({ questionnaire }) => {
+const Share = ({ questionnaire, toast }) => {
   const { id, isPublic } = questionnaire;
 
   const [pub, setIsPublic] = React.useState(isPublic);
 
   const [updateIsPublic] = useMutation(TOGGLE_PUBLIC_MUTATION);
 
+  const previewUrl = `${config.REACT_APP_LAUNCH_URL}/${
+    (questionnaire || {}).id
+  }`;
+
   const togglePublic = () => {
     setIsPublic(!pub);
     updateIsPublic({
       variables: { input: { id, isPublic: !pub } },
     });
+  };
+
+  const handleShareClick = () => {
+    const textField = document.createElement("textarea");
+    textField.setAttribute("data-test", "share-link");
+    textField.innerText = previewUrl;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand("copy");
+    textField.remove();
+    toast("Link copied to clipboard");
+    // alert("Link copied to clipboard");
   };
 
   return (
@@ -49,7 +68,9 @@ const Share = ({ questionnaire }) => {
         Author.
         {/* Need to add link here */}
       </PageDescription>
-      <ShareButton>Get shareable link</ShareButton>
+      <ShareButton variant="tertiary" small onClick={handleShareClick}>
+        Get shareable link
+      </ShareButton>
       <PageSection>
         <Wrapper>
           <SectionTitle>Public access</SectionTitle>
@@ -96,7 +117,7 @@ const Share = ({ questionnaire }) => {
 };
 
 // ------------------------------------------------
-const UnWrappedShareContent = ({ loading, error, data }) => {
+const UnWrappedShareContent = ({ loading, error, data, showToast }) => {
   if (loading) {
     return <Loading height="38rem">Page loading…</Loading>;
   }
@@ -106,8 +127,25 @@ const UnWrappedShareContent = ({ loading, error, data }) => {
   console.log(data, "here we go");
   const { questionnaire } = data;
 
-  return <Share questionnaire={questionnaire} />;
+  return <Share questionnaire={questionnaire} toast={showToast} />;
 };
+
+const Test = flowRight(withShowToast)(UnWrappedShareContent);
+// export default withApollo(props => {
+//   return (
+//     <Query
+//       query={GET_QUESTIONNAIRE}
+//       variables={{
+//         input: {
+//           questionnaireId: props.questionnaireId,
+//         },
+//       }}
+//       fetchPolicy="no-cache"
+//     >
+//       {innerprops => <UnWrappedShareContent {...innerprops} {...props} />}
+//     </Query>
+//   );
+// });
 
 export default withApollo(props => {
   return (
@@ -120,7 +158,7 @@ export default withApollo(props => {
       }}
       fetchPolicy="no-cache"
     >
-      {innerprops => <UnWrappedShareContent {...innerprops} {...props} />}
+      {innerprops => <Test {...innerprops} {...props} />}
     </Query>
   );
 });

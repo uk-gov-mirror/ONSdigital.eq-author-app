@@ -85,7 +85,7 @@ export const ShareButton = styled(Button)`
   display: flex;
   align-items: center;
   padding: 0.6em;
-  margin: 0.5em;
+  margin-bottom: 1.4em;
   border-radius: 0;
   color: ${colors.blue};
   background-color: ${colors.lighterGrey};
@@ -100,7 +100,7 @@ export const ShareButton = styled(Button)`
   }
 
   &:hover {
-    background: transparent;
-    color: ${colors.secondary};
+    background: ${colors.darkGrey};
+    color: ${colors.white};
   }
 `;
