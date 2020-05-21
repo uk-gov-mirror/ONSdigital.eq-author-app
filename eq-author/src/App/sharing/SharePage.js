@@ -28,7 +28,7 @@ const StyledMainCanvas = styled(MainCanvas)`
 `;
 // ------------------------------------------------
 
-const SharePage = props => {
+const SharePage = () => {
   return (
     <Container>
       <Header title="Sharing" />
