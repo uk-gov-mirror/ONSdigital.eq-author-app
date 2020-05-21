@@ -3,7 +3,7 @@ import { Field } from "components/Forms";
 import { flowRight } from "lodash";
 import PropTypes from "prop-types";
 import CustomPropTypes from "custom-prop-types";
-import { withApollo, Query, useMutation } from "react-apollo";
+import { Query, useMutation } from "react-apollo";
 import GET_QUESTIONNAIRE from "../graphql/GetQuestionnaire.graphql";
 import TOGGLE_PUBLIC_MUTATION from "../graphql/TogglePublicMutation.graphql";
 import config from "config";
@@ -145,8 +145,7 @@ const UnWrappedShareContent = ({ loading, error, data, showToast }) => {
     return <Error>Oops! Something went wrong</Error>;
   }
   const { questionnaire } = data;
-  console.log("I got this", questionnaire);
-  // Reduces prop load by not spread the props
+  // Reduces prop load by not spreading the props
   // {...props} <--- like that
   return <Share questionnaire={questionnaire} toast={showToast} />;
 };
@@ -181,23 +180,5 @@ ToggleLabelComp.propTypes = propType.ToggleLabelComp;
 Share.propTypes = propType.Share;
 UnWrappedShareContent.propTypes = propType.UnWrappedShareContent;
 ShareContent.propTypes = propType.ShareContent;
-
-// export default withApollo(props => {
-//   console.log(props);
-//   return (
-//     <Query
-//       query={GET_QUESTIONNAIRE}
-//       variables={{
-//         input: {
-//           questionnaireId: props.questionnaireId,
-//         },
-//       }}
-//       fetchPolicy="no-cache"
-//     >
-//       {innerprops => <ToastedUnWrappedShareContent {...innerprops} />}
-//     </Query>
-//   );
-// });
-// ------------------------------------------------------------------
 
 export default ShareContent;
