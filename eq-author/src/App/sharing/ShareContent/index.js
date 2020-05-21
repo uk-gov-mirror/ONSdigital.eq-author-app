@@ -1,5 +1,4 @@
 import React from "react";
-import { Field } from "components/Forms";
 import { flowRight } from "lodash";
 import PropTypes from "prop-types";
 import CustomPropTypes from "custom-prop-types";
@@ -14,32 +13,35 @@ import ToggleSwitch from "components/buttons/ToggleSwitch";
 
 import { withShowToast } from "components/Toasts";
 import {
-  ShareLayout,
+  Layout,
   PageTitle,
+  Description,
+  Section,
   SectionTitle,
-  PageDescription,
-  PageSection,
+  EditorTitle,
   SearchInput,
   InsetText,
   SearchContainer,
   Separator,
   Wrapper,
-  ToggleLabel,
+  PublicLabel,
   ShareButton,
+  AddButton,
+  Described,
 } from "../styles";
 
 const propType = {
-  ToggleLabelComp: {
+  TogglePublicLabel: {
     text: PropTypes.string.isRequired,
     isActive: PropTypes.bool.isRequired,
   },
-  Share: {
+  Sharing: {
     questionnaire: PropTypes.shape({
       id: PropTypes.string.isRequired,
       isPublic: PropTypes.bool.isRequired,
     }),
   },
-  UnWrappedShareContent: {
+  UnwrappedSharing: {
     loading: PropTypes.bool.isRequired,
     error: PropTypes.object, //eslint-disable-line
     data: PropTypes.shape({
@@ -52,13 +54,13 @@ const propType = {
   },
 };
 
-const ToggleLabelComp = ({ text, isActive }) => (
-  <ToggleLabel isActive={isActive}>{text}</ToggleLabel>
+const TogglePublicLabel = ({ text, isActive }) => (
+  <PublicLabel isActive={isActive}>{text}</PublicLabel>
 );
 
-const Share = ({ questionnaire, toast }) => {
+const Sharing = ({ questionnaire, toast }) => {
   const { id, isPublic } = questionnaire;
-  console.log(id, isPublic, "what");
+
   const [pub, setIsPublic] = React.useState(isPublic);
 
   const [updateIsPublic] = useMutation(TOGGLE_PUBLIC_MUTATION);
@@ -86,20 +88,20 @@ const Share = ({ questionnaire, toast }) => {
   };
 
   return (
-    <ShareLayout>
+    <Layout>
       <PageTitle>Share your questionnaire</PageTitle>
-      <PageDescription>
+      <Description>
         You can share your questionnaire with anyone who has an account with
         Author.
-      </PageDescription>
+      </Description>
       <ShareButton variant="tertiary" small onClick={handleShareClick}>
         Get shareable link
       </ShareButton>
-      <PageSection>
+      <Section>
         <Wrapper>
           <SectionTitle>Public access</SectionTitle>
           <Separator>
-            <ToggleLabelComp text="Off" isActive={!pub} />
+            <TogglePublicLabel text="Off" isActive={!pub} />
 
             <ToggleSwitch
               id="public"
@@ -107,37 +109,43 @@ const Share = ({ questionnaire, toast }) => {
               onChange={togglePublic}
               checked={pub}
             />
-            <ToggleLabelComp text="On" isActive={pub} />
+            <TogglePublicLabel text="On" isActive={pub} />
           </Separator>
         </Wrapper>
         <InsetText>
           Let anyone with an Author account view your questionnaire. If public
           access is off, only editors
         </InsetText>
-      </PageSection>
-      <PageSection>
+      </Section>
+      <Section>
         <SectionTitle>Editors</SectionTitle>
         <InsetText>
           Editors can edit questionnaire content, add comments, delete the
           questionnaire and add other editors.
         </InsetText>
-      </PageSection>
-      <PageSection>
-        <SectionTitle>Add Editors</SectionTitle>
-        Search for someone using their name or email address.
+      </Section>
+      <Section>
+        <EditorTitle>Add Editors</EditorTitle>
+        <Described>
+          Search for someone using their name or email address.
+        </Described>
         <SearchContainer>
-          <Field>
-            <SearchInput placeholder="Tom is cool" />
-            {/* Add button here */}
-          </Field>
+          <SearchInput />
+          <AddButton
+            type="submit"
+            variant="primary"
+            data-test="editor-add-button"
+          >
+            Add
+          </AddButton>
         </SearchContainer>
-      </PageSection>
-    </ShareLayout>
+      </Section>
+    </Layout>
   );
 };
 
 // ------------------------------------------------
-const UnWrappedShareContent = ({ loading, error, data, showToast }) => {
+const UnwrappedSharing = ({ loading, error, data, showToast }) => {
   if (loading) {
     return <Loading height="38rem">Page loading…</Loading>;
   }
@@ -147,17 +155,10 @@ const UnWrappedShareContent = ({ loading, error, data, showToast }) => {
   const { questionnaire } = data;
   // Reduces prop load by not spreading the props
   // {...props} <--- like that
-  return <Share questionnaire={questionnaire} toast={showToast} />;
+  return <Sharing questionnaire={questionnaire} toast={showToast} />;
 };
 
-const ToastedUnWrappedShareContent = flowRight(withShowToast)(
-  UnWrappedShareContent
-);
-
-// Keeping this until I have figure out if withApollo is needed
-// ------------------------------------------------------------------
-// props is full of apollo stuff and not sure I need to pass it on
-// Not entirely sure what withApollo does either
+const ToastedUnwrappedSharing = flowRight(withShowToast)(UnwrappedSharing);
 
 const ShareContent = props => {
   return (
@@ -171,14 +172,14 @@ const ShareContent = props => {
       }}
       fetchPolicy="no-cache"
     >
-      {innerprops => <ToastedUnWrappedShareContent {...innerprops} />}
+      {innerprops => <ToastedUnwrappedSharing {...innerprops} />}
     </Query>
   );
 };
 
-ToggleLabelComp.propTypes = propType.ToggleLabelComp;
-Share.propTypes = propType.Share;
-UnWrappedShareContent.propTypes = propType.UnWrappedShareContent;
+TogglePublicLabel.propTypes = propType.ToggleLabelComp;
+Sharing.propTypes = propType.Share;
+UnwrappedSharing.propTypes = propType.UnwrappedSharing;
 ShareContent.propTypes = propType.ShareContent;
 
 export default ShareContent;
