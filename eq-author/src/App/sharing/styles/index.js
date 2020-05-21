@@ -2,17 +2,39 @@ import styled from "styled-components";
 import { colors } from "constants/theme";
 import { UncontrolledInput } from "components/Forms/Input";
 import Button from "components/buttons/Button";
-import iconShare from "./icon-share.svg";
+import DescribedText from "components/DescribedText";
 
-export const ShareLayout = styled.div`
-  padding: 2em;
+import iconLink from "./icon-link.svg";
+
+export const Layout = styled.div`
+  padding: 1.8em;
 `;
 
 export const PageTitle = styled.h2`
   font-size: 1.1em;
   font-weight: bold;
   color: ${colors.text};
-  margin: 0 0 1em;
+  margin: 0 0 0.5em;
+`;
+
+export const Description = styled.p`
+  margin: 0.1em 0 1em;
+  font-size: 14px;
+  font-weight: 400;
+  color: ${colors.textLight};
+`;
+
+export const Described = styled.span`
+  font-size: 0.9rem;
+  margin-bottom: 1em;
+`;
+
+export const Section = styled.div`
+  padding-top: 1.5em;
+  &:first-of-type {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+  }
 `;
 
 export const SectionTitle = styled.h3`
@@ -22,24 +44,8 @@ export const SectionTitle = styled.h3`
   margin: 0 0 1em;
 `;
 
-export const PageDescription = styled.p`
-  margin: 0.1em 0 1em;
-  color: ${colors.textLight};
-`;
-
-export const PageSection = styled.div`
-  padding: 2em 0;
-  &:first-of-type {
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-  }
-`;
-
-export const SearchInput = styled(UncontrolledInput)`
-  padding: 0.5em;
-  font-size: 1em;
-  width: 100%;
-  border: 1px solid ${colors.borders};
+export const EditorTitle = styled(SectionTitle)`
+  margin: 0;
 `;
 
 export const InsetText = styled.div`
@@ -49,17 +55,28 @@ export const InsetText = styled.div`
 `;
 
 export const SearchContainer = styled.div`
-  margin: 0 0 2em;
+  margin: 1em 0 2em;
   background: #ebeef0;
   height: 100%;
-  padding: 1em 1em 0.3em;
+  padding: 1.5em 1.5em;
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
 `;
+
+export const SearchInput = styled(UncontrolledInput)`
+  padding: 0.5em;
+  font-size: 1em;
+  width: 80%;
+  border: 1px solid ${colors.borders};
+`;
+
+export const AddButton = styled(Button)``;
 
 export const Separator = styled.span`
   border-left: 1px solid ${colors.blue};
   display: flex;
   align-items: center;
-  /* padding-left: 20px; */
   margin-left: 15px;
   height: 22px;
 `;
@@ -68,7 +85,7 @@ export const Wrapper = styled.div`
   display: flex;
 `;
 
-export const ToggleLabel = styled.span`
+export const PublicLabel = styled.span`
   padding: 0 0.5em;
   &:first-of-type {
     padding-left: 1em;
@@ -92,11 +109,11 @@ export const ShareButton = styled(Button)`
 
   &::before {
     content: "";
-    background: url(${iconShare}) no-repeat center;
+    background: url(${iconLink}) no-repeat center;
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    margin-right: 0.7em;
+    width: 1.3rem;
+    height: 0.7rem;
+    margin-right: 0.9em;
   }
 
   &:hover {
