@@ -1,6 +1,8 @@
 import React from "react";
 import { Field } from "components/Forms";
 import { flowRight } from "lodash";
+import PropTypes from "prop-types";
+import CustomPropTypes from "custom-prop-types";
 import { withApollo, Query, useMutation } from "react-apollo";
 import GET_QUESTIONNAIRE from "../graphql/GetQuestionnaire.graphql";
 import TOGGLE_PUBLIC_MUTATION from "../graphql/TogglePublicMutation.graphql";
@@ -26,13 +28,37 @@ import {
   ShareButton,
 } from "../styles";
 
+const propType = {
+  ToggleLabelComp: {
+    text: PropTypes.string.isRequired,
+    isActive: PropTypes.bool.isRequired,
+  },
+  Share: {
+    questionnaire: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      isPublic: PropTypes.bool.isRequired,
+    }),
+  },
+  UnWrappedShareContent: {
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.object, //eslint-disable-line
+    data: PropTypes.shape({
+      questionnaire: CustomPropTypes.questionnaire,
+    }),
+    showToast: PropTypes.func.isRequired,
+  },
+  ShareContent: {
+    questionnaireId: PropTypes.string, // Isn't required but is needed
+  },
+};
+
 const ToggleLabelComp = ({ text, isActive }) => (
   <ToggleLabel isActive={isActive}>{text}</ToggleLabel>
 );
 
 const Share = ({ questionnaire, toast }) => {
   const { id, isPublic } = questionnaire;
-
+  console.log(id, isPublic, "what");
   const [pub, setIsPublic] = React.useState(isPublic);
 
   const [updateIsPublic] = useMutation(TOGGLE_PUBLIC_MUTATION);
@@ -57,7 +83,6 @@ const Share = ({ questionnaire, toast }) => {
     document.execCommand("copy");
     textField.remove();
     toast("Link copied to clipboard");
-    // alert("Link copied to clipboard");
   };
 
   return (
@@ -66,7 +91,6 @@ const Share = ({ questionnaire, toast }) => {
       <PageDescription>
         You can share your questionnaire with anyone who has an account with
         Author.
-        {/* Need to add link here */}
       </PageDescription>
       <ShareButton variant="tertiary" small onClick={handleShareClick}>
         Get shareable link
@@ -86,14 +110,10 @@ const Share = ({ questionnaire, toast }) => {
             <ToggleLabelComp text="On" isActive={pub} />
           </Separator>
         </Wrapper>
-
-        {/* Banner goes here */}
         <InsetText>
           Let anyone with an Author account view your questionnaire. If public
           access is off, only editors
         </InsetText>
-        {/* Banner goes here */}
-        {/* Public access */}
       </PageSection>
       <PageSection>
         <SectionTitle>Editors</SectionTitle>
@@ -124,14 +144,46 @@ const UnWrappedShareContent = ({ loading, error, data, showToast }) => {
   if (error) {
     return <Error>Oops! Something went wrong</Error>;
   }
-  console.log(data, "here we go");
   const { questionnaire } = data;
-
+  console.log("I got this", questionnaire);
+  // Reduces prop load by not spread the props
+  // {...props} <--- like that
   return <Share questionnaire={questionnaire} toast={showToast} />;
 };
 
-const Test = flowRight(withShowToast)(UnWrappedShareContent);
+const ToastedUnWrappedShareContent = flowRight(withShowToast)(
+  UnWrappedShareContent
+);
+
+// Keeping this until I have figure out if withApollo is needed
+// ------------------------------------------------------------------
+// props is full of apollo stuff and not sure I need to pass it on
+// Not entirely sure what withApollo does either
+
+const ShareContent = props => {
+  return (
+    <Query
+      query={GET_QUESTIONNAIRE}
+      variables={{
+        input: {
+          // This isn't actually defined which is super weird
+          questionnaireId: props.questionnaireId,
+        },
+      }}
+      fetchPolicy="no-cache"
+    >
+      {innerprops => <ToastedUnWrappedShareContent {...innerprops} />}
+    </Query>
+  );
+};
+
+ToggleLabelComp.propTypes = propType.ToggleLabelComp;
+Share.propTypes = propType.Share;
+UnWrappedShareContent.propTypes = propType.UnWrappedShareContent;
+ShareContent.propTypes = propType.ShareContent;
+
 // export default withApollo(props => {
+//   console.log(props);
 //   return (
 //     <Query
 //       query={GET_QUESTIONNAIRE}
@@ -142,23 +194,10 @@ const Test = flowRight(withShowToast)(UnWrappedShareContent);
 //       }}
 //       fetchPolicy="no-cache"
 //     >
-//       {innerprops => <UnWrappedShareContent {...innerprops} {...props} />}
+//       {innerprops => <ToastedUnWrappedShareContent {...innerprops} />}
 //     </Query>
 //   );
 // });
+// ------------------------------------------------------------------
 
-export default withApollo(props => {
-  return (
-    <Query
-      query={GET_QUESTIONNAIRE}
-      variables={{
-        input: {
-          questionnaireId: props.questionnaireId,
-        },
-      }}
-      fetchPolicy="no-cache"
-    >
-      {innerprops => <Test {...innerprops} {...props} />}
-    </Query>
-  );
-});
+export default ShareContent;
