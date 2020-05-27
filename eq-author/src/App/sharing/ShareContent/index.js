@@ -76,8 +76,8 @@ const TogglePublicLabel = ({ text, isActive }) => (
 );
 
 const Sharing = ({ data, showToast }) => {
-  const { id, isPublic } = data.questionnaire;
-
+  const { id, isPublic, createdBy, editors } = data.questionnaire;
+  console.log(editors);
   const [pub, setIsPublic] = React.useState(isPublic);
 
   const [updateIsPublic] = useMutation(TOGGLE_PUBLIC_MUTATION);
@@ -88,12 +88,10 @@ const Sharing = ({ data, showToast }) => {
 
   const togglePublic = () => {
     setIsPublic(!pub);
-    console.log(id, isPublic, "hello?");
     updateIsPublic({
       variables: { input: { id, isPublic: !pub } },
     });
   };
-
   const handleShareClick = () => {
     const textField = document.createElement("textarea");
     textField.setAttribute("data-test", "share-link");
@@ -142,7 +140,7 @@ const Sharing = ({ data, showToast }) => {
           questionnaire and add other editors.
         </InformationPanel>
       </Section>
-      <EditorSearch />
+      <EditorSearch owner={createdBy} editors={editors} />
     </Layout>
   );
 };
