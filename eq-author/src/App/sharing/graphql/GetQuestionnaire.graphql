@@ -2,5 +2,15 @@ query GetQuestionnaire($input: QueryInput!) {
   questionnaire(input: $input) {
     id
     isPublic
+    createdBy {
+      id
+      name
+      email
+    }
+    editors {
+      id
+      name
+      email
+    }
   }
 }
