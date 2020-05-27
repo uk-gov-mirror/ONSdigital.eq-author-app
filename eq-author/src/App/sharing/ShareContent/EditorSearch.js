@@ -8,6 +8,8 @@ import ALL_USERS from "../graphql/AllUsers.graphql";
 
 import Loading from "components/Loading";
 import Error from "components/Error";
+import UserList from "./UserList";
+import UserSearch from "./UserSearch";
 
 import { useQuery } from "@apollo/react-hooks";
 
@@ -16,19 +18,14 @@ import {
   EditorTitle,
   SearchInput,
   SearchContainer,
-  AddButton,
   Described,
 } from "../styles";
 
 // ------------------------------------------------
 /*
-I want to be able to wrap the sharing page with the three necessary extras
 
-Succeeded in creating a double wrapped query with HOC's
-problem is I think it's redundant
-
-ON WEDNESDAY
-Going to rewrite to use the useQuery hook and batch it
+1. Need to remove users 
+2. Want to add a toast to say you can't remove users
 
 */
 // ------------------------------------------------
@@ -45,8 +42,33 @@ const propType = {
   },
 };
 
-const EditorSearch = ({ users }) => {
-  console.log(users);
+const dummyData = [
+  {
+    name: "Thomas",
+    email: "thomesmac@gmail.com",
+    id: "1",
+  },
+  {
+    name: "Jenna",
+    email: "Jenna@mail.com",
+    id: "2",
+  },
+];
+
+const EditorSearch = ({ users: userList, owner, editors }) => {
+  const [editorList, setEditorList] = React.useState(editors);
+  const removeUser = event => {
+    // needs to catch owner better
+    // Will add a toast to show that the
+    const updatedUsers = editorList.filter(user => user.id !== event.id);
+
+    console.log("updatedUsers :>> ", updatedUsers);
+    setEditorList(updatedUsers);
+  };
+
+  const addUser = user => {
+    setEditorList(userList => [...userList, user]);
+  };
   return (
     <>
       <Section>
@@ -55,15 +77,9 @@ const EditorSearch = ({ users }) => {
           Search for someone using their name or email address.
         </Described>
         <SearchContainer>
-          <SearchInput />
-          <AddButton
-            type="submit"
-            variant="primary"
-            data-test="editor-add-button"
-          >
-            Add
-          </AddButton>
+          <UserSearch users={userList} onUserSelect={addUser} />
         </SearchContainer>
+        <UserList editors={editorList} owner={owner} onRemove={removeUser} />
       </Section>
     </>
   );
@@ -72,7 +88,7 @@ const EditorSearch = ({ users }) => {
 // ------------------------------------------------
 
 const QueryWrapper = Component => {
-  const GetQuestionnaireWrapper = () => (
+  const GetUserWrapper = props => (
     <Query query={ALL_USERS} fetchPolicy="no-cache">
       {innerprops => {
         if (innerprops.loading) {
@@ -81,11 +97,17 @@ const QueryWrapper = Component => {
         if (innerprops.error) {
           return <Error>Oops! Something went wrong</Error>;
         }
-        return <Component users={innerprops.data} />;
+        return (
+          <Component
+            users={innerprops.data}
+            owner={props.owner}
+            editors={props.editors}
+          />
+        );
       }}
     </Query>
   );
-  return GetQuestionnaireWrapper;
+  return GetUserWrapper;
 };
 
 const QueryWrapped = flowRight(QueryWrapper)(EditorSearch);
