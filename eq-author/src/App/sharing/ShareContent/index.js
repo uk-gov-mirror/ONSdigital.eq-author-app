@@ -53,41 +53,42 @@ const propType = {
     isActive: PropTypes.bool.isRequired,
   },
   Sharing: {
-    questionnaire: PropTypes.shape({
+    data: PropTypes.shape({
       id: PropTypes.string.isRequired,
       isPublic: PropTypes.bool.isRequired,
     }),
+    toast: PropTypes.func.isRequired,
   },
-  UnwrappedSharing: {
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.object, //eslint-disable-line
-    data: PropTypes.shape({
-      questionnaire: CustomPropTypes.questionnaire,
-    }),
-    showToast: PropTypes.func.isRequired,
-  },
-  ShareContent: {
-    questionnaireId: PropTypes.string, // Isn't required but is needed
-  },
+  // UnwrappedSharing: {
+  //   loading: PropTypes.bool.isRequired,
+  //   error: PropTypes.object, //eslint-disable-line
+  //   data: PropTypes.shape({
+  //     questionnaire: CustomPropTypes.questionnaire,
+  //   }),
+  // },
+  // ShareContent: {
+  //   questionnaireId: PropTypes.string, // Isn't required but is needed
+  // },
 };
 
 const TogglePublicLabel = ({ text, isActive }) => (
   <PublicLabel isActive={isActive}>{text}</PublicLabel>
 );
 
-const Sharing = ({ questionnaire, toast }) => {
-  const { id, isPublic } = questionnaire;
+const Sharing = ({ data, showToast }) => {
+  const { id, isPublic } = data.questionnaire;
 
   const [pub, setIsPublic] = React.useState(isPublic);
 
   const [updateIsPublic] = useMutation(TOGGLE_PUBLIC_MUTATION);
 
   const previewUrl = `${config.REACT_APP_LAUNCH_URL}/${
-    (questionnaire || {}).id
+    (data.questionnaire || {}).id
   }`;
 
   const togglePublic = () => {
     setIsPublic(!pub);
+    console.log(id, isPublic, "hello?");
     updateIsPublic({
       variables: { input: { id, isPublic: !pub } },
     });
@@ -101,7 +102,7 @@ const Sharing = ({ questionnaire, toast }) => {
     textField.select();
     document.execCommand("copy");
     textField.remove();
-    toast("Link copied to clipboard");
+    showToast("Link copied to clipboard");
   };
 
   return (
@@ -167,7 +168,7 @@ const QueryWrapper = Component => {
         if (innerprops.error) {
           return <Error>Oops! Something went wrong</Error>;
         }
-        return <Component questionnaire={innerprops.data} {...innerprops} />;
+        return <Component data={innerprops.data} {...props} />;
       }}
     </Query>
   );
