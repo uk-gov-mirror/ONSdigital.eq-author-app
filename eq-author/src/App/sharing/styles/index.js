@@ -48,11 +48,11 @@ export const EditorTitle = styled(SectionTitle)`
   margin: 0;
 `;
 
-export const InsetText = styled.div`
-  border-left: 10px solid #033e58;
-  background: #eff0f9;
-  padding: 1em;
-`;
+// export const InsetText = styled.div`
+//   border-left: 10px solid #033e58;
+//   background: #eff0f9;
+//   padding: 1em;
+// `;
 
 export const SearchContainer = styled.div`
   margin: 1em 0 2em;
