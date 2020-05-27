@@ -1,12 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import CustomPropTypes from "custom-prop-types";
+
+// Components
+// ------------------------------------------------
 import Header from "components/EditorLayout/Header";
 import ScrollPane from "components/ScrollPane";
 import { Grid } from "components/Grid";
 import MainCanvas from "components/MainCanvas";
 import Panel from "components/Panel";
 import ShareContent from "./ShareContent";
+// ------------------------------------------------
 
 // Boiler plate structure
 // ------------------------------------------------
@@ -28,7 +32,8 @@ const StyledMainCanvas = styled(MainCanvas)`
 `;
 // ------------------------------------------------
 
-const SharePage = () => {
+const SharePage = props => {
+  const { questionnaireId } = props.match.params;
   return (
     <Container>
       <Header title="Sharing" />
@@ -36,7 +41,7 @@ const SharePage = () => {
         <ScrollPane permanentScrollBar data-test="sharing-page-content">
           <StyledMainCanvas>
             <Panel>
-              <ShareContent />
+              <ShareContent questionnaireId={questionnaireId} />
             </Panel>
           </StyledMainCanvas>
         </ScrollPane>
