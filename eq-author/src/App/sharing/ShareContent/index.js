@@ -8,10 +8,11 @@ import TOGGLE_PUBLIC_MUTATION from "../graphql/TogglePublicMutation.graphql";
 import ALL_USERS from "../graphql/AllUsers.graphql";
 import config from "config";
 
+import EditorSearch from "./EditorSearch";
 import Loading from "components/Loading";
 import Error from "components/Error";
 import ToggleSwitch from "components/buttons/ToggleSwitch";
-import InformationPanel from "components/Panel";
+import { InformationPanel } from "components/Panel";
 
 import { useQuery } from "@apollo/react-hooks";
 
@@ -140,30 +141,15 @@ const Sharing = ({ questionnaire, toast }) => {
           questionnaire and add other editors.
         </InformationPanel>
       </Section>
-      <Section>
-        <EditorTitle>Add Editors</EditorTitle>
-        <Described>
-          Search for someone using their name or email address.
-        </Described>
-        <SearchContainer>
-          <SearchInput />
-          <AddButton
-            type="submit"
-            variant="primary"
-            data-test="editor-add-button"
-          >
-            Add
-          </AddButton>
-        </SearchContainer>
-      </Section>
+      <EditorSearch />
     </Layout>
   );
 };
 
 // ------------------------------------------------
 
-const OneWrapper = Component => {
-  const WrapperOne = props => (
+const QueryWrapper = Component => {
+  const GetQuestionnaireWrapper = props => (
     <Query
       query={GET_QUESTIONNAIRE}
       variables={{
@@ -185,10 +171,10 @@ const OneWrapper = Component => {
       }}
     </Query>
   );
-  return WrapperOne;
+  return GetQuestionnaireWrapper;
 };
 
-const ToastedUnwrappedSharing = flowRight(withShowToast, OneWrapper)(Sharing);
+const ToastedUnwrappedSharing = flowRight(withShowToast, QueryWrapper)(Sharing);
 
 TogglePublicLabel.propTypes = propType.ToggleLabelComp;
 Sharing.propTypes = propType.Share;
