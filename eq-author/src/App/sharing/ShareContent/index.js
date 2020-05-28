@@ -77,7 +77,6 @@ const TogglePublicLabel = ({ text, isActive }) => (
 
 const Sharing = ({ data, showToast }) => {
   const { id, isPublic, createdBy, editors } = data.questionnaire;
-  console.log(editors);
   const [pub, setIsPublic] = React.useState(isPublic);
 
   const [updateIsPublic] = useMutation(TOGGLE_PUBLIC_MUTATION);
@@ -140,7 +139,7 @@ const Sharing = ({ data, showToast }) => {
           questionnaire and add other editors.
         </InformationPanel>
       </Section>
-      <EditorSearch owner={createdBy} editors={editors} />
+      <EditorSearch questionnaireId={id} owner={createdBy} editors={editors} />
     </Layout>
   );
 };
