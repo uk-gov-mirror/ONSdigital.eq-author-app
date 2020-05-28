@@ -57,7 +57,7 @@ export const Separator = styled.span`
   border-left: 1px solid ${colors.blue};
   display: flex;
   align-items: center;
-  margin-left: 15px;
+  margin-left: 0.9em;
   height: 22px;
 `;
 
