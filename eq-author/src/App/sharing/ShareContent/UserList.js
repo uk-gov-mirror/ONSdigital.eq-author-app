@@ -1,74 +1,42 @@
 import React from "react";
-import styled from "styled-components";
 import PropTypes from "prop-types";
-
-import { colors } from "constants/theme";
 
 import ScrollPane from "components/ScrollPane";
 
 import iconGuestAvatar from "../styles/icon-guest-avatar.svg";
-import iconClose from "../styles/icon-close.svg";
 
-const List = styled.ul`
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  color: ${colors.text};
-  max-height: 10em;
-`;
+import {
+  List,
+  ListItem,
+  UserName,
+  UserEmail,
+  UserIcon,
+  RemoveButton,
+  UserOwner,
+} from "../styles/UserList";
 
-const ListItem = styled.li`
-  margin: 0 0 0.1em;
-  padding: 0.3em 0;
-  display: flex;
-  align-items: center;
-  position: relative;
-  color: #666;
-`;
+const User = PropTypes.shape({
+  picture: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+});
 
-const UserName = styled.div`
-  font-weight: bold;
-  font-size: 0.9em;
-`;
-
-const UserEmail = styled.div`
-  font-size: 0.9em;
-  margin-left: 0.5em;
-  opacity: 0.7;
-`;
-
-const UserIcon = styled.img`
-  margin-right: 0.25em;
-  height: 1.1em;
-`;
-
-const RemoveButton = styled.button`
-  appearance: none;
-  width: 1.5em;
-  height: 1.5em;
-  background: url(${iconClose}) no-repeat center;
-  background-size: 100%;
-  position: absolute;
-  right: 0.3em;
-  border: none;
-  padding: 0;
-  font-size: 1rem;
-  opacity: 0.5;
-  &:focus {
-    outline: 2px solid ${colors.tertiary};
-  }
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const UserOwner = styled.span`
-  position: absolute;
-  right: 0.5em;
-  font-size: 0.9em;
-  font-weight: bold;
-  opacity: 0.7;
-`;
+const propTypes = {
+  UserItem: {
+    user: PropTypes.shape({
+      isOwner: PropTypes.bool,
+      name: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      picture: PropTypes.string,
+    }),
+    onRemove: PropTypes.func.isRequired,
+  },
+  UserList: {
+    editors: PropTypes.arrayOf(User).isRequired,
+    owner: User.isRequired,
+    onRemove: PropTypes.func.isRequired,
+  },
+};
 
 const UserItem = ({ user, onRemove }) => {
   const { name, email, isOwner } = user;
@@ -91,15 +59,6 @@ const UserItem = ({ user, onRemove }) => {
     </ListItem>
   );
 };
-UserItem.propTypes = {
-  user: PropTypes.shape({
-    isOwner: PropTypes.bool,
-    name: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    picture: PropTypes.string,
-  }),
-  onRemove: PropTypes.func.isRequired,
-};
 
 const UserList = ({ editors, owner, onRemove }) => (
   <ScrollPane css={{ marginBottom: "1em" }} permanentScrollBar={false}>
@@ -111,16 +70,7 @@ const UserList = ({ editors, owner, onRemove }) => (
   </ScrollPane>
 );
 
-const User = PropTypes.shape({
-  picture: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-});
-
-UserList.propTypes = {
-  editors: PropTypes.arrayOf(User).isRequired,
-  owner: User.isRequired,
-  onRemove: PropTypes.func.isRequired,
-};
+UserItem.propTypes = propTypes.UserItem;
+UserList.propTypes = propTypes.UserList;
 
 export default UserList;
