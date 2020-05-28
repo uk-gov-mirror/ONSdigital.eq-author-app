@@ -12,7 +12,7 @@ import Error from "components/Error";
 import UserList from "./UserList";
 import UserSearch from "./UserSearch";
 
-import { Section, EditorTitle, SearchContainer, Described } from "../styles";
+import { Section, EditorTitle, Described } from "../styles";
 
 // ------------------------------------------------
 /*
@@ -89,9 +89,7 @@ const EditorSearch = ({ questionnaireId: id, users, owner, editors }) => {
         <Described>
           Search for someone using their name or email address.
         </Described>
-        <SearchContainer>
-          <UserSearch users={users} onUserSelect={addUser} />
-        </SearchContainer>
+        <UserSearch users={users} onUserSelect={addUser} />
         <UserList editors={editorList} owner={owner} onRemove={removeUser} />
       </Section>
     </>
