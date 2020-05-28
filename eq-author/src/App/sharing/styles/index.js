@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { colors } from "constants/theme";
-import { UncontrolledInput } from "components/Forms/Input";
+
 import Button from "components/buttons/Button";
 
 import iconLink from "./icons/icon-link.svg";
@@ -43,10 +43,6 @@ export const SectionTitle = styled.h3`
   margin: 0 0 1em;
 `;
 
-export const EditorTitle = styled(SectionTitle)`
-  margin: 0;
-`;
-
 export const SearchContainer = styled.div`
   margin: 1em 0 2em;
   background: #ebeef0;
@@ -57,15 +53,6 @@ export const SearchContainer = styled.div`
   width: 60%;
 `;
 
-export const SearchInput = styled(UncontrolledInput)`
-  padding: 0.5em;
-  font-size: 1em;
-  width: 80%;
-  border: 1px solid ${colors.borders};
-`;
-
-export const AddButton = styled(Button)``;
-
 export const Separator = styled.span`
   border-left: 1px solid ${colors.blue};
   display: flex;
@@ -74,7 +61,7 @@ export const Separator = styled.span`
   height: 22px;
 `;
 
-export const Wrapper = styled.div`
+export const FlexContainer = styled.div`
   display: flex;
 `;
 
@@ -88,7 +75,7 @@ export const PublicLabel = styled.span`
   color: ${props => (props.isActive ? colors.black : colors.grey)};
 `;
 
-export const ShareButton = styled(Button)`
+export const ShareLinkButton = styled(Button)`
   font-weight: bold;
   font-size: 0.8rem;
   line-height: 1.2;
@@ -113,4 +100,8 @@ export const ShareButton = styled(Button)`
     background: ${colors.darkGrey};
     color: ${colors.white};
   }
+`;
+
+export const EditorTitle = styled(SectionTitle)`
+  margin: 0;
 `;
