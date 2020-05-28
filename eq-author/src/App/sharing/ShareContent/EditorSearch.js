@@ -20,7 +20,31 @@ import { Section, EditorTitle, Described } from "../styles";
 1. Tidy everything up and correct the styling
 2. Look into replacing the questionnaire call with a local one
 
+
+
 */
+const dummyData = [
+  {
+    name: "Thomas McAuliffe",
+    email: "tom@mail.com",
+    id: "1",
+  },
+  {
+    name: "Thomas McAuliffe",
+    email: "tom@mail.com",
+    id: "12",
+  },
+  {
+    name: "Thomas McAuliffe",
+    email: "tom@mail.com",
+    id: "13",
+  },
+  {
+    name: "ThomasThomasThomasThomasThomasThomas",
+    email: "tom@mail.com tom@mail.com tom@mail.com",
+    id: "2",
+  },
+];
 // ------------------------------------------------
 
 const propType = {
@@ -90,7 +114,8 @@ const EditorSearch = ({ questionnaireId: id, users, owner, editors }) => {
           Search for someone using their name or email address.
         </Described>
         <UserSearch users={users} onUserSelect={addUser} />
-        <UserList editors={editorList} owner={owner} onRemove={removeUser} />
+        {/* <UserList editors={editorList} owner={owner} onRemove={removeUser} /> */}
+        <UserList editors={dummyData} owner={owner} onRemove={removeUser} />
       </Section>
     </>
   );
