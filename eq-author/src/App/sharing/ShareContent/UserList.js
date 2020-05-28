@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import ScrollPane from "components/ScrollPane";
 
-import iconGuestAvatar from "../styles/icon-guest-avatar.svg";
+import iconGuestAvatar from "../styles/icons/icon-guest-avatar.svg";
 
 import {
   List,
