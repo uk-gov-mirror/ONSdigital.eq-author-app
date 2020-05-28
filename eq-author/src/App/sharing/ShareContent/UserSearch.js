@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import reactStringReplace from "react-string-replace";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Downshift from "downshift";
-import gql from "graphql-tag";
 
 // import { Query, useMutation } from "react-apollo";
 
@@ -89,36 +88,20 @@ const highlighSearchTerm = (...args) =>
     <Highlight key={i}>{match}</Highlight>
   ));
 
-// const dummyData = [
-//   {
-//     name: "Thomas",
-//     email: "thomas@mail.com",
-//     id: "1",
-//   },
-//   {
-//     name: "Jenna",
-//     email: "Jenna@mail.com",
-//     id: "2",
-//   },
-// ];
-
 const UserSearch = ({ users, onUserSelect }) => {
-  const [user, setUser] = React.useState("");
-  //   const [user, setUser] = React.useState({ name: null, email: null, id: null });
+  const [user, setUser] = useState(null);
+
   const addUser = target => {
-    console.log("Hello world!", target);
+    console.log(target);
     setUser(target);
   };
-  //   const handleClick = event => {
-  //     onUserSelect(event);
-  //   };
+
   return (
     <>
       <Downshift
         initialIsOpen={false}
         onSelect={addUser}
-        // onSelect={onUserSelect}
-        itemToString={() => ""}
+        itemToString={user => (user ? user.name : "")}
       >
         {({
           getInputProps,
@@ -135,9 +118,6 @@ const UserSearch = ({ users, onUserSelect }) => {
               <SearchInput
                 {...getInputProps()}
                 placeholder="search people by name or email address"
-                // Can't do on change as it overwrites the getInputProps
-                // onChange={value => setUser(value)}
-                value={user.name}
               />
               <SearchResults {...getMenuProps()}>
                 {isOpen &&
