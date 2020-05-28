@@ -1,87 +1,32 @@
 import React, { useState } from "react";
 import reactStringReplace from "react-string-replace";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import Downshift from "downshift";
 
-// import { Query, useMutation } from "react-apollo";
-
-import { colors } from "constants/theme";
-
 import { Field, Label } from "components/Forms";
-
-import { UncontrolledInput } from "components/Forms/Input";
-
 import Button from "components/buttons/Button";
 
-const maxListHeight = 6;
+import {
+  SearchInput,
+  SearchResults,
+  SearchResult,
+  SearchResultName,
+  SearchResultEmail,
+  Highlight,
+} from "../styles/UserSearch";
 
-// ------------------------------------------------------------------------------
-
-/*
-
-Tomorrow I need to tidy everything up
-I need to read up about the downshift component - So I can remove the contents of the input
-Add the extra graphql mutations to handle updating the editors list
-Finish adding the tests
-
-Is my method wrong?
-
-*/
-
-// ------------------------------------------------------------------------------
-
-const SearchInput = styled(UncontrolledInput)`
-  padding: 0.5em;
-  font-size: 1em;
-  width: 100%;
-  border: 1px solid ${colors.borders};
-`;
-
-const SearchResults = styled.ul`
-  list-style: none;
-  margin: -1px 0 0;
-  padding: 0;
-  border: 1px solid ${colors.bordersLight};
-  max-height: ${maxListHeight}em;
-  overflow: scroll;
-  position: absolute;
-  width: 100%;
-  z-index: 2;
-  background: white;
-
-  &:empty {
-    display: none;
-  }
-`;
-
-const SearchResult = styled.li`
-  display: flex;
-  align-items: center;
-  font-size: 0.85em;
-  padding: 0.3em;
-  height: 2em;
-  cursor: pointer;
-  background-color: ${props =>
-    props.selected ? colors.lighterGrey : "transparent"};
-
-  &:not(:last-of-type) {
-    border-bottom: 1px solid ${colors.bordersLight};
-  }
-`;
-
-const SearchResultName = styled.span`
-  font-weight: bold;
-  margin-right: 0.5em;
-`;
-
-const SearchResultEmail = styled.span`
-  font-weight: normal;
-`;
-
-const Highlight = styled.span`
-  text-decoration: underline;
-`;
+const propTypes = {
+  UserSearch: {
+    users: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string,
+        email: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+    onUserSelect: PropTypes.func.isRequired,
+  },
+};
 
 const highlighSearchTerm = (...args) =>
   reactStringReplace(...args, (match, i) => (
@@ -92,7 +37,6 @@ const UserSearch = ({ users, onUserSelect }) => {
   const [user, setUser] = useState(null);
 
   const addUser = target => {
-    console.log(target);
     setUser(target);
   };
 
@@ -168,15 +112,6 @@ const UserSearch = ({ users, onUserSelect }) => {
   );
 };
 
-UserSearch.propTypes = {
-  users: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string,
-      email: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  onUserSelect: PropTypes.func.isRequired,
-};
+UserSearch.propTypes = propTypes.UserSearch;
 
 export default UserSearch;
