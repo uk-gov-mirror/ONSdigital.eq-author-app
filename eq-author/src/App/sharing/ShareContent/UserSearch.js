@@ -3,16 +3,18 @@ import reactStringReplace from "react-string-replace";
 import PropTypes from "prop-types";
 import Downshift from "downshift";
 
-import { Field, Label } from "components/Forms";
 import Button from "components/buttons/Button";
 
 import {
+  SearchContainer,
   SearchInput,
   SearchResults,
   SearchResult,
   SearchResultName,
   SearchResultEmail,
+  SearchField,
   Highlight,
+  SpacedFlexContainer,
 } from "../styles/UserSearch";
 
 const propTypes = {
@@ -50,61 +52,64 @@ const UserSearch = ({ users, onUserSelect }) => {
         {({
           getInputProps,
           getItemProps,
-          getLabelProps,
           getMenuProps,
           isOpen,
           inputValue,
           highlightedIndex,
         }) => (
           <div>
-            <Field>
-              <Label {...getLabelProps()}>Add editors</Label>
-              <SearchInput
-                {...getInputProps()}
-                placeholder="search people by name or email address"
-              />
-              <SearchResults {...getMenuProps()}>
-                {isOpen &&
-                  users
-                    .filter(user => {
-                      if (!inputValue) {
-                        return false;
-                      }
-                      const value = inputValue.toLowerCase();
-                      return (
-                        (user.name || "").toLowerCase().includes(value) ||
-                        user.email.toLowerCase().includes(value)
-                      );
-                    })
-                    .map((user, index) => (
-                      <SearchResult
-                        key={user.id}
-                        {...getItemProps({
-                          index,
-                          item: user,
-                          selected: highlightedIndex === index,
-                        })}
-                      >
-                        <SearchResultName>
-                          {highlighSearchTerm(user.name, inputValue)}
-                        </SearchResultName>
-                        <SearchResultEmail>
-                          {"<"}
-                          {highlighSearchTerm(user.email, inputValue)}
-                          {">"}
-                        </SearchResultEmail>
-                      </SearchResult>
-                    ))}
-              </SearchResults>
-              <Button
-                type="submit"
-                variant="primary"
-                data-test="editor-add-button"
-                onClick={() => onUserSelect(user)}
-              >
-                Add
-              </Button>
-            </Field>
+            <SearchContainer>
+              <SearchField>
+                <SpacedFlexContainer>
+                  <SearchInput
+                    {...getInputProps()}
+                    placeholder="search people by name or email address"
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    data-test="editor-add-button"
+                    onClick={() => onUserSelect(user)}
+                  >
+                    Add
+                  </Button>
+                </SpacedFlexContainer>
+                <SearchResults {...getMenuProps()}>
+                  {isOpen &&
+                    users
+                      .filter(user => {
+                        if (!inputValue) {
+                          return false;
+                        }
+                        const value = inputValue.toLowerCase();
+                        return (
+                          (user.name || "").toLowerCase().includes(value) ||
+                          user.email.toLowerCase().includes(value)
+                        );
+                      })
+                      .map((user, index) => (
+                        <SearchResult
+                          key={user.id}
+                          {...getItemProps({
+                            index,
+                            item: user,
+                            selected: highlightedIndex === index,
+                          })}
+                        >
+                          <SearchResultName>
+                            {highlighSearchTerm(user.name, inputValue)}
+                          </SearchResultName>
+                          <SearchResultEmail>
+                            {"<"}
+                            {highlighSearchTerm(user.email, inputValue)}
+                            {">"}
+                          </SearchResultEmail>
+                        </SearchResult>
+                      ))}
+                </SearchResults>
+              </SearchField>
+            </SearchContainer>
           </div>
         )}
       </Downshift>
