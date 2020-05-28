@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 
 import ScrollPane from "components/ScrollPane";
 
-import iconGuestAvatar from "../styles/icons/icon-guest-avatar.svg";
+import iconGuestAvatar from "../styles/icons/account_circle-24px.svg";
+// import iconGuestAvatar from "../styles/icons/icon-guest-avatar.svg";
 
 import {
   List,
@@ -13,6 +14,7 @@ import {
   UserIcon,
   RemoveButton,
   UserOwner,
+  Line,
 } from "../styles/UserList";
 
 const User = PropTypes.shape({
@@ -41,21 +43,30 @@ const propTypes = {
 const UserItem = ({ user, onRemove }) => {
   const { name, email, isOwner } = user;
   const picture = user.picture || iconGuestAvatar;
+  console.log("isOwner :>> ", isOwner);
   return (
-    <ListItem>
-      <UserIcon src={picture} alt="" />
+    <ListItem isOwner={isOwner}>
+      <div>
+        <UserIcon isOwner={isOwner} src={picture} alt="" />
 
-      <UserName>{name}</UserName>
-      {!isOwner && <UserEmail>{email}</UserEmail>}
+        <UserName>{name}</UserName>
+        {!isOwner && (
+          <Line>
+            <UserEmail>{email}</UserEmail>
+          </Line>
+        )}
 
-      {isOwner ? (
-        <UserOwner>owner</UserOwner>
-      ) : (
-        <RemoveButton
-          onClick={() => onRemove(user)}
-          aria-label="Remove editor"
-        />
-      )}
+        {isOwner ? (
+          <Line isOwner={isOwner}>
+            <UserOwner>Owner</UserOwner>
+          </Line>
+        ) : (
+          <RemoveButton
+            onClick={() => onRemove(user)}
+            aria-label="Remove editor"
+          />
+        )}
+      </div>
     </ListItem>
   );
 };
