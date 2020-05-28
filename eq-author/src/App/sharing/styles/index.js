@@ -2,9 +2,8 @@ import styled from "styled-components";
 import { colors } from "constants/theme";
 import { UncontrolledInput } from "components/Forms/Input";
 import Button from "components/buttons/Button";
-import DescribedText from "components/DescribedText";
 
-import iconLink from "./icon-link.svg";
+import iconLink from "./icons/icon-link.svg";
 
 export const Layout = styled.div`
   padding: 1.8em;
@@ -47,12 +46,6 @@ export const SectionTitle = styled.h3`
 export const EditorTitle = styled(SectionTitle)`
   margin: 0;
 `;
-
-// export const InsetText = styled.div`
-//   border-left: 10px solid #033e58;
-//   background: #eff0f9;
-//   padding: 1em;
-// `;
 
 export const SearchContainer = styled.div`
   margin: 1em 0 2em;
