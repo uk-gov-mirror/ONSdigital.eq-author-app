@@ -20,9 +20,9 @@ import {
   Section,
   SectionTitle,
   Separator,
-  Wrapper,
+  FlexContainer,
   PublicLabel,
-  ShareButton,
+  ShareLinkButton,
 } from "../styles";
 
 const propTypes = {
@@ -77,11 +77,11 @@ const Sharing = ({ data, showToast }) => {
         You can share your questionnaire with anyone who has an account with
         Author.
       </Description>
-      <ShareButton variant="tertiary" small onClick={handleShareClick}>
+      <ShareLinkButton variant="tertiary" small onClick={handleShareClick}>
         Get shareable link
-      </ShareButton>
+      </ShareLinkButton>
       <Section>
-        <Wrapper>
+        <FlexContainer>
           <SectionTitle>Public access</SectionTitle>
           <Separator>
             <TogglePublicLabel text="Off" isActive={!pub} />
@@ -94,7 +94,7 @@ const Sharing = ({ data, showToast }) => {
             />
             <TogglePublicLabel text="On" isActive={pub} />
           </Separator>
-        </Wrapper>
+        </FlexContainer>
         <InformationPanel>
           Let anyone with an Author account view your questionnaire. If public
           access is off, only editors
