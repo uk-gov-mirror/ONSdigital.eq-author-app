@@ -1,10 +1,12 @@
 import React from "react";
-import { flowRight } from "lodash";
 import PropTypes from "prop-types";
+import config from "config";
+
+import { flowRight } from "lodash";
 import { Query, useMutation } from "react-apollo";
+
 import GET_QUESTIONNAIRE from "../graphql/GetQuestionnaire.graphql";
 import TOGGLE_PUBLIC_MUTATION from "../graphql/TogglePublicMutation.graphql";
-import config from "config";
 
 import EditorSearch from "./EditorSearch";
 import Loading from "components/Loading";
@@ -59,6 +61,7 @@ const Sharing = ({ data, showToast }) => {
       variables: { input: { id, isPublic: !pub } },
     });
   };
+
   const handleShareClick = () => {
     const textField = document.createElement("textarea");
     textField.setAttribute("data-test", "share-link");
