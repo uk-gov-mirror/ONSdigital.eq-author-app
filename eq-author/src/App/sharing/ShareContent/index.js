@@ -1,11 +1,9 @@
 import React from "react";
 import { flowRight } from "lodash";
 import PropTypes from "prop-types";
-import CustomPropTypes from "custom-prop-types";
 import { Query, useMutation } from "react-apollo";
 import GET_QUESTIONNAIRE from "../graphql/GetQuestionnaire.graphql";
 import TOGGLE_PUBLIC_MUTATION from "../graphql/TogglePublicMutation.graphql";
-import ALL_USERS from "../graphql/AllUsers.graphql";
 import config from "config";
 
 import EditorSearch from "./EditorSearch";
@@ -14,8 +12,6 @@ import Error from "components/Error";
 import ToggleSwitch from "components/buttons/ToggleSwitch";
 import { InformationPanel } from "components/Panel";
 
-import { useQuery } from "@apollo/react-hooks";
-
 import { withShowToast } from "components/Toasts";
 import {
   Layout,
@@ -23,31 +19,13 @@ import {
   Description,
   Section,
   SectionTitle,
-  EditorTitle,
-  SearchInput,
-  SearchContainer,
   Separator,
   Wrapper,
   PublicLabel,
   ShareButton,
-  AddButton,
-  Described,
 } from "../styles";
 
-// ------------------------------------------------
-/*
-I want to be able to wrap the sharing page with the three necessary extras
-
-Succeeded in creating a double wrapped query with HOC's
-problem is I think it's redundant
-
-ON WEDNESDAY
-Going to rewrite to use the useQuery hook and batch it
-
-*/
-// ------------------------------------------------
-
-const propType = {
+const propTypes = {
   TogglePublicLabel: {
     text: PropTypes.string.isRequired,
     isActive: PropTypes.bool.isRequired,
@@ -59,16 +37,6 @@ const propType = {
     }),
     toast: PropTypes.func.isRequired,
   },
-  // UnwrappedSharing: {
-  //   loading: PropTypes.bool.isRequired,
-  //   error: PropTypes.object, //eslint-disable-line
-  //   data: PropTypes.shape({
-  //     questionnaire: CustomPropTypes.questionnaire,
-  //   }),
-  // },
-  // ShareContent: {
-  //   questionnaireId: PropTypes.string, // Isn't required but is needed
-  // },
 };
 
 const TogglePublicLabel = ({ text, isActive }) => (
@@ -174,9 +142,7 @@ const QueryWrapper = Component => {
 
 const ToastedUnwrappedSharing = flowRight(withShowToast, QueryWrapper)(Sharing);
 
-TogglePublicLabel.propTypes = propType.ToggleLabelComp;
-Sharing.propTypes = propType.Share;
-// UnwrappedSharing.propTypes = propType.UnwrappedSharing;
-// ShareContent.propTypes = propType.ShareContent;
+TogglePublicLabel.propTypes = propTypes.ToggleLabelComp;
+Sharing.propTypes = propTypes.Share;
 
 export default ToastedUnwrappedSharing;
