@@ -1,31 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { flowRight } from "lodash";
 import PropTypes from "prop-types";
 
 import { Query, useMutation } from "react-apollo";
 
 import ALL_USERS from "../graphql/AllUsers.graphql";
+import ADD_REMOVE_EDITOR from "../graphql/AddRemoveEditor.graphql";
 
 import Loading from "components/Loading";
 import Error from "components/Error";
 import UserList from "./UserList";
 import UserSearch from "./UserSearch";
 
-import { useQuery } from "@apollo/react-hooks";
-
-import {
-  Section,
-  EditorTitle,
-  SearchInput,
-  SearchContainer,
-  Described,
-} from "../styles";
+import { Section, EditorTitle, SearchContainer, Described } from "../styles";
 
 // ------------------------------------------------
 /*
 
-1. Need to remove users 
-2. Want to add a toast to say you can't remove users
+1. Tidy everything up and correct the styling
+2. Look into replacing the questionnaire call with a local one
 
 */
 // ------------------------------------------------
@@ -40,35 +33,55 @@ const propType = {
       })
     ).isRequired,
   },
+  GetUserWrapper: {
+    owner: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      email: PropTypes.string,
+    }),
+    editors: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+        email: PropTypes.string,
+      })
+    ),
+  },
 };
 
-const dummyData = [
-  {
-    name: "Thomas",
-    email: "thomesmac@gmail.com",
-    id: "1",
-  },
-  {
-    name: "Jenna",
-    email: "Jenna@mail.com",
-    id: "2",
-  },
-];
+const EditorSearch = ({ questionnaireId: id, users, owner, editors }) => {
+  const [editorList, setEditorList] = useState(editors);
 
-const EditorSearch = ({ users: userList, owner, editors }) => {
-  const [editorList, setEditorList] = React.useState(editors);
+  const [mutateEditors] = useMutation(ADD_REMOVE_EDITOR);
+
   const removeUser = event => {
-    // needs to catch owner better
-    // Will add a toast to show that the
-    const updatedUsers = editorList.filter(user => user.id !== event.id);
+    const updatedEditors = editorList.filter(user => user.id !== event.id);
 
-    console.log("updatedUsers :>> ", updatedUsers);
-    setEditorList(updatedUsers);
+    setEditorList(updatedEditors);
+
+    mutateEditors({
+      variables: {
+        input: { id, editors: updatedEditors.map(editor => editor.id) },
+      },
+    });
   };
 
   const addUser = user => {
-    setEditorList(userList => [...userList, user]);
+    const isEditor = editorList.some(
+      editor => editor.id !== user.id || user.id !== owner.id
+    );
+
+    if (!isEditor) {
+      const updatedEditors = editorList.concat(user);
+      setEditorList(updatedEditors);
+      mutateEditors({
+        variables: {
+          input: { id, editors: updatedEditors.map(editor => editor.id) },
+        },
+      });
+    }
   };
+
   return (
     <>
       <Section>
@@ -77,15 +90,13 @@ const EditorSearch = ({ users: userList, owner, editors }) => {
           Search for someone using their name or email address.
         </Described>
         <SearchContainer>
-          <UserSearch users={userList} onUserSelect={addUser} />
+          <UserSearch users={users} onUserSelect={addUser} />
         </SearchContainer>
         <UserList editors={editorList} owner={owner} onRemove={removeUser} />
       </Section>
     </>
   );
 };
-
-// ------------------------------------------------
 
 const QueryWrapper = Component => {
   const GetUserWrapper = props => (
@@ -94,23 +105,30 @@ const QueryWrapper = Component => {
         if (innerprops.loading) {
           return <Loading height="38rem">Page loading…</Loading>;
         }
+
         if (innerprops.error) {
           return <Error>Oops! Something went wrong</Error>;
         }
+
         return (
           <Component
-            users={innerprops.data}
+            users={innerprops.data.users}
             owner={props.owner}
             editors={props.editors}
+            questionnaireId={props.questionnaireId}
           />
         );
       }}
     </Query>
   );
+
+  GetUserWrapper.propTypes = propType.GetUserWrapper;
+
   return GetUserWrapper;
 };
 
 const QueryWrapped = flowRight(QueryWrapper)(EditorSearch);
 
 EditorSearch.propTypes = propType.EditorSearch;
+
 export default QueryWrapped;
