@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { colors } from "constants/theme";
 
 import { UncontrolledInput } from "components/Forms/Input";
+import { Field } from "components/Forms";
 
 const maxListHeight = 6;
 
@@ -10,6 +11,7 @@ export const SearchInput = styled(UncontrolledInput)`
   font-size: 1em;
   width: 100%;
   border: 1px solid ${colors.borders};
+  margin-right: 1em;
 `;
 
 export const SearchResults = styled.ul`
@@ -55,4 +57,20 @@ export const SearchResultEmail = styled.span`
 
 export const Highlight = styled.span`
   text-decoration: underline;
+`;
+
+export const SearchContainer = styled.div`
+  margin: 1em 0 2em;
+  background: #ebeef0;
+  height: 100%;
+  padding: 1.5em 1.5em;
+  width: 60%;
+`;
+export const SpacedFlexContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+export const SearchField = styled(Field)`
+  margin-bottom: 0;
 `;
