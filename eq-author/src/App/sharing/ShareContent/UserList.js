@@ -43,7 +43,6 @@ const propTypes = {
 const UserItem = ({ user, onRemove }) => {
   const { name, email, isOwner } = user;
   const picture = user.picture || iconGuestAvatar;
-  console.log("isOwner :>> ", isOwner);
   return (
     <ListItem isOwner={isOwner}>
       <div>
