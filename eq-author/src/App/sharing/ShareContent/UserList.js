@@ -12,7 +12,7 @@ import {
   UserIcon,
   RemoveButton,
   UserOwner,
-  Line,
+  UserSeparator,
 } from "../styles/UserList";
 
 const User = PropTypes.shape({
@@ -46,17 +46,17 @@ const UserItem = ({ user, onRemove }) => {
       <UserContainer isOwner={isOwner}>
         <UserIcon src={picture} alt="" />
 
-        <UserName>{name}</UserName>
-        {!isOwner && (
-          <Line>
+        {name ? <UserName>{name}</UserName> : <UserEmail>{email}</UserEmail>}
+        {!isOwner && name && (
+          <UserSeparator>
             <UserEmail>{email}</UserEmail>
-          </Line>
+          </UserSeparator>
         )}
 
         {isOwner ? (
-          <Line>
+          <UserSeparator>
             <UserOwner>Owner</UserOwner>
-          </Line>
+          </UserSeparator>
         ) : (
           <RemoveButton
             onClick={() => onRemove(user)}

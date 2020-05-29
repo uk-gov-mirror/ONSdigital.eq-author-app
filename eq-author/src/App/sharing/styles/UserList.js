@@ -11,6 +11,8 @@ const iconColors = {
     "invert(46%) sepia(4%) saturate(4439%) hue-rotate(158deg) brightness(94%) contrast(103%)",
 };
 
+const USER_FONT_SIZE = "0.8em";
+
 export const RemoveButton = styled.button`
   appearance: none;
   width: 1.5em;
@@ -43,42 +45,43 @@ export const ListItem = styled.li`
   position: relative;
   color: #666;
   div {
-    display: flex;
+    /* display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: center; */
     padding: 0.3em 0.5em;
   }
 `;
 
 export const UserName = styled.span`
+  font-size: ${USER_FONT_SIZE};
   color: ${colors.text};
   font-weight: bold;
-  font-size: 0.9em;
+  padding: 0.3em 0.5em;
 `;
 
 export const UserEmail = styled.div`
-  color: ${colors.textLight};
-  font-size: 0.9em;
+  font-size: ${USER_FONT_SIZE};
+  color: ${colors.text};
   margin-left: 0.9em;
   opacity: 0.7;
-  font-weight: bold;
+  font-weight: 600;
 `;
 
 export const UserOwner = styled.span`
+  font-size: ${USER_FONT_SIZE};
+  color: ${colors.white};
   margin-left: 0.9em;
   margin-right: 1.2em;
-  font-size: 0.9em;
   font-weight: bold;
   opacity: 0.7;
 `;
 
 export const UserIcon = styled.img`
-  margin-right: 0.25em;
   height: 1.1em;
   filter: ${iconColors.notOwner};
 `;
 
-export const Line = styled(Separator)`
+export const UserSeparator = styled(Separator)`
   margin-left: 0.6em;
   border-left: 1px solid ${colors.blue};
 `;
@@ -96,10 +99,14 @@ export const UserContainer = styled.div`
       ${UserName} {
         color: ${colors.white};
       }
+      ${UserEmail} {
+        color: ${colors.white};
+        margin-left: 0;
+      }
       ${UserIcon} {
         filter: ${iconColors.owner};
       }
-      ${Line} {
+      ${UserSeparator} {
         border-left: 1px solid ${colors.white};
       }
     `};
