@@ -12,7 +12,7 @@ import Error from "components/Error";
 import UserList from "./UserList";
 import UserSearch from "./UserSearch";
 
-import { Section, EditorTitle, Described } from "../styles";
+import { Section, EditorTitle, Described } from "../styles/SharePageContent";
 
 const User = PropTypes.shape({
   picture: PropTypes.string,

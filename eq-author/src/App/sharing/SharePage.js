@@ -1,36 +1,19 @@
 import React from "react";
-import styled from "styled-components";
 import CustomPropTypes from "custom-prop-types";
 
-// Components
-// ------------------------------------------------
 import Header from "components/EditorLayout/Header";
 import ScrollPane from "components/ScrollPane";
-import { Grid } from "components/Grid";
-import MainCanvas from "components/MainCanvas";
+
 import Panel from "components/Panel";
 import ShareContent from "./SharePageContent";
-// ------------------------------------------------
 
-// Boiler plate structure
-// ------------------------------------------------
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-`;
+import { Container, StyledGrid, StyledMainCanvas } from "./styles/SharePage";
 
-const StyledGrid = styled(Grid)`
-  overflow: hidden;
-  padding-top: 2em;
-`;
-
-const StyledMainCanvas = styled(MainCanvas)`
-  padding: 0 0.5em 0 1em;
-  max-width: 80em;
-`;
-// ------------------------------------------------
+const propTypes = {
+  SharePage: {
+    match: CustomPropTypes.match.isRequired,
+  },
+};
 
 const SharePage = props => {
   const { questionnaireId } = props.match.params;
@@ -50,8 +33,6 @@ const SharePage = props => {
   );
 };
 
-SharePage.propTypes = {
-  match: CustomPropTypes.match.isRequired,
-};
+SharePage.propTypes = propTypes.SharePage;
 
 export default SharePage;

@@ -3,15 +3,15 @@ import { colors } from "constants/theme";
 
 import iconClose from "./icons/icon-close.svg";
 
-import { Separator } from "./index";
+import { Separator } from "./SharePageContent";
+
+const USER_FONT_SIZE = "0.8em";
 
 const iconColors = {
   owner: "none",
   notOwner:
     "invert(46%) sepia(4%) saturate(4439%) hue-rotate(158deg) brightness(94%) contrast(103%)",
 };
-
-const USER_FONT_SIZE = "0.8em";
 
 export const RemoveButton = styled.button`
   appearance: none;
@@ -44,12 +44,6 @@ export const ListItem = styled.li`
   align-items: center;
   position: relative;
   color: #666;
-  div {
-    /* display: flex;
-    flex-direction: row;
-    align-items: center; */
-    padding: 0.3em 0.5em;
-  }
 `;
 
 export const UserName = styled.span`

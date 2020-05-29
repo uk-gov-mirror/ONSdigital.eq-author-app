@@ -8,13 +8,14 @@ import { Query, useMutation } from "react-apollo";
 import GET_QUESTIONNAIRE from "../graphql/GetQuestionnaire.graphql";
 import TOGGLE_PUBLIC_MUTATION from "../graphql/TogglePublicMutation.graphql";
 
-import EditorSearch from "./EditorSearch";
 import Loading from "components/Loading";
 import Error from "components/Error";
 import ToggleSwitch from "components/buttons/ToggleSwitch";
 import { InformationPanel } from "components/Panel";
-
 import { withShowToast } from "components/Toasts";
+
+import EditorSearch from "./EditorSearch";
+
 import {
   Layout,
   PageTitle,
@@ -25,7 +26,7 @@ import {
   FlexContainer,
   PublicLabel,
   ShareLinkButton,
-} from "../styles";
+} from "../styles/SharePageContent";
 
 const propTypes = {
   TogglePublicLabel: {
