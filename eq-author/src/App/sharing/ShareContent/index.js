@@ -39,6 +39,9 @@ const propTypes = {
     }),
     toast: PropTypes.func.isRequired,
   },
+  GetQuestionnaireWrapper: {
+    questionnaireId: PropTypes.string,
+  },
 };
 
 const TogglePublicLabel = ({ text, isActive }) => (
@@ -123,7 +126,6 @@ const QueryWrapper = Component => {
       query={GET_QUESTIONNAIRE}
       variables={{
         input: {
-          // This isn't actually defined which is super weird
           questionnaireId: props.questionnaireId,
         },
       }}
@@ -140,6 +142,8 @@ const QueryWrapper = Component => {
       }}
     </Query>
   );
+  GetQuestionnaireWrapper.propTypes = propTypes.GetQuestionnaireWrapper;
+
   return GetQuestionnaireWrapper;
 };
 
