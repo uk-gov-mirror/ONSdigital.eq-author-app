@@ -1,14 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import ScrollPane from "components/ScrollPane";
-
-import iconGuestAvatar from "../styles/icons/account_circle-24px.svg";
-// import iconGuestAvatar from "../styles/icons/icon-guest-avatar.svg";
+import iconGuestAvatar from "../styles/icons/icon-avatar.svg";
 
 import {
   List,
   ListItem,
+  UserContainer,
   UserName,
   UserEmail,
   UserIcon,
@@ -44,9 +42,9 @@ const UserItem = ({ user, onRemove }) => {
   const { name, email, isOwner } = user;
   const picture = user.picture || iconGuestAvatar;
   return (
-    <ListItem isOwner={isOwner}>
-      <div>
-        <UserIcon isOwner={isOwner} src={picture} alt="" />
+    <ListItem>
+      <UserContainer isOwner={isOwner}>
+        <UserIcon src={picture} alt="" />
 
         <UserName>{name}</UserName>
         {!isOwner && (
@@ -56,7 +54,7 @@ const UserItem = ({ user, onRemove }) => {
         )}
 
         {isOwner ? (
-          <Line isOwner={isOwner}>
+          <Line>
             <UserOwner>Owner</UserOwner>
           </Line>
         ) : (
@@ -65,19 +63,17 @@ const UserItem = ({ user, onRemove }) => {
             aria-label="Remove editor"
           />
         )}
-      </div>
+      </UserContainer>
     </ListItem>
   );
 };
 
 const UserList = ({ editors, owner, onRemove }) => (
-  <ScrollPane css={{ marginBottom: "1em" }} permanentScrollBar={false}>
-    <List>
-      {[{ ...owner, isOwner: true }, ...editors].map(user => (
-        <UserItem key={user.id} user={user} onRemove={onRemove} />
-      ))}
-    </List>
-  </ScrollPane>
+  <List>
+    {[{ ...owner, isOwner: true }, ...editors].map(user => (
+      <UserItem key={user.id} user={user} onRemove={onRemove} />
+    ))}
+  </List>
 );
 
 UserItem.propTypes = propTypes.UserItem;
