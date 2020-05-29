@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { flowRight } from "lodash";
+import React from "react";
 import PropTypes from "prop-types";
+import { flowRight } from "lodash";
 
 import { Query, useMutation } from "react-apollo";
 
@@ -14,74 +14,27 @@ import UserSearch from "./UserSearch";
 
 import { Section, EditorTitle, Described } from "../styles";
 
-// ------------------------------------------------
-/*
-
-1. Tidy everything up and correct the styling
-2. Look into replacing the questionnaire call with a local one
-
-
-
-*/
-const dummyData = [
-  {
-    name: "Thomas McAuliffe",
-    email: "tom@mail.com",
-    id: "1",
-  },
-  {
-    name: "Thomas McAuliffe",
-    email: "tom@mail.com",
-    id: "12",
-  },
-  {
-    name: "Thomas McAuliffe",
-    email: "tom@mail.com",
-    id: "13",
-  },
-  {
-    name: "ThomasThomasThomasThomasThomasThomas",
-    email: "tom@mail.com tom@mail.com tom@mail.com",
-    id: "2",
-  },
-];
-// ------------------------------------------------
+const User = PropTypes.shape({
+  picture: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+});
 
 const propType = {
   EditorSearch: {
-    users: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
-        email: PropTypes.string,
-      })
-    ).isRequired,
+    users: PropTypes.arrayOf(User).isRequired,
   },
   GetUserWrapper: {
-    owner: PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      email: PropTypes.string,
-    }),
-    editors: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
-        email: PropTypes.string,
-      })
-    ),
+    owner: PropTypes.shape(User),
+    editors: PropTypes.arrayOf(PropTypes.shape(User)),
   },
 };
 
 const EditorSearch = ({ questionnaireId: id, users, owner, editors }) => {
-  const [editorList, setEditorList] = useState(editors);
-
   const [mutateEditors] = useMutation(ADD_REMOVE_EDITOR);
 
   const removeUser = event => {
-    const updatedEditors = editorList.filter(user => user.id !== event.id);
-
-    setEditorList(updatedEditors);
+    const updatedEditors = editors.filter(user => user.id !== event.id);
 
     mutateEditors({
       variables: {
@@ -91,13 +44,12 @@ const EditorSearch = ({ questionnaireId: id, users, owner, editors }) => {
   };
 
   const addUser = user => {
-    const isEditor = editorList.some(
+    const isEditor = editors.some(
       editor => editor.id !== user.id || user.id !== owner.id
     );
 
     if (!isEditor) {
-      const updatedEditors = editorList.concat(user);
-      setEditorList(updatedEditors);
+      const updatedEditors = editors.concat(user);
       mutateEditors({
         variables: {
           input: { id, editors: updatedEditors.map(editor => editor.id) },
@@ -114,8 +66,7 @@ const EditorSearch = ({ questionnaireId: id, users, owner, editors }) => {
           Search for someone using their name or email address.
         </Described>
         <UserSearch users={users} onUserSelect={addUser} />
-        {/* <UserList editors={editorList} owner={owner} onRemove={removeUser} /> */}
-        <UserList editors={dummyData} owner={owner} onRemove={removeUser} />
+        <UserList editors={editors} owner={owner} onRemove={removeUser} />
       </Section>
     </>
   );
@@ -123,7 +74,7 @@ const EditorSearch = ({ questionnaireId: id, users, owner, editors }) => {
 
 const QueryWrapper = Component => {
   const GetUserWrapper = props => (
-    <Query query={ALL_USERS} fetchPolicy="no-cache">
+    <Query query={ALL_USERS}>
       {innerprops => {
         if (innerprops.loading) {
           return <Loading height="38rem">Page loading…</Loading>;
