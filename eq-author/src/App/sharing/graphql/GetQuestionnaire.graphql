@@ -1,5 +1,5 @@
 query GetQuestionnaire($input: QueryInput!) {
-  questionnaire(input: $input) {
+  questionnaire(input: $input) @client {
     id
     isPublic
     createdBy {
