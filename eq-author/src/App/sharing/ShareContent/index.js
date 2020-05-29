@@ -40,7 +40,7 @@ const propTypes = {
     toast: PropTypes.func.isRequired,
   },
   GetQuestionnaireWrapper: {
-    questionnaireId: PropTypes.string,
+    questionnaireId: PropTypes.string.isRequired,
   },
 };
 
@@ -50,7 +50,6 @@ const TogglePublicLabel = ({ text, isActive }) => (
 
 const Sharing = ({ data, showToast }) => {
   const { id, isPublic, createdBy, editors } = data.questionnaire;
-  const [pub, setIsPublic] = React.useState(isPublic);
 
   const [updateIsPublic] = useMutation(TOGGLE_PUBLIC_MUTATION);
 
@@ -58,12 +57,10 @@ const Sharing = ({ data, showToast }) => {
     (data.questionnaire || {}).id
   }`;
 
-  const togglePublic = () => {
-    setIsPublic(!pub);
+  const togglePublic = () =>
     updateIsPublic({
-      variables: { input: { id, isPublic: !pub } },
+      variables: { input: { id, isPublic: !isPublic } },
     });
-  };
 
   const handleShareClick = () => {
     const textField = document.createElement("textarea");
@@ -90,15 +87,15 @@ const Sharing = ({ data, showToast }) => {
         <FlexContainer>
           <SectionTitle>Public access</SectionTitle>
           <Separator>
-            <TogglePublicLabel text="Off" isActive={!pub} />
+            <TogglePublicLabel text="Off" isActive={!isPublic} />
 
             <ToggleSwitch
               id="public"
               name="public"
               onChange={togglePublic}
-              checked={pub}
+              checked={isPublic}
             />
-            <TogglePublicLabel text="On" isActive={pub} />
+            <TogglePublicLabel text="On" isActive={isPublic} />
           </Separator>
         </FlexContainer>
         <InformationPanel>
@@ -118,8 +115,6 @@ const Sharing = ({ data, showToast }) => {
   );
 };
 
-// ------------------------------------------------
-
 const QueryWrapper = Component => {
   const GetQuestionnaireWrapper = props => (
     <Query
@@ -129,7 +124,6 @@ const QueryWrapper = Component => {
           questionnaireId: props.questionnaireId,
         },
       }}
-      fetchPolicy="no-cache"
     >
       {innerprops => {
         if (innerprops.loading) {
