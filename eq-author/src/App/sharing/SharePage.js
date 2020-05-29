@@ -9,7 +9,7 @@ import ScrollPane from "components/ScrollPane";
 import { Grid } from "components/Grid";
 import MainCanvas from "components/MainCanvas";
 import Panel from "components/Panel";
-import ShareContent from "./ShareContent";
+import ShareContent from "./SharePageContent";
 // ------------------------------------------------
 
 // Boiler plate structure

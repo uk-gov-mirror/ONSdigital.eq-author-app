@@ -22,7 +22,7 @@ const User = PropTypes.shape({
 
 const propType = {
   EditorSearch: {
-    users: PropTypes.arrayOf(User).isRequired,
+    users: PropTypes.arrayOf(User),
   },
   GetUserWrapper: {
     owner: PropTypes.shape(User),

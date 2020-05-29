@@ -34,13 +34,16 @@ export const Section = styled.div`
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
   }
+  &:last-of-type {
+    padding-top: 0;
+  }
 `;
 
 export const SectionTitle = styled.h3`
   font-size: 1.1em;
   font-weight: bold;
   color: ${colors.text};
-  margin: 0 0 1em;
+  margin: 0 0 0em;
 `;
 
 export const SearchContainer = styled.div`
