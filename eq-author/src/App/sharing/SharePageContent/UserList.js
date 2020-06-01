@@ -16,24 +16,24 @@ import {
 } from "../styles/UserList";
 
 const User = PropTypes.shape({
-  picture: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
+  // picture: PropTypes.string,
+  // name: PropTypes.string,
+  // email: PropTypes.string,
 });
 
 const propTypes = {
   UserItem: {
     user: PropTypes.shape({
       isOwner: PropTypes.bool,
-      name: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
+      name: PropTypes.string,
+      email: PropTypes.string,
       picture: PropTypes.string,
     }),
     onRemove: PropTypes.func.isRequired,
   },
   UserList: {
-    editors: PropTypes.arrayOf(User).isRequired,
-    owner: User.isRequired,
+    editors: PropTypes.arrayOf(User),
+    owner: User,
     onRemove: PropTypes.func.isRequired,
   },
 };
@@ -77,6 +77,6 @@ const UserList = ({ editors, owner, onRemove }) => (
 );
 
 UserItem.propTypes = propTypes.UserItem;
-UserList.propTypes = propTypes.UserList;
+// UserList.propTypes = propTypes.UserList;
 
 export default UserList;

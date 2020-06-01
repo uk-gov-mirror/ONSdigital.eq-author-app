@@ -41,7 +41,7 @@ const propTypes = {
     toast: PropTypes.func.isRequired,
   },
   GetQuestionnaireWrapper: {
-    questionnaireId: PropTypes.string.isRequired,
+    questionnaireId: PropTypes.string,
   },
 };
 
@@ -127,8 +127,6 @@ const QueryWrapper = Component => {
       }}
     >
       {innerprops => {
-        console.log("innerprops :>> ", innerprops);
-        console.log("what");
         if (innerprops.loading) {
           return <Loading height="38rem">Page loading…</Loading>;
         }

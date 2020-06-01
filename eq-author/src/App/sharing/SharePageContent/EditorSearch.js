@@ -16,8 +16,8 @@ import { Section, EditorTitle, Described } from "../styles/SharePageContent";
 
 const User = PropTypes.shape({
   picture: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  email: PropTypes.string,
 });
 
 const propType = {
@@ -25,8 +25,10 @@ const propType = {
     users: PropTypes.arrayOf(User),
   },
   GetUserWrapper: {
-    owner: PropTypes.shape(User),
-    editors: PropTypes.arrayOf(PropTypes.shape(User)),
+    questionnaireId: PropTypes.string,
+    users: PropTypes.arrayOf(User),
+    // owner: PropTypes.shape(User),
+    // editors: PropTypes.arrayOf(PropTypes.shape(User)),
   },
 };
 
@@ -86,16 +88,16 @@ const QueryWrapper = Component => {
 
         return (
           <Component
+            questionnaireId={props.questionnaireId}
             users={innerprops.data.users}
             owner={props.owner}
             editors={props.editors}
-            questionnaireId={props.questionnaireId}
           />
         );
       }}
     </Query>
   );
-
+  // this removes eslint rule and by removing owner and editors it does produce console error
   GetUserWrapper.propTypes = propType.GetUserWrapper;
 
   return GetUserWrapper;

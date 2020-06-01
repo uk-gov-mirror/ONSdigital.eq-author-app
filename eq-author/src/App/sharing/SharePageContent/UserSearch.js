@@ -21,11 +21,11 @@ const propTypes = {
   UserSearch: {
     users: PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.string.isRequired,
+        id: PropTypes.string,
         name: PropTypes.string,
-        email: PropTypes.string.isRequired,
+        email: PropTypes.string,
       })
-    ).isRequired,
+    ),
     onUserSelect: PropTypes.func.isRequired,
   },
 };
