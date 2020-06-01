@@ -1,0 +1,416 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Share Page should render 1`] = `
+Object {
+  "asFragment": [Function],
+  "baseElement": .c3 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c1 {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  min-width: 10em;
+  margin-bottom: 0;
+  z-index: 99999999;
+}
+
+.c2 {
+  display: inline-block;
+  text-align: initial;
+}
+
+.c0 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c9 {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  overflow: hidden;
+  white-space: pre;
+  color: #FFFFFF;
+  padding: 0 1.5em 1em;
+}
+
+.c10 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0;
+  width: 100%;
+  line-height: 1.3;
+}
+
+.c5 {
+  color: #FFFFFF;
+  background: #3B7A9E;
+  font-weight: 400;
+  position: relative;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 1em 1.5em;
+}
+
+.c7 {
+  font-weight: bold;
+}
+
+.c11 {
+  position: absolute;
+  right: 2em;
+  bottom: 0.5em;
+}
+
+.c13 {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+  -webkit-background-clip: text;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+
+.c13::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  box-shadow: none;
+  background-color: #d6d8da;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+
+.c13::-webkit-scrollbar-track {
+  border-radius: 0;
+  box-shadow: none;
+  background: rgba(0,0,0,0.1);
+}
+
+.c13::-webkit-scrollbar {
+  width: 10px;
+}
+
+.c13 >:first-child {
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+}
+
+.c13:hover::-webkit-scrollbar-thumb {
+  background-color: #bbbfc2;
+}
+
+.c15 {
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  border: 1px solid #d6d8da;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  overflow: hidden;
+  padding-top: 2em;
+}
+
+.c14 {
+  max-width: 55em;
+  margin: 0 auto 1em;
+  padding: 0 1em;
+  position: relative;
+  width: 100%;
+  padding: 0 0.5em 0 1em;
+  max-width: 80em;
+}
+
+@media (max-height:680px) {
+  .c12 {
+    height: auto;
+  }
+}
+
+<body>
+    <div
+      id="toast"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2"
+          >
+            <ol
+              aria-live="assertive"
+              aria-relevant="additions removals"
+              class="c3"
+              role="alert"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c4"
+      >
+        <header
+          class="c5"
+        >
+          <div
+            class="c6"
+          >
+            <div
+              class="c7"
+            />
+          </div>
+          <div
+            class="c8"
+          >
+            <span
+              class="c9"
+            >
+              <h1
+                class="c10"
+                data-test="questionnaire-title"
+              >
+                Sharing
+                 
+              </h1>
+            </span>
+          </div>
+          <div
+            class="c11"
+          >
+            <div />
+          </div>
+        </header>
+        <div
+          class="c12"
+          data-test="grid"
+        >
+          <div
+            class="c13"
+            data-test="sharing-page-content"
+          >
+            <main
+              class="c14"
+            >
+              <div
+                class="c15"
+              >
+                <div />
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="SharePage__Container-sc-3qvfzi-0 cvIKTR"
+    >
+      <header
+        class="Header__StyledHeader-amzyc0-0 daEDZn"
+      >
+        <div
+          class="Header__Flex-amzyc0-1 dcjRxl"
+        >
+          <div
+            class="Header__Subtitle-amzyc0-2 egipIu"
+          />
+        </div>
+        <div
+          class="PageTitle__Wrapper-sc-9ichkv-0 UfwqJ"
+        >
+          <span
+            class="Truncated-sc-1ql7w8e-0 sHDBU"
+          >
+            <h1
+              class="PageTitle__Title-sc-9ichkv-1 hgzTAf"
+              data-test="questionnaire-title"
+            >
+              Sharing
+               
+            </h1>
+          </span>
+        </div>
+        <div
+          class="Header__SavingContainer-amzyc0-4 kxwzGe"
+        >
+          <div />
+        </div>
+      </header>
+      <div
+        class="Grid-vhqpl-0 SharePage__StyledGrid-sc-3qvfzi-1 cOjdxA"
+        data-test="grid"
+      >
+        <div
+          class="ScrollPane-l5f9wg-0 jfrWMc"
+          data-test="sharing-page-content"
+        >
+          <main
+            class="MainCanvas-sc-847h59-0 SharePage__StyledMainCanvas-sc-3qvfzi-2 ertwxC"
+          >
+            <div
+              class="Panel-sc-813jnv-0 bWbtic"
+            >
+              <div />
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "history": Object {
+    "action": "POP",
+    "block": [Function],
+    "canGo": [Function],
+    "createHref": [Function],
+    "entries": Array [
+      Object {
+        "hash": "",
+        "key": Any<String>,
+        "pathname": "/q/1/sharing",
+        "search": "",
+        "state": undefined,
+      },
+    ],
+    "go": [Function],
+    "goBack": [Function],
+    "goForward": [Function],
+    "index": 0,
+    "length": 1,
+    "listen": [Function],
+    "location": Object {
+      "hash": "",
+      "key": Any<String>,
+      "pathname": "/q/1/sharing",
+      "search": "",
+      "state": undefined,
+    },
+    "push": [Function],
+    "replace": [Function],
+  },
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

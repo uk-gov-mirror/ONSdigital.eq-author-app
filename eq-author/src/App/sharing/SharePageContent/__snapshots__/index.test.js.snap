@@ -1,0 +1,654 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Share Page should render 1`] = `
+Object {
+  "asFragment": [Function],
+  "baseElement": .c3 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c1 {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  min-width: 10em;
+  margin-bottom: 0;
+  z-index: 99999999;
+}
+
+.c2 {
+  display: inline-block;
+  text-align: initial;
+}
+
+.c0 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c14 {
+  font-size: 1em;
+  border: thin solid #999999;
+  padding: 0.5em;
+  color: #333333;
+  display: block;
+  width: 100%;
+  -webkit-transition: outline-color 100ms ease-in,border-color 100ms ease-in;
+  transition: outline-color 100ms ease-in,border-color 100ms ease-in;
+  outline: thin solid transparent;
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  padding: 0;
+  margin: 0 1em 0 0;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-size: 1em;
+}
+
+.c14:hover {
+  border-color: #3B7A9E;
+  outline-color: #3B7A9E;
+}
+
+.c14:focus,
+.c14:focus-within {
+  border-color: #3B7A9E;
+  outline-color: #3B7A9E;
+  box-shadow: 0 0 0 3px #FDBD56;
+}
+
+.c14::-webkit-input-placeholder {
+  color: #a3a3a3;
+}
+
+.c14::-moz-placeholder {
+  color: #a3a3a3;
+}
+
+.c14:-ms-input-placeholder {
+  color: #a3a3a3;
+}
+
+.c14::placeholder {
+  color: #a3a3a3;
+}
+
+.c14:focus {
+  outline: none;
+  border: 1px solid #3B7A9E;
+}
+
+.c14[disabled] {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.c14:checked {
+  background: url(icon-checkbox.svg) no-repeat center;
+  background-size: 0.8em auto;
+}
+
+.c17 {
+  height: 1em;
+  width: 1.5em;
+  top: 0.6000000000000001em;
+  background: #3B7A9E;
+  border-radius: 2em;
+  position: absolute;
+  border: 1px solid #3B7A9E;
+  -webkit-transition: background 100ms ease-out,border-color 100ms ease-in;
+  transition: background 100ms ease-out,border-color 100ms ease-in;
+  outline: 1px solid transparent;
+  cursor: pointer;
+}
+
+.c17:hover {
+  border-color: #3B7A9E;
+}
+
+.c18 {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  background: #FFFFFF;
+  top: calc(50% - 1em / 2);
+  left: calc(33% - 1em / 2);
+  position: relative;
+  will-change: transform;
+  -webkit-transform: translateX( 0.5em );
+  -ms-transform: translateX( 0.5em );
+  transform: translateX( 0.5em );
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform 100ms ease-in-out;
+  -webkit-transition: transform 100ms ease-in-out;
+  transition: transform 100ms ease-in-out;
+  border: inherit;
+}
+
+.c15 {
+  opacity: 0;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.c15:focus + .c16 {
+  box-shadow: 0 0 0 2px #FDBD56;
+}
+
+.c15:hover + .c16 {
+  border-color: #3B7A9E;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  height: 2.2em;
+  width: 2em;
+  position: relative;
+}
+
+.c20 {
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  border: 1px solid #d6d8da;
+  background-color: #f0f1f9;
+  border: 0;
+  border-radius: 0;
+  border-left: 0.5em solid #003c57;
+  padding: 1em;
+  margin: 1em 0;
+}
+
+.c4 {
+  padding: 1.8em;
+}
+
+.c5 {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333333;
+  margin: 0 0 0.5em;
+}
+
+.c6 {
+  margin: 0.1em 0 1em;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666666;
+}
+
+.c8 {
+  padding-top: 1.5em;
+}
+
+.c8:first-of-type {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.c8:last-of-type {
+  padding-top: 0;
+}
+
+.c10 {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333333;
+  margin: 0 0 0em;
+}
+
+.c11 {
+  border-left: 1px solid #3B7A9E;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-left: 0.9em;
+  height: 22px;
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c12 {
+  padding: 0 0.5em;
+  font-weight: bold;
+  font-size: 12px;
+  color: #999999;
+}
+
+.c12:first-of-type {
+  padding-left: 1em;
+}
+
+.c19 {
+  padding: 0 0.5em;
+  font-weight: bold;
+  font-size: 12px;
+  color: #333333;
+}
+
+.c19:first-of-type {
+  padding-left: 1em;
+}
+
+.c7 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  padding: 0.75em 2em;
+  border-radius: 4px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-transition: all 100ms ease-out;
+  transition: all 100ms ease-out;
+  -webkit-letter-spacing: 0;
+  -moz-letter-spacing: 0;
+  -ms-letter-spacing: 0;
+  letter-spacing: 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-bg);
+  --color-text: #3B7A9E;
+  --color-bg: transparent;
+  border: 1px solid transparent;
+  padding: 0;
+  font-weight: bold;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0.6em;
+  margin-bottom: 1.4em;
+  border-radius: 0;
+  color: #3B7A9E;
+  background-color: #f5f5f5;
+}
+
+.c7:focus,
+.c7:active {
+  outline-width: 0;
+}
+
+.c7:focus {
+  outline: none;
+}
+
+.c7[disabled] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.c7:hover {
+  --color-text: #FFFFFF;
+  --color-bg: #3B7A9E;
+}
+
+.c7::before {
+  content: "";
+  background: url(icon-link.svg) no-repeat center;
+  display: inline-block;
+  width: 1.3rem;
+  height: 0.7rem;
+  margin-right: 0.9em;
+}
+
+.c7:hover {
+  background: #666666;
+  color: #FFFFFF;
+}
+
+<body>
+    <div
+      id="toast"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2"
+          >
+            <ol
+              aria-live="assertive"
+              aria-relevant="additions removals"
+              class="c3"
+              role="alert"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c4"
+      >
+        <h2
+          class="c5"
+        >
+          Share your questionnaire
+        </h2>
+        <p
+          class="c6"
+        >
+          You can share your questionnaire with anyone who has an account with Author.
+        </p>
+        <button
+          class="c7"
+          data-test="share-button"
+          type="button"
+        >
+          Get shareable link
+        </button>
+        <div
+          class="c8"
+        >
+          <div
+            class="c9"
+          >
+            <h3
+              class="c10"
+            >
+              Public access
+            </h3>
+            <span
+              class="c11"
+            >
+              <span
+                class="c12"
+              >
+                Off
+              </span>
+              <div
+                aria-checked="true"
+                class="c13"
+                data-test="public"
+                role="switch"
+              >
+                <input
+                  aria-checked="true"
+                  checked=""
+                  class="c14 c15"
+                  id="public"
+                  name="public"
+                  role="checkbox"
+                  type="checkbox"
+                  value=""
+                />
+                <div
+                  class="c16 c17"
+                  role="presentation"
+                >
+                  <div
+                    class="c18"
+                  />
+                </div>
+              </div>
+              <span
+                class="c19"
+              >
+                On
+              </span>
+            </span>
+          </div>
+          <div
+            class="c20"
+          >
+            Let anyone with an Author account view your questionnaire. If public access is off, only editors
+          </div>
+        </div>
+        <div
+          class="c8"
+        >
+          <h3
+            class="c10"
+          >
+            Editors
+          </h3>
+          <div
+            class="c20"
+          >
+            Editors can edit questionnaire content, add comments, delete the questionnaire and add other editors.
+          </div>
+        </div>
+        <div />
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="SharePageContent__Layout-sc-1b5f2eo-0 kispUH"
+    >
+      <h2
+        class="SharePageContent__PageTitle-sc-1b5f2eo-1 GmPmv"
+      >
+        Share your questionnaire
+      </h2>
+      <p
+        class="SharePageContent__Description-sc-1b5f2eo-2 jLyKQy"
+      >
+        You can share your questionnaire with anyone who has an account with Author.
+      </p>
+      <button
+        class="Button-sc-11dla3f-0 SharePageContent__ShareLinkButton-sc-1b5f2eo-10 hRubug"
+        data-test="share-button"
+        type="button"
+      >
+        Get shareable link
+      </button>
+      <div
+        class="SharePageContent__Section-sc-1b5f2eo-4 kuilzE"
+      >
+        <div
+          class="SharePageContent__FlexContainer-sc-1b5f2eo-8 eqMbYP"
+        >
+          <h3
+            class="SharePageContent__SectionTitle-sc-1b5f2eo-5 deZkqp"
+          >
+            Public access
+          </h3>
+          <span
+            class="SharePageContent__Separator-sc-1b5f2eo-7 gdZucX"
+          >
+            <span
+              class="SharePageContent__PublicLabel-sc-1b5f2eo-9 hcuwmW"
+            >
+              Off
+            </span>
+            <div
+              aria-checked="true"
+              class="ToggleSwitch__FlexInline-sc-1r2teg2-3 ckHPik"
+              data-test="public"
+              role="switch"
+            >
+              <input
+                aria-checked="true"
+                checked=""
+                class="Input__StyledInput-sc-1frtas6-0 mrbJM ToggleSwitch__HiddenInput-sc-1r2teg2-2 kueRdl"
+                id="public"
+                name="public"
+                role="checkbox"
+                type="checkbox"
+                value=""
+              />
+              <div
+                class="ToggleSwitch__ToggleSwitchBackground-sc-1r2teg2-0 HbMXd"
+                role="presentation"
+              >
+                <div
+                  class="ToggleSwitch__ToggleSwitchKnob-sc-1r2teg2-1 bJQUav"
+                />
+              </div>
+            </div>
+            <span
+              class="SharePageContent__PublicLabel-sc-1b5f2eo-9 jPQhWC"
+            >
+              On
+            </span>
+          </span>
+        </div>
+        <div
+          class="Panel-sc-813jnv-0 Panel__InformationPanel-sc-813jnv-1 CgwuF"
+        >
+          Let anyone with an Author account view your questionnaire. If public access is off, only editors
+        </div>
+      </div>
+      <div
+        class="SharePageContent__Section-sc-1b5f2eo-4 kuilzE"
+      >
+        <h3
+          class="SharePageContent__SectionTitle-sc-1b5f2eo-5 deZkqp"
+        >
+          Editors
+        </h3>
+        <div
+          class="Panel-sc-813jnv-0 Panel__InformationPanel-sc-813jnv-1 CgwuF"
+        >
+          Editors can edit questionnaire content, add comments, delete the questionnaire and add other editors.
+        </div>
+      </div>
+      <div />
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "history": Object {
+    "action": "POP",
+    "block": [Function],
+    "canGo": [Function],
+    "createHref": [Function],
+    "entries": Array [
+      Object {
+        "hash": "",
+        "key": Any<String>,
+        "pathname": "/",
+        "search": "",
+        "state": undefined,
+      },
+    ],
+    "go": [Function],
+    "goBack": [Function],
+    "goForward": [Function],
+    "index": 0,
+    "length": 1,
+    "listen": [Function],
+    "location": Object {
+      "hash": "",
+      "key": Any<String>,
+      "pathname": "/",
+      "search": "",
+      "state": undefined,
+    },
+    "push": [Function],
+    "replace": [Function],
+  },
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
