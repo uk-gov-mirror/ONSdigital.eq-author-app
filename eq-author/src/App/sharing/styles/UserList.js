@@ -95,6 +95,7 @@ export const UserContainer = styled.div`
       }
       ${UserEmail} {
         color: ${colors.white};
+        opacity: 1;
         margin-left: 0.5em;
       }
       ${UserIcon} {
