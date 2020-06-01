@@ -1,11 +1,102 @@
 import React from "react";
+import { render, act, flushPromises } from "tests/utils/rtl";
+import SharePage from "./SharePage";
+import { MeContext } from "App/MeContext";
+import { publishStatusSubscription } from "components/EditorLayout/Header";
+
+jest.mock("./SharePageContent/index.js", () => {
+  const ShareContent = () => <div />;
+  return ShareContent;
+});
+
+const renderSharingPage = (questionnaire, props, user, mocks) => {
+  return render(
+    <MeContext.Provider value={{ me: user, signOut: jest.fn(), props }}>
+      <SharePage {...props} />
+    </MeContext.Provider>,
+    {
+      route: `/q/${questionnaire.id}/sharing`,
+      urlParamMatcher: "/q/:questionnaireId/sharing",
+      mocks,
+    }
+  );
+};
 
 describe("Share Page", () => {
-  it("should render", () => {});
-  it("should have shareable link", () => {});
-  it("should be able to alter public access", () => {});
-  it("should have only the owner", () => {});
-  it("should be able to add an editor", () => {});
-  it("should display editors and owner", () => {});
-  it("should be able to delete editor", () => {});
+  let questionnaire, props, user, mocks;
+
+  beforeEach(() => {
+    questionnaire = {
+      id: "1",
+      isPublic: true,
+    };
+    props = {
+      match: { params: { modifier: "", questionnaireId: questionnaire.id } },
+    };
+    user = {
+      id: "2",
+      displayName: "TestName",
+      email: "TEAmail@mail.com",
+      picture: "",
+      admin: true,
+      name: "T",
+      __typename: "User",
+    };
+    mocks = [
+      {
+        request: {
+          query: publishStatusSubscription,
+          variables: { id: questionnaire.id },
+        },
+        result: () => ({
+          data: {
+            publishStatusUpdated: {
+              id: questionnaire.id,
+              publishStatus: "Unpublished",
+              __typename: "Questionnaire",
+            },
+          },
+        }),
+      },
+    ];
+  });
+
+  it("should render", () => {
+    const wrapper = renderSharingPage(questionnaire, props, user, mocks);
+    expect(wrapper).toMatchSnapshot({
+      history: {
+        entries: [
+          {
+            key: expect.any(String),
+          },
+        ],
+        location: {
+          key: expect.any(String),
+        },
+      },
+    });
+  });
+
+  it("should have correct title", () => {
+    const { getByText } = renderSharingPage(questionnaire, props, user, mocks);
+
+    expect(getByText("Sharing")).toBeTruthy();
+  });
+
+  it("should have correct scroll pane", () => {
+    const { getByTestId } = renderSharingPage(
+      questionnaire,
+      props,
+      user,
+      mocks
+    );
+
+    expect(getByTestId("sharing-page-content")).toBeTruthy();
+  });
+
+  afterEach(async () => {
+    await act(async () => {
+      await flushPromises();
+    });
+  });
 });
