@@ -63,7 +63,6 @@ export const UtilityBtns = styled.div`
 export const UnwrappedMainNavigation = props => {
   const { questionnaire, title, children, client, match } = props;
   const { me } = useMe();
-  const [isSharingModalOpen, setSharingModalOpen] = useState(false);
   const [isSettingsModalOpen, setSettingsModalOpen] = useState(
     match.params.modifier === "settings"
   );

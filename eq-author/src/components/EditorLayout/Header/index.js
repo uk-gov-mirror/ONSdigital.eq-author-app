@@ -12,7 +12,6 @@ import { withQuestionnaire } from "components/QuestionnaireContext";
 import config from "config";
 import { useMe } from "App/MeContext";
 import { colors } from "constants/theme";
-import SharingModal from "./SharingModal";
 import PageTitle from "./PageTitle";
 import UpdateQuestionnaireSettingsModal from "./UpdateQuestionnaireSettingsModal";
 import SavingIndicator from "./SavingIndicator";
@@ -51,7 +50,6 @@ const SavingContainer = styled.div`
 export const UnconnectedHeader = props => {
   const { questionnaire, title, children, match } = props;
   const { me } = useMe();
-  const [isSharingModalOpen, setSharingModalOpen] = useState(false);
   const [isSettingsModalOpen, setSettingsModalOpen] = useState(
     match.params.modifier === "settings"
   );
@@ -80,15 +78,6 @@ export const UnconnectedHeader = props => {
       </StyledHeader>
       {questionnaire && (
         <>
-          {me && (
-            <SharingModal
-              questionnaire={questionnaire}
-              previewUrl={previewUrl}
-              isOpen={isSharingModalOpen}
-              onClose={() => setSharingModalOpen(false)}
-              currentUser={me}
-            />
-          )}
           <UpdateQuestionnaireSettingsModal
             isOpen={isSettingsModalOpen}
             onClose={() => setSettingsModalOpen(false)}
