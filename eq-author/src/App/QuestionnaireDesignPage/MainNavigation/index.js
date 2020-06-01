@@ -34,7 +34,6 @@ import metadataIcon from "App/QuestionnaireDesignPage/MainNavigation/icons/metad
 import shareIcon from "App/QuestionnaireDesignPage/MainNavigation/icons/sharing-icon.svg?inline";
 import viewIcon from "App/QuestionnaireDesignPage/MainNavigation/icons/view-survey-icon.svg?inline";
 
-import SharingModal from "./SharingModal";
 import UpdateQuestionnaireSettingsModal from "./UpdateQuestionnaireSettingsModal";
 
 import {
@@ -233,15 +232,6 @@ export const UnwrappedMainNavigation = props => {
       </StyledMainNavigation>
       {questionnaire && (
         <>
-          {me && (
-            <SharingModal
-              questionnaire={questionnaire}
-              previewUrl={previewUrl}
-              isOpen={isSharingModalOpen}
-              onClose={() => setSharingModalOpen(false)}
-              currentUser={me}
-            />
-          )}
           <UpdateQuestionnaireSettingsModal
             isOpen={isSettingsModalOpen}
             onClose={() => setSettingsModalOpen(false)}
