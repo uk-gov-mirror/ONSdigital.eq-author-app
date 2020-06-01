@@ -16,9 +16,9 @@ import {
 } from "../styles/UserList";
 
 const User = PropTypes.shape({
-  // picture: PropTypes.string,
-  // name: PropTypes.string,
-  // email: PropTypes.string,
+  picture: PropTypes.string,
+  name: PropTypes.string,
+  email: PropTypes.string,
 });
 
 const propTypes = {
@@ -77,6 +77,6 @@ const UserList = ({ editors, owner, onRemove }) => (
 );
 
 UserItem.propTypes = propTypes.UserItem;
-// UserList.propTypes = propTypes.UserList;
+UserList.propTypes = propTypes.UserList;
 
 export default UserList;
