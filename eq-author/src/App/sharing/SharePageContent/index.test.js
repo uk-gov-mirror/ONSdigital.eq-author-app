@@ -12,7 +12,7 @@ const renderSharing = (props, mocks) => {
   return render(<Sharing {...props} {...mocks} />);
 };
 
-let props, mocks;
+let props;
 
 beforeEach(() => {
   props = {
@@ -41,9 +41,6 @@ beforeEach(() => {
     },
     showToast: jest.fn(),
   };
-  mocks = {
-    handleShareClick: jest.fn(),
-  };
 });
 
 afterEach(async () => {
@@ -69,25 +66,31 @@ describe("Share Page", () => {
     });
   });
 
-  it("should have shareable link", () => {
-    const wrapper = renderSharing(props, mocks);
-    // const { getByTestId } = renderSharing(props, mocks);
-    const { getByTestId } = wrapper;
-    jest.spyOn(wrapper, "handleShareClick");
-    const shareButton = getByTestId("share-button");
-    expect(shareButton).toBeTruthy();
+  it("should have shareable link", async () => {
+    const originalExecCommand = document.execCommand;
+    let selectedText = "no text selected";
+    document.execCommand = command => {
+      if (command === "copy") {
+        // jsdom has not implemented textselection so we we have do the next best thing
+        selectedText = document.querySelector("[data-test='share-link']")
+          .innerText;
+      }
+    };
+    const { getByText } = renderSharing(props);
+    await act(async () => {
+      await flushPromises();
+    });
 
-    fireEvent.click(shareButton);
-    expect(mocks.handleShareClick).toHaveBeenCalled();
+    const linkButton = getByText("Get shareable link");
+
+    fireEvent.click(linkButton);
+    expect(selectedText).toMatch(
+      new RegExp(`/launch/${props.data.questionnaire.id}$`)
+    );
+
+    expect(props.showToast).toHaveBeenCalled();
+    document.execCommand = originalExecCommand;
   });
 
-  it("should be able to alter public access", () => {});
-
-  it("should have only the owner", () => {});
-
-  it("should be able to add an editor", () => {});
-
-  it("should display editors and owner", () => {});
-
-  it("should be able to delete editor", () => {});
+  it("should be able to toggle public access", () => {});
 });
