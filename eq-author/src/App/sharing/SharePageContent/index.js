@@ -45,11 +45,11 @@ const propTypes = {
   },
 };
 
-const TogglePublicLabel = ({ text, isActive }) => (
+export const TogglePublicLabel = ({ text, isActive }) => (
   <PublicLabel isActive={isActive}>{text}</PublicLabel>
 );
 
-const Sharing = ({ data, showToast }) => {
+export const Sharing = ({ data, showToast }) => {
   const { id, isPublic, createdBy, editors } = data.questionnaire;
 
   const [updateIsPublic] = useMutation(TOGGLE_PUBLIC_MUTATION);
@@ -81,7 +81,12 @@ const Sharing = ({ data, showToast }) => {
         You can share your questionnaire with anyone who has an account with
         Author.
       </Description>
-      <ShareLinkButton variant="tertiary" small onClick={handleShareClick}>
+      <ShareLinkButton
+        variant="tertiary"
+        small
+        onClick={handleShareClick}
+        data-test="share-button"
+      >
         Get shareable link
       </ShareLinkButton>
       <Section>
