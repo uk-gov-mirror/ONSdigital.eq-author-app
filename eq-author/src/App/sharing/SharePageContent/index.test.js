@@ -121,7 +121,10 @@ describe("Share Page", () => {
   });
 
   it("should be able to toggle public access", async () => {
-    const { getByTestId, getByRole } = renderSharing(props, mocks);
+    const { getByTestId, getByRole, rerender } = render(
+      <Sharing {...props} />,
+      { mocks }
+    );
 
     const publicSwitch = getByTestId("public");
 
@@ -133,7 +136,18 @@ describe("Share Page", () => {
       await fireEvent.click(switchInput);
       flushPromises();
     });
-    // Want to add check to see that the aria-checked has been updated
+
+    props = {
+      data: {
+        questionnaire: {
+          isPublic: false,
+        },
+      },
+    };
+
+    rerender(<Sharing {...props} />);
+
+    expect(switchInput["aria-checked"]).toBeFalsy();
     expect(queryWasCalled).toBeTruthy();
   });
 });
