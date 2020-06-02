@@ -68,7 +68,6 @@ describe("MainNavigation", () => {
 
     const viewSurveyBtn = getByTestId("btn-preview");
     const settingsBtn = getByTestId("btn-settings");
-    const sharingBtn = getByTestId("btn-share");
     const historyBtn = getByTestId("btn-history");
     const metadataBtn = getByTestId("btn-metadata");
     const qcodesBtn = getByTestId("btn-qcodes");
@@ -76,7 +75,6 @@ describe("MainNavigation", () => {
 
     expect(viewSurveyBtn).not.toBeDisabled();
     expect(settingsBtn).not.toBeDisabled();
-    expect(sharingBtn).not.toBeDisabled();
     expect(historyBtn).not.toBeDisabled();
     expect(metadataBtn).not.toBeDisabled();
     expect(qcodesBtn).not.toBeDisabled();
@@ -105,7 +103,6 @@ describe("MainNavigation", () => {
 
     const viewSurveyBtn = getByTestId("btn-preview");
     const settingsBtn = getByTestId("btn-settings");
-    const sharingBtn = getByTestId("btn-share");
     const historyBtn = getByTestId("btn-history");
     const metadataBtn = getByTestId("btn-metadata");
     const qcodesBtn = getByTestId("btn-qcodes");
@@ -113,7 +110,6 @@ describe("MainNavigation", () => {
 
     expect(viewSurveyBtn.hasAttribute("disabled")).toBeTruthy();
     expect(settingsBtn.hasAttribute("disabled")).toBeFalsy();
-    expect(sharingBtn.hasAttribute("disabled")).toBeFalsy();
     expect(historyBtn.hasAttribute("disabled")).toBeFalsy();
     expect(metadataBtn.hasAttribute("disabled")).toBeFalsy();
     expect(qcodesBtn.hasAttribute("disabled")).toBeTruthy();
