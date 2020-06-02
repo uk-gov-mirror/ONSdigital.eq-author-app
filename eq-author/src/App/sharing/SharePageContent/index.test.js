@@ -1,7 +1,9 @@
 import React from "react";
 import { render, act, flushPromises, fireEvent } from "tests/utils/rtl";
 
-import { Sharing, TogglePublicLabel } from "./index";
+import { Sharing } from "./index";
+
+import TOGGLE_PUBLIC_MUTATION from "../graphql/TogglePublicMutation.graphql";
 
 jest.mock("./EditorSearch.js", () => {
   const EditorSearch = () => <div />;
@@ -9,11 +11,12 @@ jest.mock("./EditorSearch.js", () => {
 });
 
 const renderSharing = (props, mocks) => {
-  return render(<Sharing {...props} {...mocks} />);
+  return render(<Sharing {...props} />, { mocks });
 };
 
-let props;
+let props, mocks;
 
+let queryWasCalled = false;
 beforeEach(() => {
   props = {
     data: {
@@ -41,6 +44,31 @@ beforeEach(() => {
     },
     showToast: jest.fn(),
   };
+  mocks = [
+    {
+      request: {
+        query: TOGGLE_PUBLIC_MUTATION,
+        variables: {
+          input: {
+            id: props.data.questionnaire.id,
+            isPublic: !props.data.questionnaire.isPublic,
+          },
+        },
+      },
+      result: () => {
+        queryWasCalled = true;
+        return {
+          data: {
+            updateQuestionnaire: {
+              id: props.data.questionnaire.id,
+              isPublic: !props.data.questionnaire.isPublic,
+              __typename: "Questionnaire",
+            },
+          },
+        };
+      },
+    },
+  ];
 });
 
 afterEach(async () => {
@@ -92,5 +120,20 @@ describe("Share Page", () => {
     document.execCommand = originalExecCommand;
   });
 
-  it("should be able to toggle public access", () => {});
+  it("should be able to toggle public access", async () => {
+    const { getByTestId, getByRole } = renderSharing(props, mocks);
+
+    const publicSwitch = getByTestId("public");
+
+    expect(publicSwitch).toBeTruthy();
+
+    const switchInput = getByRole("checkbox");
+
+    await act(async () => {
+      await fireEvent.click(switchInput);
+      flushPromises();
+    });
+    // Want to add check to see that the aria-checked has been updated
+    expect(queryWasCalled).toBeTruthy();
+  });
 });
