@@ -42,25 +42,30 @@ const UserItem = ({ user, onRemove }) => {
   const { name, email, isOwner } = user;
   const picture = user.picture || iconGuestAvatar;
   return (
-    <ListItem>
+    <ListItem data-test="user-item">
       <UserContainer isOwner={isOwner}>
         <UserIcon src={picture} alt="" />
 
-        {name ? <UserName>{name}</UserName> : <UserEmail>{email}</UserEmail>}
+        {name ? (
+          <UserName data-test="user-name">{name}</UserName>
+        ) : (
+          <UserEmail data-test="user-email">{email}</UserEmail>
+        )}
         {!isOwner && name && (
           <UserSeparator>
-            <UserEmail>{email}</UserEmail>
+            <UserEmail data-test="user-email">{email}</UserEmail>
           </UserSeparator>
         )}
 
         {isOwner ? (
           <UserSeparator>
-            <UserOwner>Owner</UserOwner>
+            <UserOwner data-test="user-owner">Owner</UserOwner>
           </UserSeparator>
         ) : (
           <RemoveButton
             onClick={() => onRemove(user)}
             aria-label="Remove editor"
+            data-test="user-remove-btn"
           />
         )}
       </UserContainer>
