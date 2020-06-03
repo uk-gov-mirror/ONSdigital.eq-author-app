@@ -47,7 +47,7 @@ const UserSearch = ({ users, onUserSelect }) => {
       <Downshift
         initialIsOpen={false}
         onSelect={addUser}
-        itemToString={user => (user ? user.name : "")}
+        itemToString={user => (user ? user.name || user.email : "")}
       >
         {({
           getInputProps,
@@ -64,6 +64,7 @@ const UserSearch = ({ users, onUserSelect }) => {
                   <SearchInput
                     {...getInputProps()}
                     placeholder="search people by name or email address"
+                    data-test="user-search"
                   />
 
                   <Button

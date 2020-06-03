@@ -1,0 +1,622 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Editor search should render 1`] = `
+Object {
+  "asFragment": [Function],
+  "baseElement": .c3 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.c1 {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  min-width: 10em;
+  margin-bottom: 0;
+  z-index: 99999999;
+}
+
+.c2 {
+  display: inline-block;
+  text-align: initial;
+}
+
+.c0 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c13 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  padding: 0.75em 2em;
+  border-radius: 4px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-transition: all 100ms ease-out;
+  transition: all 100ms ease-out;
+  -webkit-letter-spacing: 0;
+  -moz-letter-spacing: 0;
+  -ms-letter-spacing: 0;
+  letter-spacing: 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-bg);
+  --color-text: #FFFFFF;
+  --color-bg: #3B7A9E;
+  position: relative;
+  border: none;
+}
+
+.c13:focus,
+.c13:active {
+  outline-width: 0;
+}
+
+.c13:focus {
+  outline: none;
+}
+
+.c13[disabled] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.c13:hover {
+  --color-text: #FFFFFF;
+  --color-bg: #2d5d79;
+  border-color: var(--color-bg);
+}
+
+.c6 {
+  font-size: 0.9rem;
+  margin-bottom: 1em;
+}
+
+.c4 {
+  padding-top: 1.5em;
+}
+
+.c4:first-of-type {
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.c4:last-of-type {
+  padding-top: 0;
+}
+
+.c5 {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333333;
+  margin: 0 0 0em;
+  margin: 0;
+}
+
+.c15 {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  color: #333333;
+}
+
+.c16 {
+  margin: 0 0 0.4em;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  color: #666;
+}
+
+.c21 {
+  font-size: 0.8em;
+  color: #333333;
+  font-weight: bold;
+  padding: 0.3em 0.5em;
+}
+
+.c24 {
+  font-size: 0.8em;
+  color: #FFFFFF;
+  margin-left: 0.9em;
+  margin-right: 1.2em;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+.c19 {
+  height: 1.1em;
+  -webkit-filter: invert(46%) sepia(4%) saturate(4439%) hue-rotate(158deg) brightness(94%) contrast(103%);
+  filter: invert(46%) sepia(4%) saturate(4439%) hue-rotate(158deg) brightness(94%) contrast(103%);
+}
+
+.c23 {
+  border-left: 1px solid #3B7A9E;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-left: 0.9em;
+  height: 22px;
+  margin-left: 0.6em;
+  border-left: 1px solid #3B7A9E;
+}
+
+.c17 {
+  background-color: #333333;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0.3em 0.5em;
+}
+
+.c17 .c20 {
+  color: #FFFFFF;
+}
+
+.c17 .c25 {
+  color: #FFFFFF;
+  opacity: 1;
+  margin-left: 0.5em;
+}
+
+.c17 .c18 {
+  -webkit-filter: none;
+  filter: none;
+}
+
+.c17 .c22 {
+  border-left: 1px solid #FFFFFF;
+}
+
+.c11 {
+  font-size: 1em;
+  border: thin solid #999999;
+  padding: 0.5em;
+  color: #333333;
+  display: block;
+  width: 100%;
+  -webkit-transition: outline-color 100ms ease-in,border-color 100ms ease-in;
+  transition: outline-color 100ms ease-in,border-color 100ms ease-in;
+  outline: thin solid transparent;
+}
+
+.c11:hover {
+  border-color: #3B7A9E;
+  outline-color: #3B7A9E;
+}
+
+.c11:focus,
+.c11:focus-within {
+  border-color: #3B7A9E;
+  outline-color: #3B7A9E;
+  box-shadow: 0 0 0 3px #FDBD56;
+}
+
+.c11::-webkit-input-placeholder {
+  color: #a3a3a3;
+}
+
+.c11::-moz-placeholder {
+  color: #a3a3a3;
+}
+
+.c11:-ms-input-placeholder {
+  color: #a3a3a3;
+}
+
+.c11::placeholder {
+  color: #a3a3a3;
+}
+
+.c11:focus {
+  outline: none;
+  border: 1px solid #3B7A9E;
+}
+
+.c11[disabled] {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.c8 {
+  display: block;
+  width: 100%;
+  margin-bottom: 1em;
+  position: relative;
+}
+
+.c12 {
+  padding: 0.5em;
+  font-size: 1em;
+  width: 100%;
+  border: 1px solid #999999;
+  margin-right: 1em;
+}
+
+.c14 {
+  list-style: none;
+  margin: -1px 0 0;
+  padding: 0;
+  border: 1px solid #d6d8da;
+  max-height: 6em;
+  overflow: scroll;
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+  background: white;
+}
+
+.c14:empty {
+  display: none;
+}
+
+.c7 {
+  margin: 1em 0 2em;
+  background: #ebeef0;
+  height: 100%;
+  padding: 1.5em 1.5em;
+  width: 60%;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c9 {
+  margin-bottom: 0;
+}
+
+<body>
+    <div
+      id="toast"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2"
+          >
+            <ol
+              aria-live="assertive"
+              aria-relevant="additions removals"
+              class="c3"
+              role="alert"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="c4"
+      >
+        <h3
+          class="c5"
+        >
+          Add Editors
+        </h3>
+        <span
+          class="c6"
+        >
+          Search for someone using their name or email address.
+        </span>
+        <div
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-labelledby="downshift-0-label"
+          role="combobox"
+        >
+          <div
+            class="c7"
+          >
+            <div
+              class="c8 c9"
+            >
+              <div
+                class="c10"
+              >
+                <input
+                  aria-autocomplete="list"
+                  aria-labelledby="downshift-0-label"
+                  autocomplete="off"
+                  class="c11 c12"
+                  data-test="user-search"
+                  id="downshift-0-input"
+                  name="downshift-0-input"
+                  placeholder="search people by name or email address"
+                  type="text"
+                  value=""
+                />
+                <button
+                  class="c13"
+                  data-test="editor-add-button"
+                  type="submit"
+                >
+                  Add
+                </button>
+              </div>
+              <ul
+                aria-labelledby="downshift-0-label"
+                class="c14"
+                id="downshift-0-menu"
+                role="listbox"
+              />
+            </div>
+          </div>
+        </div>
+        <ul
+          class="c15"
+        >
+          <li
+            class="c16"
+            data-test="user-item"
+          >
+            <div
+              class="c17"
+            >
+              <img
+                alt=""
+                class="c18 c19"
+                src="icon-avatar.svg"
+              />
+              <span
+                class="c20 c21"
+                data-test="user-name"
+              >
+                OwnerThomas
+              </span>
+              <span
+                class="c22 c23"
+              >
+                <span
+                  class="c24"
+                  data-test="user-owner"
+                >
+                  Owner
+                </span>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="SharePageContent__Section-sc-1b5f2eo-4 kuilzE"
+    >
+      <h3
+        class="SharePageContent__SectionTitle-sc-1b5f2eo-5 SharePageContent__EditorTitle-sc-1b5f2eo-11 fvkqIn"
+      >
+        Add Editors
+      </h3>
+      <span
+        class="SharePageContent__Described-sc-1b5f2eo-3 GcHTP"
+      >
+        Search for someone using their name or email address.
+      </span>
+      <div
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-labelledby="downshift-0-label"
+        role="combobox"
+      >
+        <div
+          class="UserSearch__SearchContainer-sc-7kueiq-6 dMGwgU"
+        >
+          <div
+            class="Field__StyledField-sc-5cw3uj-0 dDXNVZ UserSearch__SearchField-sc-7kueiq-8 dquVZO"
+          >
+            <div
+              class="UserSearch__SpacedFlexContainer-sc-7kueiq-7 eThrzJ"
+            >
+              <input
+                aria-autocomplete="list"
+                aria-labelledby="downshift-0-label"
+                autocomplete="off"
+                class="Input__StyledInput-sc-1frtas6-0 btxJfn UserSearch__SearchInput-sc-7kueiq-0 jiWXsX"
+                data-test="user-search"
+                id="downshift-0-input"
+                name="downshift-0-input"
+                placeholder="search people by name or email address"
+                type="text"
+                value=""
+              />
+              <button
+                class="Button-sc-11dla3f-0 kjakbo"
+                data-test="editor-add-button"
+                type="submit"
+              >
+                Add
+              </button>
+            </div>
+            <ul
+              aria-labelledby="downshift-0-label"
+              class="UserSearch__SearchResults-sc-7kueiq-1 iPGsTc"
+              id="downshift-0-menu"
+              role="listbox"
+            />
+          </div>
+        </div>
+      </div>
+      <ul
+        class="UserList__List-sc-16igd5g-1 dCtyYW"
+      >
+        <li
+          class="UserList__ListItem-sc-16igd5g-2 cPJfWV"
+          data-test="user-item"
+        >
+          <div
+            class="UserList__UserContainer-sc-16igd5g-8 kJPhRg"
+          >
+            <img
+              alt=""
+              class="UserList__UserIcon-sc-16igd5g-6 esoOJD"
+              src="icon-avatar.svg"
+            />
+            <span
+              class="UserList__UserName-sc-16igd5g-3 hhjUOZ"
+              data-test="user-name"
+            >
+              OwnerThomas
+            </span>
+            <span
+              class="SharePageContent__Separator-sc-1b5f2eo-7 UserList__UserSeparator-sc-16igd5g-7 uNZqV"
+            >
+              <span
+                class="UserList__UserOwner-sc-16igd5g-5 gwSQFl"
+                data-test="user-owner"
+              >
+                Owner
+              </span>
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "history": Object {
+    "action": "POP",
+    "block": [Function],
+    "canGo": [Function],
+    "createHref": [Function],
+    "entries": Array [
+      Object {
+        "hash": "",
+        "key": Any<String>,
+        "pathname": "/",
+        "search": "",
+        "state": undefined,
+      },
+    ],
+    "go": [Function],
+    "goBack": [Function],
+    "goForward": [Function],
+    "index": 0,
+    "length": 1,
+    "listen": [Function],
+    "location": Object {
+      "hash": "",
+      "key": Any<String>,
+      "pathname": "/",
+      "search": "",
+      "state": undefined,
+    },
+    "push": [Function],
+    "replace": [Function],
+  },
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
