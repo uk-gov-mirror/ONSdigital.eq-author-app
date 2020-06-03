@@ -18,39 +18,46 @@ const User = PropTypes.shape({
   picture: PropTypes.string,
   name: PropTypes.string,
   email: PropTypes.string,
+  id: PropTypes.string,
 });
 
 const propType = {
   EditorSearch: {
+    questionnaireId: PropTypes.string,
     users: PropTypes.arrayOf(User),
+    owner: PropTypes.shape({
+      picture: PropTypes.string,
+      name: PropTypes.string,
+      email: PropTypes.string,
+      id: PropTypes.string,
+    }),
+    editors: PropTypes.arrayOf(User),
   },
   GetUserWrapper: {
     questionnaireId: PropTypes.string,
     users: PropTypes.arrayOf(User),
-    // owner: PropTypes.shape(User),
-    // editors: PropTypes.arrayOf(PropTypes.shape(User)),
+    owner: PropTypes.shape({
+      picture: PropTypes.string,
+      name: PropTypes.string,
+      email: PropTypes.string,
+      id: PropTypes.string,
+    }),
+    editors: PropTypes.arrayOf(PropTypes.shape(User)),
   },
 };
 
-const EditorSearch = ({ questionnaireId: id, users, owner, editors }) => {
+export const EditorSearch = ({
+  questionnaireId: id,
+  users,
+  owner,
+  editors,
+}) => {
   const [mutateEditors] = useMutation(ADD_REMOVE_EDITOR);
-
-  const removeUser = event => {
-    const updatedEditors = editors.filter(user => user.id !== event.id);
-
-    mutateEditors({
-      variables: {
-        input: { id, editors: updatedEditors.map(editor => editor.id) },
-      },
-    });
-  };
-
   const addUser = user => {
-    const isEditor = editors.some(
-      editor => editor.id !== user.id || user.id !== owner.id
-    );
+    const isEditor = editors.some(editor => editor.id === user.id);
+    const isOwner = user.id === owner.id;
 
-    if (!isEditor) {
+    if (!isEditor && !isOwner) {
       const updatedEditors = editors.concat(user);
       mutateEditors({
         variables: {
@@ -58,6 +65,15 @@ const EditorSearch = ({ questionnaireId: id, users, owner, editors }) => {
         },
       });
     }
+  };
+
+  const removeUser = event => {
+    const updatedEditors = editors.filter(user => user.id !== event.id);
+    mutateEditors({
+      variables: {
+        input: { id, editors: updatedEditors.map(editor => editor.id) },
+      },
+    });
   };
 
   return (
@@ -97,7 +113,7 @@ const QueryWrapper = Component => {
       }}
     </Query>
   );
-  // this removes eslint rule and by removing owner and editors it does produce console error
+
   GetUserWrapper.propTypes = propType.GetUserWrapper;
 
   return GetUserWrapper;
