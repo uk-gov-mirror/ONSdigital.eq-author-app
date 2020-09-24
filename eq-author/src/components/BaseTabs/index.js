@@ -28,7 +28,9 @@ const BaseTabs = ({
   activeId,
   tabs,
 }) => {
+  console.log("Tabs: ", tabs);
   const activeTab = tabs.find(({ id }) => id === activeId) || tabs[0];
+  console.log("Activate Tab: ", activeTab);
   const { render: renderTab, id: activeTabId } = activeTab;
   return (
     <React.Fragment>

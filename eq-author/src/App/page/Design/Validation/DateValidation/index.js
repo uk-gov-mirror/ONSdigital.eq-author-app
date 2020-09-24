@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { flowRight, get, find } from "lodash";
+import { flowRight, find } from "lodash";
 
-import { Input, Select } from "components/Forms";
+import { Select } from "components/Forms";
 import { Grid, Column } from "components/Grid";
 
 import { ValidationPills } from "../ValidationPills";
@@ -17,20 +17,15 @@ import { ERR_NO_VALUE } from "constants/validationMessages";
 
 import withChangeUpdate from "enhancers/withChangeUpdate";
 
-import * as entityTypes from "constants/validation-entity-types";
 import { DATE, DATE_RANGE } from "constants/answer-types";
 import { DAYS, MONTHS, YEARS } from "constants/durations";
 
-import Metadata from "./Metadata";
-import Custom from "./Custom";
+import MetadataContentPicker from "./MetadataContentPicker";
+import CustomEditor from "./CustomEditor";
+import PreviousAnswerEditor from "./PreviousAnswerEditor";
 
 const UNITS = [DAYS, MONTHS, YEARS];
 const RELATIVE_POSITIONS = ["before", "after"];
-
-const DateInput = styled(Input)`
-  width: 12em;
-  height: 2.5em;
-`;
 
 const ConnectedPath = styled(Path)`
   height: 3.6em;
@@ -75,14 +70,24 @@ const getUnits = ({ format, type }) => {
   return UNITS.slice(2);
 };
 
+const Now = () => (
+  <StartDateText>The date the respondent begins the survey</StartDateText>
+);
+
 const UnwrappedDateValidation = ({
-  answer: { format, type },
+  answer: {
+    properties: { format },
+    type,
+  },
+  answer,
   displayName,
   onChange,
   onUpdate,
+  onSubmit,
   onChangeUpdate,
   validation,
   validation: { offset, relativePosition, entityType },
+  readKey,
 }) => {
   const availableUnits = getUnits({ format, type });
 
@@ -92,11 +97,6 @@ const UnwrappedDateValidation = ({
 
   const handleError = () => {
     return <StyledError>{ERR_NO_VALUE}</StyledError>;
-  };
-
-  const validationPills = {
-    Metadata: Metadata,
-    Custom: Custom,
   };
 
   return (
@@ -149,112 +149,35 @@ const UnwrappedDateValidation = ({
         </AlignedColumn>
         <Column cols={9}>
           <ValidationPills
+            answer={answer}
+            displayName={displayName}
             entityType={entityType}
+            format={format}
+            offset={offset}
             onEntityTypeChange={onChangeUpdate}
-            {...validationPills}
+            onChange={onChange}
+            onChangeUpdate={onChangeUpdate}
+            onSubmit={onSubmit}
+            onUpdate={onUpdate}
+            path={`answer.validation.${readKey}.availablePreviousAnswers`}
+            readKey={readKey}
+            relativePosition={relativePosition}
+            type={type}
+            validation={validation}
+            metadata={MetadataContentPicker}
+            Custom={CustomEditor}
+            {...(type === DATE
+              ? {
+                  PreviousAnswer: PreviousAnswerEditor,
+                  Now: Now,
+                }
+              : {})}
           />
         </Column>
       </Grid>
     </div>
   );
 };
-
-// export class UnwrappedDateValidation extends React.Component {
-//   render() {
-//     // const {
-//     //   validation: { offset, relativePosition, entityType },
-//     //   answer: {
-//     //     properties: { format },
-//     //     type,
-//     //   },
-//     //   displayName,
-//     //   onChange,
-//     //   onUpdate,
-//     //   onChangeUpdate,
-//     //   validation,
-//     // } = this.props;
-//     const availableUnits = getUnits({ format, type });
-
-//     const validationPills = {
-//       Metadata: this.Metadata,
-//       Custom: this.Custom,
-//     };
-
-//     if (type === DATE) {
-//       validationPills.PreviousAnswer = this.PreviousAnswer;
-//       validationPills.Now = this.Now;
-//     }
-
-//     const hasError = find(validation.validationErrorInfo.errors, error =>
-//       error.errorCode.includes("ERR_NO_VALUE")
-//     );
-
-//     const handleError = () => {
-//       return <StyledError>{ERR_NO_VALUE}</StyledError>;
-//     };
-
-//     return (
-//       // <div>
-//       //   <Grid>
-//       //     <AlignedColumn cols={START_COL_SIZE}>
-//       //       <EmphasisedText>{displayName} is</EmphasisedText>
-//       //     </AlignedColumn>
-//       //     <Column cols={END_COL_SIZE}>
-//       //       <Duration
-//       //         name="offset"
-//       //         duration={offset}
-//       //         value={offset.unit}
-//       //         units={availableUnits}
-//       //         onChange={onChange}
-//       //         onUpdate={onUpdate}
-//       //         hasError={hasError}
-//       //       />
-//       //     </Column>
-//       //   </Grid>
-//       //   <Grid>
-//       //     <Column cols={START_COL_SIZE}>
-//       //       <ConnectedPath />
-//       //     </Column>
-//       //     <Column cols={END_COL_SIZE}>
-//       //       {hasError && handleError()}
-//       //     </Column>
-//       //   </Grid>
-//       //   <Grid>
-//       //     <AlignedColumn cols={START_COL_SIZE}>
-//       //       {type === DATE && (
-//       //         <RelativePositionSelect
-//       //           name="relativePosition"
-//       //           value={relativePosition}
-//       //           onChange={onChange}
-//       //           onBlur={onUpdate}
-//       //           data-test="relative-position-select"
-//       //         >
-//       //           {RELATIVE_POSITIONS.map(position => (
-//       //             <option key={position} value={position}>
-//       //               {position}
-//       //             </option>
-//       //           ))}
-//       //         </RelativePositionSelect>
-//       //       )}
-//       //       {type === DATE_RANGE && (
-//       //         <RelativePositionText>
-//       //           {relativePosition.toLowerCase()}
-//       //         </RelativePositionText>
-//       //       )}
-//       //       <PathEnd />
-//       //     </AlignedColumn>
-//       //     <Column cols={9}>
-//       //       <ValidationPills
-//       //         entityType={entityType}
-//       //         onEntityTypeChange={onChangeUpdate}
-//       //         {...validationPills}
-//       //       />
-//       //     </Column>
-//       //   </Grid>
-//       // </div>
-//     );
-//   }
-// }
 
 UnwrappedDateValidation.propTypes = {
   validation: PropTypes.shape({
@@ -272,7 +195,6 @@ UnwrappedDateValidation.propTypes = {
       value: PropTypes.number,
     }).isRequired,
     relativePosition: PropTypes.string.isRequired,
-    entityType: PropTypes.oneOf(Object.values(entityTypes)).isRequired,
   }).isRequired,
   answer: PropTypes.shape({
     id: PropTypes.string.required,
@@ -283,6 +205,7 @@ UnwrappedDateValidation.propTypes = {
   onToggleValidationRule: PropTypes.func.isRequired,
   onChangeUpdate: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   displayName: PropTypes.string.isRequired,
   readKey: PropTypes.string.isRequired,
@@ -290,23 +213,3 @@ UnwrappedDateValidation.propTypes = {
 };
 
 export default flowRight(withChangeUpdate)(UnwrappedDateValidation);
-
-// const availableUnits = getUnits({ format, type });
-
-//     const validationPills = {
-//       Metadata: this.Metadata,
-//       Custom: this.Custom,
-//     };
-
-//     if (type === DATE) {
-//       validationPills.PreviousAnswer = this.PreviousAnswer;
-//       validationPills.Now = this.Now;
-//     }
-
-//     const hasError = find(validation.validationErrorInfo.errors, error =>
-//       error.errorCode.includes("ERR_NO_VALUE")
-//     );
-
-//     const handleError = () => {
-//       return <StyledError>{ERR_NO_VALUE}</StyledError>;
-//     };
