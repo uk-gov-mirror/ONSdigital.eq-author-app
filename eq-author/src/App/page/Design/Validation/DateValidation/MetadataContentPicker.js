@@ -19,7 +19,6 @@ Metadata.propTypes = {
     id: PropTypes.string.isRequired,
     enabled: PropTypes.bool.isRequired,
     custom: PropTypes.number,
-    inclusive: PropTypes.bool.isRequired,
     previousAnswer: PropTypes.shape({
       displayName: PropTypes.string.isRequired,
     }),

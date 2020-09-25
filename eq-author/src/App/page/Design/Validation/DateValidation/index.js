@@ -164,7 +164,7 @@ const UnwrappedDateValidation = ({
             relativePosition={relativePosition}
             type={type}
             validation={validation}
-            metadata={MetadataContentPicker}
+            Metadata={MetadataContentPicker}
             Custom={CustomEditor}
             {...(type === DATE
               ? {
