@@ -82,6 +82,8 @@ const getRules = ctx => flatMap(filter(getRouting(ctx), "rules"), "rules");
 
 const getRoutingRuleById = (ctx, id) => find(getRules(ctx), { id });
 
+// getPageByRoutingId
+
 const getSkipConditions = ctx =>
   flatMap(filter(getPages(ctx), "skipConditions"), "skipConditions");
 
@@ -197,7 +199,30 @@ const remapAllNestedIds = entity => {
   });
 };
 
+const getValidationErrorInfo = ctx => ctx.validationErrorInfo;
+
+const returnValidationErrors = (ctx, id, ...conditions) => {
+  const errors = conditions.reduce((acc, condition) =>
+    getValidationErrorInfo(ctx).filter(condition)
+  );
+
+  if (!errors) {
+    return {
+      id,
+      errors: [],
+      totalCount: 0,
+    };
+  }
+
+  return {
+    id,
+    errors,
+    totalCount: errors.length,
+  };
+};
+
 module.exports = {
+  getSections,
   getSectionById,
   getSectionByPageId,
 
@@ -231,6 +256,8 @@ module.exports = {
   getConfirmationById,
 
   getValidationById,
+  getValidationErrorInfo,
+  returnValidationErrors,
 
   getAvailablePreviousAnswersForValidation,
   getAvailableMetadataForValidation,

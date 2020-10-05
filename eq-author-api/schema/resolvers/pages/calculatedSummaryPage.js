@@ -12,7 +12,12 @@ const {
 } = require("../../../constants/answerTypes");
 
 const { createMutation } = require("../createMutation");
-const { getPageById, getAnswerById, getSectionByPageId } = require("../utils");
+const {
+  getPageById,
+  getAnswerById,
+  getSectionByPageId,
+  getPages,
+} = require("../utils");
 
 const createCalculatedSummary = (input = {}) => ({
   id: uuidv4(),
@@ -29,7 +34,7 @@ Resolvers.CalculatedSummaryPage = {
   section: ({ id }, input, ctx) => getSectionByPageId(ctx, id),
   position: ({ id }, args, ctx) => {
     const section = getSectionByPageId(ctx, id);
-    return findIndex(section.pages, { id });
+    return findIndex(getPages(section), { id });
   },
   summaryAnswers: ({ id, summaryAnswers }, args, ctx) => {
     const section = getSectionByPageId(ctx, id);
@@ -92,8 +97,8 @@ Resolvers.Mutation = {
       });
       const page = createCalculatedSummary({ sectionId });
       const insertionPosition =
-        typeof position === "number" ? position : section.pages.length;
-      section.pages.splice(insertionPosition, 0, page);
+        typeof position === "number" ? position : getPages(section).length;
+      getPages(section).splice(insertionPosition, 0, page);
       return page;
     }
   ),

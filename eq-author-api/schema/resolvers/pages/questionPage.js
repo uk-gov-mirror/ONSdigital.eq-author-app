@@ -1,8 +1,15 @@
-const { find, findIndex, merge, some, takeRightWhile } = require("lodash");
+const { findIndex, merge } = require("lodash");
+
+const { availableRoutingDestinations } = require("../../../src/businessLogic");
 const { getName } = require("../../../utils/getName");
 const { v4: uuidv4 } = require("uuid");
 
-const { getPageById, getSectionByPageId } = require("../utils");
+const {
+  getPages,
+  getPageById,
+  getSectionByPageId,
+  getSectionById,
+} = require("../utils");
 const { createMutation } = require("../createMutation");
 
 const {
@@ -12,26 +19,30 @@ const {
 const getPreviousAnswersForPage = require("../../../src/businessLogic/getPreviousAnswersForPage");
 const Resolvers = {};
 
-const createQuestionPage = (input = {}) => ({
-  id: uuidv4(),
-  pageType: "QuestionPage",
-  title: "",
-  description: "",
-  descriptionEnabled: false,
-  guidanceEnabled: false,
-  definitionEnabled: false,
-  additionalInfoEnabled: false,
-  answers: [],
-  routing: null,
-  alias: null,
-  ...input,
-});
+const createQuestionPage = (input = {}) => {
+  const a = {
+    id: uuidv4(),
+    pageType: "QuestionPage",
+    title: "",
+    description: "",
+    descriptionEnabled: false,
+    guidanceEnabled: false,
+    definitionEnabled: false,
+    additionalInfoEnabled: false,
+    answers: [],
+    routing: null,
+    alias: null,
+    ...input,
+  };
+
+  return a;
+};
 
 Resolvers.QuestionPage = {
   section: ({ id }, input, ctx) => getSectionByPageId(ctx, id),
   position: ({ id }, args, ctx) => {
     const section = getSectionByPageId(ctx, id);
-    return findIndex(section.pages, { id });
+    return findIndex(getPages(section), { id });
   },
   displayName: page => getName(page, "QuestionPage"),
   availablePipingAnswers: ({ id }, args, ctx) =>
@@ -45,31 +56,16 @@ Resolvers.QuestionPage = {
       ROUTING_ANSWER_TYPES
     ),
   availableRoutingDestinations: ({ id }, args, ctx) => {
-    const section = find(ctx.questionnaire.sections, section => {
-      if (section.pages && some(section.pages, { id })) {
-        return section;
-      }
-    });
-
-    const pages = takeRightWhile(section.pages, page => page.id !== id);
-    const sections = takeRightWhile(
-      ctx.questionnaire.sections,
-      futureSection => futureSection.id !== section.id
-    );
-
-    const logicalDestinations = [
-      {
-        logicalDestination: "NextPage",
-      },
-      {
-        logicalDestination: "EndOfQuestionnaire",
-      },
-    ];
+    const {
+      logicalDestinations,
+      sections,
+      questionPages,
+    } = availableRoutingDestinations(ctx, id);
 
     return {
       logicalDestinations,
       sections,
-      pages,
+      pages: questionPages,
     };
   },
   validationErrorInfo: ({ id }, args, ctx) => {
@@ -78,23 +74,21 @@ Resolvers.QuestionPage = {
     );
 
     if (!pageErrors) {
-      return ({ id, errors: [], totalCount: 0 });
+      return { id, errors: [], totalCount: 0 };
     }
 
-    return ({ id, errors: pageErrors, totalCount: pageErrors.length });
+    return { id, errors: pageErrors, totalCount: pageErrors.length };
   },
 };
 
 Resolvers.Mutation = {
   createQuestionPage: createMutation(
     (root, { input: { position, ...pageInput } }, ctx) => {
-      const section = find(ctx.questionnaire.sections, {
-        id: pageInput.sectionId,
-      });
+      const section = getSectionById(ctx, pageInput.sectionId);
       const page = createQuestionPage(pageInput);
       const insertionPosition =
-        typeof position === "number" ? position : section.pages.length;
-      section.pages.splice(insertionPosition, 0, page);
+        typeof position === "number" ? position : getPages(section).length;
+      getPages(section).splice(insertionPosition, 0, page);
       return page;
     }
   ),

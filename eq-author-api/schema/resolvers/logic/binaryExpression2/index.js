@@ -18,6 +18,7 @@ const {
   getSkipConditionById,
   getSkipConditions,
   getAllExpressionGroups,
+  getExpressionGroupByExpressionId,
 } = require("../../utils");
 
 const Resolvers = {};
@@ -54,14 +55,18 @@ Resolvers.BinaryExpression2 = {
     return null;
   },
   expressionGroup: async ({ id }, args, ctx) => {
-    return find(expressionGroup => {
-      if (
-        expressionGroup.expressions &&
-        some({ id }, expressionGroup.expressions)
-      ) {
-        return expressionGroup;
-      }
-    }, getAllExpressionGroups(ctx));
+    // replace this with function
+    // find expressiongroup by expression id
+    // return find(expressionGroup => {
+    //   if (
+    //     expressionGroup.expressions &&
+    //     some({ id }, expressionGroup.expressions)
+    //   ) {
+    //     return expressionGroup;
+    //   }
+    // }, getAllExpressionGroups(ctx));
+    const expressionGroups = getAllExpressionGroups(ctx);
+    return getExpressionGroupByExpressionId(expressionGroups, id);
   },
   validationErrorInfo: ({ id }, args, ctx) => {
     const expressionErrors = ctx.validationErrorInfo.filter(
@@ -269,7 +274,7 @@ Resolvers.Mutation = {
     {
       const routingExpressionGroups = getExpressionGroups(ctx);
       const skipConditions = getSkipConditions(ctx);
-
+      // expressiongroup by expression group id
       const expressionGroup = find(
         expressionGroup => {
           if (some({ id: input.id }, expressionGroup.expressions)) {
@@ -278,6 +283,10 @@ Resolvers.Mutation = {
         },
         [...routingExpressionGroups, ...skipConditions]
       );
+      // const expressionGroup = getExpressionGroupByExpressionId(
+      //   [...routingExpressionGroups, ...skipConditions],
+      //   input.id
+      // );
 
       expressionGroup.expressions = reject(
         { id: input.id },

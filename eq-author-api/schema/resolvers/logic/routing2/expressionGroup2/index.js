@@ -12,6 +12,7 @@ Resolvers.ExpressionGroup2 = {
 Resolvers.Mutation = {
   updateExpressionGroup2: createMutation(
     (root, { input: { id, operator } }, ctx) => {
+      // see if this can become a function
       const expressionGroup = find(
         { id },
         flatMap(

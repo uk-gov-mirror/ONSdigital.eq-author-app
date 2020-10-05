@@ -42,6 +42,7 @@ Resolvers.RoutingRule2 = {
     return routing;
   },
   validationErrorInfo: ({ id }, args, ctx) => {
+    // need to make a function for this
     const routingRuleErrors = ctx.validationErrorInfo.filter(
       ({ routingRuleId }) => id === routingRuleId
     );

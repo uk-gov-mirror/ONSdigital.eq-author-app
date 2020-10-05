@@ -1,6 +1,5 @@
 const { GraphQLDate, GraphQLDateTime } = require("graphql-iso-date");
 const {
-  compact,
   includes,
   isNil,
   find,
@@ -42,20 +41,24 @@ const { currentVersion } = require("../../migrations");
 const { createExpression, createLeftSide } = require("../../src/businessLogic");
 
 const {
+  getSections,
   getSectionById,
   getSectionByPageId,
   getPages,
   getPageById,
+  getPageByAnswerId,
   getPageByConfirmationId,
   getPageByValidationId,
   getAnswers,
   getAnswerById,
   getOptionById,
   getConfirmationById,
+  getValidationErrorInfo,
   getValidationById,
   getAvailablePreviousAnswersForValidation,
   getAvailableMetadataForValidation,
   remapAllNestedIds,
+  returnValidationErrors,
 } = require("./utils");
 
 const createAnswer = require("../../src/businessLogic/createAnswer");
@@ -115,14 +118,18 @@ const createFolder = (input = {}) => ({
   ...input,
 });
 
-const createSection = (input = {}) => ({
-  id: uuidv4(),
-  title: "",
-  introductionEnabled: false,
-  folders: [createFolder()],
-  alias: "",
-  ...input,
-});
+const createSection = (input = {}) => {
+  console.log("inside creating section");
+  const a = {
+    id: uuidv4(),
+    title: "",
+    introductionEnabled: false,
+    folders: [createFolder()],
+    alias: "",
+    ...input,
+  };
+  return a;
+};
 
 const createNewQuestionnaire = input => {
   const defaultQuestionnaire = {
@@ -348,31 +355,30 @@ const Resolvers = {
       return section;
     }),
     updateSection: createMutation((_, { input }, ctx) => {
-      const section = find(ctx.questionnaire.sections, { id: input.id });
+      // const section = find(ctx.questionnaire.sections, { id: input.id });
+      const section = getSectionById(ctx, input.id);
       merge(section, input);
       return section;
     }),
     deleteSection: createMutation((root, { input }, ctx) => {
-      const section = find(ctx.questionnaire.sections, { id: input.id });
-      const removedSection = first(remove(ctx.questionnaire.sections, section));
+      const section = getSectionById(ctx, input.id);
+      const removedSection = first(remove(getSections(ctx), section));
       onSectionDeleted(ctx, removedSection);
       return ctx.questionnaire;
     }),
     moveSection: createMutation((_, { input }, ctx) => {
-      const removedSection = first(
-        remove(ctx.questionnaire.sections, { id: input.id })
-      );
-      ctx.questionnaire.sections.splice(input.position, 0, removedSection);
+      const removedSection = first(remove(getSections(ctx), { id: input.id }));
+      getSections(ctx).splice(input.position, 0, removedSection);
       return removedSection;
     }),
     duplicateSection: createMutation((_, { input }, ctx) => {
-      const section = find(ctx.questionnaire.sections, { id: input.id });
+      const section = getSectionById(ctx.questionnaire.sections, input.id);
       const newSection = omit(cloneDeep(section), "id");
       set(newSection, "alias", addPrefix(newSection.alias));
       set(newSection, "title", addPrefix(newSection.title));
       const duplicatedSection = createSection(newSection);
       const remappedSection = remapAllNestedIds(duplicatedSection);
-      ctx.questionnaire.sections.splice(input.position, 0, remappedSection);
+      getSections(ctx).splice(input.position, 0, remappedSection);
       return remappedSection;
     }),
     createAnswer: createMutation((root, { input }, ctx) => {
@@ -420,12 +426,13 @@ const Resolvers = {
       }
     ),
     deleteAnswer: createMutation((_, { input }, ctx) => {
-      const pages = getPages(ctx);
-      const page = find(pages, page => {
-        if (page.answers && some(page.answers, { id: input.id })) {
-          return page;
-        }
-      });
+      // const pages = getPages(ctx);
+      // const page = find(pages, page => {
+      //   if (page.answers && some(page.answers, { id: input.id })) {
+      //     return page;
+      //   }
+      // });
+      const page = getPageByAnswerId(ctx, input.id);
 
       const deletedAnswer = first(remove(page.answers, { id: input.id }));
 
@@ -434,13 +441,13 @@ const Resolvers = {
       return page;
     }),
     moveAnswer: createMutation((_, { input: { id, position } }, ctx) => {
-      const pages = getPages(ctx);
-      const page = find(pages, page => {
-        if (page.answers && some(page.answers, { id })) {
-          return page;
-        }
-      });
-
+      // const pages = getPages(ctx);
+      // const page = find(pages, page => {
+      //   if (page.answers && some(page.answers, { id })) {
+      //     return page;
+      //   }
+      // });
+      const page = getPageByAnswerId(ctx, id);
       const answerMoving = first(remove(page.answers, { id }));
       page.answers.splice(position, 0, answerMoving);
 
@@ -448,8 +455,9 @@ const Resolvers = {
     }),
 
     createOption: createMutation((root, { input }, ctx) => {
-      const pages = getPages(ctx);
-      const answers = flatMap(pages, page => page.answers);
+      // const pages = getPages(ctx);
+      // const answers = flatMap(pages, page => page.answers);
+      const answers = getAnswers(ctx);
       const parent = find(answers, { id: input.answerId });
       const option = createOption(input);
 
@@ -459,9 +467,10 @@ const Resolvers = {
     }),
 
     createMutuallyExclusiveOption: createMutation((root, { input }, ctx) => {
-      const pages = getPages(ctx);
-      const answers = flatMap(pages, page => page.answers);
-      const answer = find(answers, { id: input.answerId });
+      // const pages = getPages(ctx);
+      // const answers = flatMap(pages, page => page.answers);
+      // const answer = find(answers, { id: input.answerId });
+      const answer = getAnswerById(ctx, input.answerId);
 
       const existing = find(answer.options, { mutuallyExclusive: true });
       if (!isNil(existing)) {
@@ -478,8 +487,9 @@ const Resolvers = {
     }),
 
     moveOption: createMutation((_, { input: { id, position } }, ctx) => {
-      const pages = getPages(ctx);
-      const answers = compact(flatMap(pages, page => page.answers));
+      // const pages = getPages(ctx);
+      // const answers = compact(flatMap(pages, page => page.answers));
+      const answers = getAnswers(ctx);
       const answer = find(answers, answer => {
         if (answer.options && some(answer.options, { id })) {
           return answer;
@@ -495,10 +505,11 @@ const Resolvers = {
     }),
 
     updateOption: createMutation((_, { input }, ctx) => {
-      const pages = getPages(ctx);
-      const answers = compact(flatMap(pages, page => page.answers));
-      const options = flatMap(answers, answer => answer.options);
-      const option = find(options, { id: input.id });
+      // const pages = getPages(ctx);
+      // const answers = compact(flatMap(pages, page => page.answers));
+      // const options = flatMap(answers, answer => answer.options);
+      // const option = find(options, { id: input.id });
+      const option = getOptionById(ctx, input.id);
 
       merge(option, input);
 
@@ -506,7 +517,8 @@ const Resolvers = {
     }),
     deleteOption: createMutation((_, { input }, ctx) => {
       const pages = getPages(ctx);
-      const answers = flatMap(pages, page => page.answers);
+      // const answers = flatMap(pages, page => page.answers);
+      const answers = getAnswers(ctx);
 
       const answer = find(answers, answer => {
         if (answer.options && some(answer.options, { id: input.id })) {
@@ -589,7 +601,8 @@ const Resolvers = {
     }),
     createQuestionConfirmation: createMutation((_, { input }, ctx) => {
       const section = getSectionByPageId(ctx, input.pageId);
-      const page = find(section.pages, { id: input.pageId });
+      // const page = find(section.pages, { id: input.pageId });
+      const page = getPageById(section, input.pageId);
       const questionConfirmation = {
         id: uuidv4(),
         title: "",
@@ -943,7 +956,7 @@ const Resolvers = {
       return "Read";
     },
     totalErrorCount: (questionnaire, args, ctx) =>
-      ctx.validationErrorInfo.length,
+      getValidationErrorInfo(ctx).length,
   },
 
   History: {
@@ -967,7 +980,7 @@ const Resolvers = {
   },
 
   Section: {
-    //folders: section => section.folders,
+    folders: section => section.folders,
     questionnaire: (section, args, ctx) => ctx.questionnaire,
     title: (section, args, ctx) =>
       ctx.questionnaire.navigation ? section.title : "",
@@ -981,25 +994,12 @@ const Resolvers = {
     availablePipingAnswers: ({ id }, args, ctx) =>
       getPreviousAnswersForSection(ctx.questionnaire, id),
     availablePipingMetadata: (section, args, ctx) => ctx.questionnaire.metadata,
-    validationErrorInfo: ({ id }, args, ctx) => {
-      const sectionErrors = ctx.validationErrorInfo.filter(
-        ({ sectionId, pageId }) => id === sectionId && !pageId
-      );
-
-      if (!sectionErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
+    validationErrorInfo: ({ id }, args, ctx) =>
+      returnValidationErrors(
+        ctx,
         id,
-        errors: sectionErrors,
-        totalCount: sectionErrors.length,
-      };
-    },
+        ({ sectionId, pageId }) => id === sectionId && !pageId
+      ),
   },
 
   LogicalDestination: {
@@ -1039,29 +1039,13 @@ const Resolvers = {
     secondaryLabelDefault: answer =>
       getName({ label: answer.secondaryLabel }, "BasicAnswer"),
 
-    validationErrorInfo: ({ id }, args, ctx) => {
-      const answerErrors = ctx.validationErrorInfo.filter(
-        ({ answerId }) => id === answerId
-      );
-
-      if (!answerErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
-        id,
-        errors: answerErrors,
-        totalCount: answerErrors.length,
-      };
-    },
+    validationErrorInfo: ({ id }, args, ctx) =>
+      returnValidationErrors(ctx, id, ({ answerId }) => id === answerId),
   },
 
   MultipleChoiceAnswer: {
     page: (answer, args, ctx) => {
+      // replace with find answerById
       const pages = getPages(ctx);
       return find(pages, page => {
         if (page.answers && some(page.answers, { id: answer.id })) {
@@ -1077,8 +1061,9 @@ const Resolvers = {
 
   Option: {
     answer: (option, args, ctx) => {
-      const pages = getPages(ctx);
-      const answers = flatMap(pages, page => page.answers);
+      // const pages = getPages(ctx);
+      // const answers = flatMap(pages, page => page.answers);
+      const answers = getAnswers(ctx);
       return find(answers, answer => {
         if (answer.options && some(answer.options, { id: option.id })) {
           return answer;
@@ -1087,24 +1072,8 @@ const Resolvers = {
     },
     displayName: option => getName(option, "Option"),
     additionalAnswer: option => option.additionalAnswer,
-    validationErrorInfo: ({ id }, args, ctx) => {
-      const optionErrors = ctx.validationErrorInfo.filter(
-        ({ optionId }) => id === optionId
-      );
-
-      if (!optionErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-      return {
-        id,
-        errors: optionErrors,
-        totalCount: optionErrors.length,
-      };
-    },
+    validationErrorInfo: ({ id }, args, ctx) =>
+      returnValidationErrors(ctx, id, ({ optionId }) => id === optionId),
   },
 
   ValidationType: {
@@ -1173,28 +1142,16 @@ const Resolvers = {
     custom: ({ custom }) => custom,
     entityType: ({ entityType }) => entityType,
     previousAnswer: ({ previousAnswer }, args, ctx) =>
+      // check this works
       isNil(previousAnswer) ? null : getAnswerById(ctx, previousAnswer),
     availablePreviousAnswers: ({ id }, args, ctx) =>
       getAvailablePreviousAnswersForValidation(ctx, id),
-    validationErrorInfo: ({ id }, args, ctx) => {
-      const minValueErrors = ctx.validationErrorInfo.filter(
-        ({ validationId }) => id === validationId
-      );
-
-      if (!minValueErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
+    validationErrorInfo: ({ id }, args, ctx) =>
+      returnValidationErrors(
+        ctx,
         id,
-        errors: minValueErrors,
-        totalCount: minValueErrors.length,
-      };
-    },
+        ({ validationId }) => id === validationId
+      ),
   },
 
   MaxValueValidationRule: {
@@ -1207,38 +1164,21 @@ const Resolvers = {
     availablePreviousAnswers: ({ id }, args, ctx) =>
       getAvailablePreviousAnswersForValidation(ctx, id),
     validationErrorInfo: ({ id }, args, ctx) => {
-      const maxValueErrors = ctx.validationErrorInfo.filter(
-        ({ validationId }) => id === validationId
-      );
-
-      const sharedErrors = ctx.validationErrorInfo.filter(
-        ({ validationProperty, errorCode, answerId }) => {
-          const answer = getAnswerById(ctx, answerId);
-          if (answer && answer.validation && answer.validation.maxValue) {
-            const errorsShareParent = answer.validation.maxValue.id === id;
-            return (
-              validationProperty === "minValue" &&
-              errorsShareParent &&
-              errorCode === "ERR_MIN_LARGER_THAN_MAX"
-            );
-          }
-          return false;
+      const maxValueErrors = ({ validationId }) => id === validationId;
+      const sharedErrors = ({ validationProperty, errorCode, answerId }) => {
+        const answer = getAnswerById(ctx, answerId);
+        if (answer && answer.validation && answer.validation.maxValue) {
+          const errorsShareParent = answer.validation.maxValue.id === id;
+          return (
+            validationProperty === "minValue" &&
+            errorsShareParent &&
+            errorCode === "ERR_MIN_LARGER_THAN_MAX"
+          );
         }
-      );
-
-      if (!maxValueErrors && !sharedErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
-        id,
-        errors: [...maxValueErrors, ...sharedErrors],
-        totalCount: maxValueErrors.length + sharedErrors.length,
+        return false;
       };
+
+      return returnValidationErrors(ctx, id, maxValueErrors, sharedErrors);
     },
   },
 
@@ -1257,25 +1197,12 @@ const Resolvers = {
       getAvailablePreviousAnswersForValidation(ctx, id),
     availableMetadata: ({ id }, args, ctx) =>
       getAvailableMetadataForValidation(ctx, id),
-    validationErrorInfo: ({ id }, args, ctx) => {
-      const earliestDateErrors = ctx.validationErrorInfo.filter(
-        ({ validationId }) => id === validationId
-      );
-
-      if (!earliestDateErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
+    validationErrorInfo: ({ id }, args, ctx) =>
+      returnValidationErrors(
+        ctx,
         id,
-        errors: earliestDateErrors,
-        totalCount: earliestDateErrors.length,
-      };
-    },
+        ({ validationId }) => id === validationId
+      ),
   },
 
   LatestDateValidationRule: {
@@ -1294,98 +1221,51 @@ const Resolvers = {
     availableMetadata: ({ id }, args, ctx) =>
       getAvailableMetadataForValidation(ctx, id),
     validationErrorInfo: ({ id }, args, ctx) => {
-      const latestDateErrors = ctx.validationErrorInfo.filter(
-        ({ validationId }) => id === validationId
-      );
-
-      const sharedErrors = ctx.validationErrorInfo.filter(
-        ({ validationProperty, errorCode, answerId }) => {
-          const answer = getAnswerById(ctx, answerId);
-          if (answer && answer.validation && answer.validation.latestDate) {
-            const errorsShareParent = answer.validation.latestDate.id === id;
-            return (
-              validationProperty === "earliestDate" &&
-              errorsShareParent &&
-              errorCode === "ERR_EARLIEST_AFTER_LATEST"
-            );
-          }
-          return false;
+      const latestDateErrors = ({ validationId }) => id === validationId;
+      const sharedErrors = ({ validationProperty, errorCode, answerId }) => {
+        const answer = getAnswerById(ctx, answerId);
+        if (answer && answer.validation && answer.validation.latestDate) {
+          const errorsShareParent = answer.validation.latestDate.id === id;
+          return (
+            validationProperty === "earliestDate" &&
+            errorsShareParent &&
+            errorCode === "ERR_EARLIEST_AFTER_LATEST"
+          );
         }
-      );
-
-      if (!latestDateErrors && !sharedErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
-        id,
-        errors: [...latestDateErrors, ...sharedErrors],
-        totalCount: latestDateErrors.length + sharedErrors.length,
+        return false;
       };
+
+      return returnValidationErrors(ctx, id, latestDateErrors, sharedErrors);
     },
   },
   MinDurationValidationRule: {
     duration: ({ duration }) => duration,
-    validationErrorInfo: ({ id }, args, ctx) => {
-      const minDurationErrors = ctx.validationErrorInfo.filter(
-        ({ validationId }) => id === validationId
-      );
-
-      if (!minDurationErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
+    validationErrorInfo: ({ id }, args, ctx) =>
+      returnValidationErrors(
+        ctx,
         id,
-        errors: minDurationErrors,
-        totalCount: minDurationErrors.length,
-      };
-    },
+        ({ validationId }) => id === validationId
+      ),
   },
 
   MaxDurationValidationRule: {
     duration: ({ duration }) => duration,
     validationErrorInfo: ({ id }, args, ctx) => {
-      const maxDurationErrors = ctx.validationErrorInfo.filter(
-        ({ validationId }) => id === validationId
-      );
-
-      const sharedErrors = ctx.validationErrorInfo.filter(
-        ({ validationProperty, errorCode, answerId }) => {
-          const answer = getAnswerById(ctx, answerId);
-          if (answer && answer.validation && answer.validation.maxDuration) {
-            const errorsShareParent = answer.validation.maxDuration.id === id;
-            return (
-              validationProperty === "minDuration" &&
-              errorsShareParent &&
-              errorCode === "ERR_MAX_DURATION_TOO_SMALL"
-            );
-          }
-          return false;
+      const maxDurationErrors = ({ validationId }) => id === validationId;
+      const sharedErrors = ({ validationProperty, errorCode, answerId }) => {
+        const answer = getAnswerById(ctx, answerId);
+        if (answer && answer.validation && answer.validation.maxDuration) {
+          const errorsShareParent = answer.validation.maxDuration.id === id;
+          return (
+            validationProperty === "minDuration" &&
+            errorsShareParent &&
+            errorCode === "ERR_MAX_DURATION_TOO_SMALL"
+          );
         }
-      );
-
-      if (!maxDurationErrors && !sharedErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
-        id,
-        errors: [...maxDurationErrors, ...sharedErrors],
-        totalCount: maxDurationErrors.length + sharedErrors.length,
+        return false;
       };
+
+      return returnValidationErrors(ctx, id, maxDurationErrors, sharedErrors);
     },
   },
 
@@ -1417,47 +1297,21 @@ const Resolvers = {
     availablePipingAnswers: ({ id }, args, ctx) =>
       getPreviousAnswersForPage(ctx.questionnaire, id),
     availablePipingMetadata: (page, args, ctx) => ctx.questionnaire.metadata,
-    validationErrorInfo: ({ id }, args, ctx) => {
-      const confirmationQuestionErrors = ctx.validationErrorInfo.filter(
-        ({ confirmationId }) => id === confirmationId
-      );
-
-      if (!confirmationQuestionErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
+    validationErrorInfo: ({ id }, args, ctx) =>
+      returnValidationErrors(
+        ctx,
         id,
-        errors: confirmationQuestionErrors,
-        totalCount: confirmationQuestionErrors.length,
-      };
-    },
+        ({ confirmationId }) => id === confirmationId
+      ),
   },
 
   ConfirmationOption: {
-    validationErrorInfo: ({ id }, args, ctx) => {
-      const confirmationOptionErrors = ctx.validationErrorInfo.filter(
-        ({ confirmationOptionId }) => id === confirmationOptionId
-      );
-
-      if (!confirmationOptionErrors) {
-        return {
-          id,
-          errors: [],
-          totalCount: 0,
-        };
-      }
-
-      return {
+    validationErrorInfo: ({ id }, args, ctx) =>
+      returnValidationErrors(
+        ctx,
         id,
-        errors: confirmationOptionErrors,
-        totalCount: confirmationOptionErrors.length,
-      };
-    },
+        ({ confirmationOptionId }) => id === confirmationOptionId
+      ),
   },
 
   Date: GraphQLDate,
