@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "pre-push-lint": " cd eq-author-api && yarn lint && cd ../eq-publisher && yarn lint"
+    "pre-push-lint": " cd eq-author-api && yarn lint && cd ../eq-publisher && yarn lint",
+    "cypress:open": "cypress open"
   },
   "repository": {
     "type": "git",
@@ -20,8 +21,11 @@
   },
   "homepage": "https://github.com/ONSdigital/eq-author-app#readme",
   "dependencies": {
+    "cypress": "^6.2.0",
+    "dotenv": "^8.2.0",
     "husky": "latest",
     "lint-staged": "latest",
+    "mocha": "^8.2.1",
     "prettier": "latest",
     "prettylint": "latest"
   },
@@ -39,5 +43,6 @@
   },
   "prettier": {
     "trailingComma": "es5"
-  }
+  },
+  "devDependencies": {}
 }
