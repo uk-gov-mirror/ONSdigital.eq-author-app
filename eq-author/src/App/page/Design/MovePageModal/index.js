@@ -48,6 +48,7 @@ const propTypes = {
 };
 
 const MovePageModal = ({ sectionId, page, isOpen, onClose, onMovePage }) => {
+  console.log(`page:::`, page);
   const { questionnaire } = useQuestionnaire();
   const [isSectionSelectOpen, setIsSectionSelectOpen] = useState(false);
   const [selectedSectionId, setSelectedSectionId] = useState(sectionId);

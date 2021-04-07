@@ -9,6 +9,7 @@ import DuplicateButton from "components/buttons/DuplicateButton";
 import MoveButton from "components/buttons/MovePageButton";
 import DeleteButton from "components/buttons/IconButtonDelete";
 import DeleteConfirmDialog from "components/DeleteConfirmDialog";
+import MovePageModal from "../../App/page/Design/MovePageModal";
 
 import iconFolder from "assets/icon-dialog-folder.svg";
 
@@ -32,15 +33,21 @@ const EditorToolbar = ({
   disableMove,
   disableDuplicate,
   disableDelete,
+  data,
 }) => {
+  console.log(`data :`, data);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [showMoveFolderModal, setMoveFolderModal] = useState(false);
   return (
     <>
       <Toolbar>
         <ShortCodeEditor shortCode={shortCode} onUpdate={shortCodeOnUpdate} />
         <Buttons>
-          <MoveButton disabled={disableMove} onClick={onMove} />
+          <MoveButton
+            data-test="btn-move-folder"
+            disabled={disableMove}
+            onClick={() => setMoveFolderModal(true)}
+          />
           <DuplicateButton
             data-test="btn-duplicate-folder"
             disabled={disableDuplicate}
@@ -65,6 +72,13 @@ const EditorToolbar = ({
         icon={icons[pageType]}
         data-test={`delete-${pageType}-modal`}
       />
+      {/* <MovePageModal
+        isOpen={showMoveFolderModal}
+        onClose={() => setMoveFolderModal(false)}
+        onMovePage={onMove}
+        sectionId={data.folder.sectionId}
+        page={data.folder}
+      /> */}
     </>
   );
 };

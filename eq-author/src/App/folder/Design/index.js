@@ -193,9 +193,10 @@ const FolderDesignPage = ({ history, match }) => {
               variables: { input: { id } },
             })
           }
-          disableMove
+          // disableMove
           key={`toolbar-folder-${folderId}`}
           title={alias}
+          data={data}
         />
         <h2>Folders</h2>
         <p>
