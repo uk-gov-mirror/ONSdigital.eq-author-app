@@ -29,10 +29,11 @@ import onCompleteDelete from "./onCompleteDelete";
 
 import onCompleteDuplicate from "./onCompleteDuplicate";
 
-import GET_FOLDER_QUERY from "./getFolderQuery.graphql";
-import UPDATE_FOLDER_MUTATION from "./updateFolderMutation.graphql";
+import GET_FOLDER_QUERY from "App/folder/graphql/getFolderQuery.graphql";
+import UPDATE_FOLDER_MUTATION from "App/folder/graphql/updateFolderMutation.graphql";
+import MOVE_FOLDER_MUTATION from "App/folder/graphql/moveFolder.graphql";
 import DUPLICATE_FOLDER_MUTATION from "graphql/duplicateFolder.graphql";
-import DELETE_FOLDER_MUTATION from "./deleteFolder.graphql";
+import DELETE_FOLDER_MUTATION from "App/folder/graphql/deleteFolder.graphql";
 
 import { colors } from "constants/theme";
 
@@ -78,6 +79,7 @@ const FolderDesignPage = ({ history, match }) => {
   let folderPosition, pages;
 
   const [saveShortCode] = useMutation(UPDATE_FOLDER_MUTATION);
+  const [moveFolder] = useMutation(MOVE_FOLDER_MUTATION);
   const [duplicateFolder] = useMutation(DUPLICATE_FOLDER_MUTATION, {
     onCompleted: ({ duplicateFolder }) =>
       duplicateFolder &&
@@ -182,7 +184,11 @@ const FolderDesignPage = ({ history, match }) => {
           shortCode={alias}
           pageType={FOLDER}
           shortCodeOnUpdate={shortCodeOnUpdate}
-          onMove={() => alert("onMove")}
+          onMove={(args) => {
+            moveFolder({
+              variables: { input: { id, position: args.to.position } },
+            });
+          }}
           onDuplicate={() =>
             duplicateFolder({
               variables: { input: { id, position: position + 1 } },
