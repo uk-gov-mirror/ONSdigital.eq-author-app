@@ -36,6 +36,7 @@ const {
   disableTheme,
   updateTheme,
   toggleQuestionnaireStarred,
+  setQuestionnaireLocked,
 } = require("../../tests/utils/contextBuilder/questionnaire");
 
 const {
@@ -110,7 +111,7 @@ describe("questionnaire", () => {
       });
     });
 
-    it("should create a default theme when questionnaire created", async () => {
+    it("should give business questionnaires the 'default' theme when questionnaire created", async () => {
       const questionnaire = await createQuestionnaire(ctx, {
         ...config,
         type: BUSINESS,
@@ -128,6 +129,25 @@ describe("questionnaire", () => {
         ]),
       });
     });
+
+    it("should give social questionnaires the 'social' theme when questionnaire created", async () => {
+      const questionnaire = await createQuestionnaire(ctx, {
+        ...config,
+        type: SOCIAL,
+      });
+      expect(questionnaire).toMatchObject({
+        previewTheme: "social",
+        themes: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            shortName: "social",
+            legalBasisCode: "NOTICE_1",
+            eqId: "",
+            formType: "",
+          }),
+        ]),
+      });
+    });
   });
 
   describe("mutate", () => {
@@ -137,6 +157,7 @@ describe("questionnaire", () => {
         description: "description",
         sections: [{}],
         metadata: [{}],
+        type: BUSINESS,
       });
     });
     it("should mutate a questionnaire", async () => {
@@ -214,6 +235,49 @@ describe("questionnaire", () => {
         // Dynamoose sets empty arrays to undefined, hence we have to check that starredQuestionnaires
         // is either length 0 or undefined
         expect([0, undefined]).toContain(updatedUser.starredQuestionnaires);
+      });
+    });
+
+    describe("locking", () => {
+      it("should allow questionnaire to be locked and unlocked", async () => {
+        await setQuestionnaireLocked(
+          {
+            questionnaireId: ctx.questionnaire.id,
+            locked: true,
+          },
+          ctx
+        );
+
+        let updatedQuestionnaire = await queryQuestionnaire(ctx);
+        expect(updatedQuestionnaire.locked).toBe(true);
+
+        await setQuestionnaireLocked(
+          {
+            questionnaireId: ctx.questionnaire.id,
+            locked: false,
+          },
+          ctx
+        );
+
+        updatedQuestionnaire = await queryQuestionnaire(ctx);
+        expect(updatedQuestionnaire.locked).toBe(false);
+      });
+
+      it("should prevent modifying questionnaire when locked", async () => {
+        await setQuestionnaireLocked(
+          {
+            questionnaireId: ctx.questionnaire.id,
+            locked: true,
+          },
+          ctx
+        );
+
+        expect(
+          updateSurveyId({
+            questionnaireId: ctx.questionnaire.id,
+            surveyId: "1337",
+          })
+        ).rejects.toThrow();
       });
     });
 
@@ -637,6 +701,19 @@ describe("questionnaire", () => {
       const deletedQuestionnaire = await queryQuestionnaire(ctx);
       expect(deletedQuestionnaire).toBeNull();
       questionnaire = null;
+    });
+
+    it("should not delete a locked questionnaire", async () => {
+      ctx = await buildContext({});
+      await setQuestionnaireLocked(
+        {
+          questionnaireId: ctx.questionnaire.id,
+          locked: true,
+        },
+        ctx
+      );
+
+      expect(deleteQuestionnaire(ctx, ctx.questionnaire.id)).rejects.toThrow();
     });
   });
 
