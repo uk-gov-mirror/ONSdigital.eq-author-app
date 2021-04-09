@@ -85,8 +85,6 @@ export class PageHeader extends React.Component {
       questionnaire,
     } = this.props;
 
-    console.log(`page >>>`, page);
-
     return (
       <>
         <Toolbar>

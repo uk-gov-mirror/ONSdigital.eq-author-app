@@ -471,10 +471,10 @@ const Resolvers = {
 
       return section;
     }),
-    moveFolder: createMutation((_, { input }, ctx) => {
-      const section = getSectionByFolderId(ctx, input.id);
-      const folderToMove = first(remove(section.folders, { id: input.id }));
-      section.folders.splice(input.position, 0, folderToMove);
+    moveFolder: createMutation((_, { input: { id, position } }, ctx) => {
+      const section = getSectionByFolderId(ctx, id);
+      const folderToMove = first(remove(section.folders, { id }));
+      section.folders.splice(position, 0, folderToMove);
       return folderToMove;
     }),
     duplicateFolder: createMutation((_, { input }, ctx) => {

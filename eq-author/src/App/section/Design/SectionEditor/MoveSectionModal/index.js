@@ -4,17 +4,16 @@ import CustomPropTypes from "custom-prop-types";
 import MoveModal from "components/MoveModal";
 import PositionModal from "components/PositionModal";
 
-class MoveSectionModal extends React.Component {
-  static propTypes = {
-    section: CustomPropTypes.section.isRequired,
-    questionnaire: CustomPropTypes.questionnaire.isRequired,
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onMoveSection: PropTypes.func.isRequired,
-  };
-
-  handleOnMove = ({ position }) => {
-    const { section, onMoveSection } = this.props;
+const propTypes = {
+  section: CustomPropTypes.section.isRequired,
+  questionnaire: CustomPropTypes.questionnaire.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onMoveSection: PropTypes.func.isRequired,
+};
+const MoveSectionModal = (props) => {
+  const { section, questionnaire, onMoveSection } = props;
+  const handleOnMove = ({ position }) => {
     onMoveSection({
       from: {
         id: section.id,
@@ -27,23 +26,17 @@ class MoveSectionModal extends React.Component {
     });
   };
 
-  render() {
-    const {
-      questionnaire: { sections },
-      section,
-    } = this.props;
+  return (
+    <MoveModal title={"Move section"} {...props}>
+      <PositionModal
+        options={questionnaire.sections}
+        selected={section}
+        onMove={handleOnMove}
+      />
+    </MoveModal>
+  );
+};
 
-    return (
-      <MoveModal title={"Move section"} {...this.props}>
-        <PositionModal
-          options={sections}
-          selected={section}
-          onMove={this.handleOnMove}
-          {...this.props}
-        />
-      </MoveModal>
-    );
-  }
-}
+MoveSectionModal.propTypes = propTypes;
 
 export default MoveSectionModal;
