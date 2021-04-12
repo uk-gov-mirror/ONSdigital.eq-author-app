@@ -5,7 +5,7 @@ import {
   buildQuestionnaire,
   buildSections,
 } from "tests/utils/createMockQuestionnaire";
-import MovePageModal from "App/page/Design/MovePageModal";
+import MovePageModal from "App/page/Design/MoveEntityModal";
 
 describe("Question Page Editor", () => {
   let wrapper, mockHandlers, page, mockEvent, questionnaire, match;

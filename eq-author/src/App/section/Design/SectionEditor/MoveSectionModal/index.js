@@ -29,6 +29,7 @@ const MoveSectionModal = (props) => {
   return (
     <MoveModal title={"Move section"} {...props}>
       <PositionModal
+        title="Section"
         options={questionnaire.sections}
         selected={section}
         onMove={handleOnMove}

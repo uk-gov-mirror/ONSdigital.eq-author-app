@@ -4,69 +4,51 @@ exports[`PositionModal should render 1`] = `
 <div
   data-test="position-modal"
 >
-  <PositionModal__Label
-    htmlFor="PositionModal1"
-  >
-    Position
-  </PositionModal__Label>
-  <PositionModal__Trigger
-    data-test="position-modal-trigger"
+  <InnerModal
+    displayName="Section 1"
     id="PositionModal1"
-    onClick={[Function]}
-  >
-    Select
-  </PositionModal__Trigger>
-  <ItemSelectModal
-    data-test="position-select-modal"
     isOpen={false}
+    onChange={[Function]}
+    onClick={[Function]}
     onClose={[Function]}
     onConfirm={[Function]}
-    primaryText="Move"
-    secondaryText="Cancel"
-    title="Position"
+    selected="0"
   >
-    <withChangeHandler(ItemSelect)
-      data-test="position-item-select"
-      name="position"
-      onChange={[Function]}
+    <PositionModal__Indent
+      data-test="option-0"
+      key="0"
       value="0"
     >
-      <PositionModal__Indent
-        data-test="option-0"
-        key="0"
-        value="0"
-      >
-        Section 1
-      </PositionModal__Indent>
-      <PositionModal__Indent
-        data-test="option-1"
-        key="1"
-        value="1"
-      >
-        Section 2
-      </PositionModal__Indent>
-      <PositionModal__Indent
-        data-test="option-2"
-        key="2"
-        value="2"
-      >
-        Section 3
-      </PositionModal__Indent>
-      <PositionModal__Indent
-        data-test="option-3"
-        key="3"
-        value="3"
-      >
-        Section 4
-      </PositionModal__Indent>
-      <PositionModal__Indent
-        data-test="option-4"
-        key="4"
-        value="4"
-      >
-        Section 5
-      </PositionModal__Indent>
-    </withChangeHandler(ItemSelect)>
-  </ItemSelectModal>
+      Section 1
+    </PositionModal__Indent>
+    <PositionModal__Indent
+      data-test="option-1"
+      key="1"
+      value="1"
+    >
+      Section 2
+    </PositionModal__Indent>
+    <PositionModal__Indent
+      data-test="option-2"
+      key="2"
+      value="2"
+    >
+      Section 3
+    </PositionModal__Indent>
+    <PositionModal__Indent
+      data-test="option-3"
+      key="3"
+      value="3"
+    >
+      Section 4
+    </PositionModal__Indent>
+    <PositionModal__Indent
+      data-test="option-4"
+      key="4"
+      value="4"
+    >
+      Section 5
+    </PositionModal__Indent>
+  </InnerModal>
 </div>
 `;

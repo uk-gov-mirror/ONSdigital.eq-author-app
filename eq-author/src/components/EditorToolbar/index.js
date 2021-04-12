@@ -9,7 +9,7 @@ import DuplicateButton from "components/buttons/DuplicateButton";
 import MoveButton from "components/buttons/MovePageButton";
 import DeleteButton from "components/buttons/IconButtonDelete";
 import DeleteConfirmDialog from "components/DeleteConfirmDialog";
-import MovePageModal from "App/page/Design/MovePageModal";
+import MoveFolderModal from "App/page/Design/MoveEntityModal";
 
 import iconFolder from "assets/icon-dialog-folder.svg";
 
@@ -71,13 +71,13 @@ const EditorToolbar = ({
         icon={icons[pageType]}
         data-test={`delete-${pageType}-modal`}
       />
-      <MovePageModal
+      <MoveFolderModal
         isOpen={showMoveFolderModal}
         onClose={() => setMoveFolderModal(false)}
-        onMovePage={onMove}
+        onMove={onMove}
         sectionId={data.folder.section.id}
-        page={data.folder}
-        folder
+        selected={data.folder}
+        entity="Folder"
       />
     </>
   );

@@ -471,12 +471,25 @@ const Resolvers = {
 
       return section;
     }),
-    moveFolder: createMutation((_, { input: { id, position } }, ctx) => {
-      const section = getSectionByFolderId(ctx, id);
-      const folderToMove = first(remove(section.folders, { id }));
-      section.folders.splice(position, 0, folderToMove);
-      return folderToMove;
-    }),
+    moveFolder: createMutation(
+      (_, { input: { id, position, sectionId } }, ctx) => {
+        const section = getSectionByFolderId(ctx, id);
+        const folderToMove = first(remove(section.folders, { id }));
+
+        if (!section.folders.length) {
+          onFolderDeleted(ctx, folderToMove);
+          section.folders.push(createFolder());
+        }
+
+        if (sectionId) {
+          const newSection = getSectionById(ctx, sectionId);
+          newSection.folders.splice(position, 0, folderToMove);
+        } else {
+          section.folders.splice(position, 0, folderToMove);
+        }
+        return folderToMove;
+      }
+    ),
     duplicateFolder: createMutation((_, { input }, ctx) => {
       const section = getSectionByFolderId(ctx, input.id);
       const folder = getFolderById(ctx, input.id);

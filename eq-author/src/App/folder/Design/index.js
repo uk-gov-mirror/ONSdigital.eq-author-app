@@ -34,6 +34,8 @@ import UPDATE_FOLDER_MUTATION from "App/folder/graphql/updateFolderMutation.grap
 import MOVE_FOLDER_MUTATION from "App/folder/graphql/moveFolder.graphql";
 import DUPLICATE_FOLDER_MUTATION from "graphql/duplicateFolder.graphql";
 import DELETE_FOLDER_MUTATION from "App/folder/graphql/deleteFolder.graphql";
+import GET_SECTION from "graphql/getSection.graphql";
+import fragment from "graphql/fragments/movePage.graphql";
 
 import { colors } from "constants/theme";
 
@@ -181,12 +183,49 @@ const FolderDesignPage = ({ history, match }) => {
     >
       <StyledPanel data-test="folders-page">
         <EditorToolbar
+          key={`toolbar-folder-${folderId}`}
+          title={alias}
           shortCode={alias}
           pageType={FOLDER}
           shortCodeOnUpdate={shortCodeOnUpdate}
-          onMove={(args) => {
+          data={data}
+          onMove={({ from, to }) => {
             moveFolder({
-              variables: { input: { id, position: args.to.position } },
+              variables: {
+                input: {
+                  id,
+                  position: to.position,
+                  sectionId: to.selectedSectionId,
+                },
+              },
+              refetchQueries: [
+                {
+                  query: GET_SECTION,
+                  variables: {
+                    input: {
+                      sectionId: to.sectionId,
+                    },
+                  },
+                },
+              ],
+              // i am here and need a little bit more digging to figure out if I can finish
+              update: (cache, { data: moveFolder } = {}) => {
+                if (moveFolder) {
+                  // debugger;
+                  const fromSectionId = `Section${from.sectionId}`;
+                  const fromSection = cache.readFragment({
+                    id: fromSectionId,
+                    fragment,
+                  });
+                  // debugger;
+                  if (fromSection && moveFolder) {
+                    cache.writeData({
+                      id: `Section${from.sectionId}`,
+                      data: fromSection,
+                    });
+                  }
+                }
+              },
             });
           }}
           onDuplicate={() =>
@@ -199,10 +238,6 @@ const FolderDesignPage = ({ history, match }) => {
               variables: { input: { id } },
             })
           }
-          // disableMove
-          key={`toolbar-folder-${folderId}`}
-          title={alias}
-          data={data}
         />
         <h2>Folders</h2>
         <p>

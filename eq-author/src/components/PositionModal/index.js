@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { uniqueId } from "lodash";
 import styled from "styled-components";
 import { InnerModal } from "./InnerModal";
+import { Option } from "components/ItemSelectModal/ItemSelect";
 
 const Indent = styled(Option)`
   margin-left: ${({ indent }) => (indent ? 1 : 0)}em;
@@ -61,19 +62,17 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
 
     if (parentId) {
       // get pages in target folder + selected item
-      const selectedItemPosition = orderedOptions
+      positionCalculation = orderedOptions
         .filter(
           ({ parentId: itemId, id }) =>
             parentId === itemId || id === selected.id
         )
         .findIndex(({ id }) => id === selected.id);
-      positionCalculation = selectedItemPosition;
     } else {
       // remove all nested pages
-      const selectedItemPosition = orderedOptions
+      positionCalculation = orderedOptions
         .filter(({ parentId }) => !parentId)
         .findIndex(({ id }) => id === selected.id);
-      positionCalculation = selectedItemPosition;
     }
 
     onMove({
