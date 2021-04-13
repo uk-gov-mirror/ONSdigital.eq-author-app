@@ -37,6 +37,7 @@ const EditorToolbar = ({
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMoveFolderModal, setMoveFolderModal] = useState(false);
+  console.log(data, "what");
   return (
     <>
       <Toolbar>

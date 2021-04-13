@@ -85,9 +85,7 @@ const MoveEntityModal = ({
   const { questionnaire } = useQuestionnaire();
   const { options, move } = entityData[entity];
 
-  const [isSectionSelectOpen, setIsSectionSelectOpen] = useState(false);
   const [selectedSectionId, setSelectedSectionId] = useState(sectionId);
-
   // const sectionButtonId = uniqueId("MovePageModal");
 
   const handleMove = (result) => {
@@ -113,7 +111,6 @@ const MoveEntityModal = ({
             data-test={"section-position-modal"}
             title={"Section"}
             options={questionnaire.sections}
-            onMove={() => setIsSectionSelectOpen(false)}
             selected={selectedSection}
             onChange={(value) =>
               setSelectedSectionId(questionnaire.sections[value].id)
@@ -131,9 +128,19 @@ const MoveEntityModal = ({
           />
         </MoveModal>
       ),
-    [selectedSection, questionnaire, selected, isOpen, isSectionSelectOpen]
+    [selectedSection, questionnaire, selected, isOpen, entity]
   );
 };
+// ,
+// [
+//   selectedSection,
+//   questionnaire,
+//   selected,
+//   isOpen,
+//   isSectionSelectOpen,
+//   entity,
+// ]
+// );
 
 MoveEntityModal.propTypes = propTypes;
 

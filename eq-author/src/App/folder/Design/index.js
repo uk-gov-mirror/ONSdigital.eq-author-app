@@ -77,7 +77,9 @@ const FolderDesignPage = ({ history, match }) => {
 
   const { loading, error, data } = useQuery(GET_FOLDER_QUERY, {
     variables: { input: { folderId } },
+    fetchPolicy: "cache-and-network",
   });
+
   let folderPosition, pages;
 
   const [saveShortCode] = useMutation(UPDATE_FOLDER_MUTATION);
@@ -198,34 +200,18 @@ const FolderDesignPage = ({ history, match }) => {
                   sectionId: to.selectedSectionId,
                 },
               },
+              // this works
+              // but I need to conditional it
               refetchQueries: [
                 {
                   query: GET_SECTION,
                   variables: {
                     input: {
-                      sectionId: to.sectionId,
+                      sectionId: from.sectionId,
                     },
                   },
                 },
               ],
-              // i am here and need a little bit more digging to figure out if I can finish
-              update: (cache, { data: moveFolder } = {}) => {
-                if (moveFolder) {
-                  // debugger;
-                  const fromSectionId = `Section${from.sectionId}`;
-                  const fromSection = cache.readFragment({
-                    id: fromSectionId,
-                    fragment,
-                  });
-                  // debugger;
-                  if (fromSection && moveFolder) {
-                    cache.writeData({
-                      id: `Section${from.sectionId}`,
-                      data: fromSection,
-                    });
-                  }
-                }
-              },
             });
           }}
           onDuplicate={() =>

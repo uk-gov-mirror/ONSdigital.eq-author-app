@@ -75,11 +75,13 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
         .findIndex(({ id }) => id === selected.id);
     }
 
-    onMove({
-      ...item,
-      folderId: parentId,
-      position: positionCalculation,
-    });
+    if (onMove) {
+      onMove({
+        ...item,
+        folderId: parentId,
+        position: positionCalculation,
+      });
+    }
 
     setIsOpen(false);
   };
