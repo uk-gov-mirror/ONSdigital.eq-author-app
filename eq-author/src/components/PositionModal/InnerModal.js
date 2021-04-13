@@ -80,10 +80,13 @@ InnerModal.propTypes = {
   onConfirm: PropTypes.func,
   onChange: PropTypes.func,
   children: PropTypes.node,
-  selected: PropTypes.shape({
-    id: PropTypes.string,
-    displayName: PropTypes.string,
-    position: PropTypes.number,
-  }).isRequired,
+  selected: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      id: PropTypes.string,
+      displayName: PropTypes.string,
+      position: PropTypes.number,
+    }),
+  ]).isRequired,
   displayName: PropTypes.string,
 };

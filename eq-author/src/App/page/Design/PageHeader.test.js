@@ -107,7 +107,7 @@ describe("Question Page Editor", () => {
 
     it("should call handler when confirmed", () => {
       const moveWrapper = wrapper.find(MovePageModal);
-      moveWrapper.simulate("movePage");
+      moveWrapper.props().onMove();
       expect(mockHandlers.onMovePage).toHaveBeenCalled();
     });
 

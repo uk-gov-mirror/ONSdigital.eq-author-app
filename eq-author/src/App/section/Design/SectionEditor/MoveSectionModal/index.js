@@ -11,27 +11,30 @@ const propTypes = {
   onClose: PropTypes.func.isRequired,
   onMoveSection: PropTypes.func.isRequired,
 };
-const MoveSectionModal = ({ section, questionnaire, onMoveSection }) => (
-  <MoveModal title={"Move section"}>
-    <PositionModal
-      title="Section"
-      options={questionnaire.sections}
-      selected={section}
-      onMove={({ position }) =>
-        onMoveSection({
-          from: {
-            id: section.id,
-            position: section.position,
-          },
-          to: {
-            id: section.id,
-            position: position,
-          },
-        })
-      }
-    />
-  </MoveModal>
-);
+const MoveSectionModal = (props) => {
+  const { questionnaire, section, onMoveSection } = props;
+  return (
+    <MoveModal title={"Move section"} {...props}>
+      <PositionModal
+        title="Section"
+        options={questionnaire.sections}
+        selected={section}
+        onMove={({ position }) =>
+          onMoveSection({
+            from: {
+              id: section.id,
+              position: section.position,
+            },
+            to: {
+              id: section.id,
+              position: position,
+            },
+          })
+        }
+      />
+    </MoveModal>
+  );
+};
 
 MoveSectionModal.propTypes = propTypes;
 

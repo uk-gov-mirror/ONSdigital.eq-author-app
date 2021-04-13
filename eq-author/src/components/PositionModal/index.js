@@ -87,7 +87,7 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
   };
 
   return (
-    <div data-test="position-modal">
+    <div data-test={`${title.toLowerCase()}-position-modal`}>
       <InnerModal
         id={positionButtonId}
         title={title}
@@ -101,7 +101,7 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
       >
         {orderedOptions.map(({ displayName, parentEnabled }, i) => (
           <Indent
-            data-test={`option-${i}`}
+            data-test="options"
             key={i}
             value={String(i)}
             indent={parentEnabled ? parentEnabled.toString() : undefined}
@@ -124,13 +124,13 @@ PositionModal.propTypes = {
       parentEnabled: PropTypes.bool,
     })
   ).isRequired,
-  onMove: PropTypes.func.isRequired,
   selected: PropTypes.shape({
     id: PropTypes.string,
     displayName: PropTypes.string,
     position: PropTypes.number,
   }).isRequired,
-  onChange: PropTypes.string,
+  onMove: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
 export default PositionModal;

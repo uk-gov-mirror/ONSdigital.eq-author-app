@@ -1,10 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
 import MoveModal from "components/MoveModal";
 import PropTypes from "prop-types";
 import CustomPropTypes from "custom-prop-types";
 import PositionModal from "components/PositionModal";
-// import { find, uniqueId } from "lodash";
 
 import { useQuestionnaire } from "components/QuestionnaireContext";
 
@@ -34,7 +32,7 @@ const propTypes = {
   page: CustomPropTypes.page,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onMovePage: PropTypes.func.isRequired,
+  onMove: PropTypes.func.isRequired,
   entity: PropTypes.string.isRequired,
 };
 
@@ -86,7 +84,6 @@ const MoveEntityModal = ({
   const { options, move } = entityData[entity];
 
   const [selectedSectionId, setSelectedSectionId] = useState(sectionId);
-  // const sectionButtonId = uniqueId("MovePageModal");
 
   const handleMove = (result) => {
     const { position, folderId } = result;
@@ -131,16 +128,6 @@ const MoveEntityModal = ({
     [selectedSection, questionnaire, selected, isOpen, entity]
   );
 };
-// ,
-// [
-//   selectedSection,
-//   questionnaire,
-//   selected,
-//   isOpen,
-//   isSectionSelectOpen,
-//   entity,
-// ]
-// );
 
 MoveEntityModal.propTypes = propTypes;
 
