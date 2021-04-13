@@ -45,7 +45,7 @@ describe("MovePageModal", () => {
   });
 
   it("should open section select modal", () => {
-    expect(screen.queryByTestId("section-item-select")).toBeNull();
+    expect(screen.queryByTestId("section-item-select")).not.toBeInTheDocument();
     fireEvent.click(screen.getByText(/Section 1/));
     expect(screen.queryByTestId("section-item-select")).toBeVisible();
   });
@@ -56,7 +56,7 @@ describe("MovePageModal", () => {
     fireEvent.click(screen.getByText(/Select/));
 
     await waitForElementToBeRemoved(() => screen.queryByText(/Select/i));
-    expect(screen.queryByText(/Select/)).toBeNull();
+    expect(screen.queryByText(/Select/)).not.toBeInTheDocument();
   });
 
   it("should close select modal on cancel", async () => {
@@ -65,7 +65,7 @@ describe("MovePageModal", () => {
     fireEvent.click(screen.getByText(/Cancel/));
 
     await waitForElementToBeRemoved(() => screen.queryByText(/Cancel/i));
-    expect(screen.queryByText(/Cancel/)).toBeNull();
+    expect(screen.queryByText(/Cancel/)).not.toBeInTheDocument();
   });
 
   it("should update selection on change", async () => {
@@ -74,7 +74,7 @@ describe("MovePageModal", () => {
     fireEvent.click(screen.getByText(/Section 2/));
     fireEvent.click(screen.getByText(/Select/));
     await waitForElementToBeRemoved(() => screen.queryByText(/Select/i));
-    expect(screen.queryByText(/Section 1/)).toBeNull();
+    expect(screen.queryByText(/Section 1/)).not.toBeInTheDocument();
     expect(screen.queryByText(/Section 2/)).toBeVisible();
   });
 });
@@ -87,7 +87,7 @@ describe("MovePageModal: questionnaire not loaded", () => {
 
     setup({ selected: null });
 
-    expect(screen.queryByTestId("move-modal")).toBeNull();
+    expect(screen.queryByTestId("move-modal")).not.toBeInTheDocument();
   });
 });
 describe("MovePageModal: buildPageList", () => {
