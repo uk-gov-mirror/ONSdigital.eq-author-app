@@ -37,7 +37,6 @@ const EditorToolbar = ({
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMoveFolderModal, setMoveFolderModal] = useState(false);
-  console.log(data, "what");
   return (
     <>
       <Toolbar>
@@ -95,6 +94,8 @@ EditorToolbar.propTypes = {
   disableMove: PropTypes.bool,
   disableDuplicate: PropTypes.bool,
   disableDelete: PropTypes.bool,
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.object,
 };
 
 export default EditorToolbar;

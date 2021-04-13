@@ -35,7 +35,6 @@ import MOVE_FOLDER_MUTATION from "App/folder/graphql/moveFolder.graphql";
 import DUPLICATE_FOLDER_MUTATION from "graphql/duplicateFolder.graphql";
 import DELETE_FOLDER_MUTATION from "App/folder/graphql/deleteFolder.graphql";
 import GET_SECTION from "graphql/getSection.graphql";
-import fragment from "graphql/fragments/movePage.graphql";
 
 import { colors } from "constants/theme";
 
