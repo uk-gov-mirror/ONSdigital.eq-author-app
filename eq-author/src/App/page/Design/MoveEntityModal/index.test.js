@@ -1,7 +1,11 @@
 import React from "react";
-import MovePageModal, { buildPageList } from ".";
-import { shallow } from "enzyme";
-import { byTestAttr } from "tests/utils/selectors";
+import MoveEntityModal, { buildPageList } from ".";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitForElementToBeRemoved,
+} from "tests/utils/rtl";
 import { buildQuestionnaire } from "tests/utils/createMockQuestionnaire";
 import { useQuestionnaire } from "components/QuestionnaireContext";
 
@@ -10,14 +14,6 @@ jest.mock("components/QuestionnaireContext", () => ({
   useQuestionnaire: jest.fn(),
 }));
 
-jest.mock("components/PositionModal");
-
-const getSectionModal = (wrapper) =>
-  wrapper.find(byTestAttr("section-select-modal"));
-
-const getSectionItem = (wrapper) =>
-  wrapper.find(byTestAttr("section-item-select"));
-
 const mockQuestionnaire = buildQuestionnaire({ sectionCount: 2 });
 const currentSection = mockQuestionnaire.sections[0];
 const currentPage = currentSection.folders[0].pages[0];
@@ -25,60 +21,61 @@ const currentPage = currentSection.folders[0].pages[0];
 useQuestionnaire.mockImplementation(() => ({
   questionnaire: mockQuestionnaire,
 }));
+const onMove = jest.fn();
+function setup(props) {
+  const utils = render(
+    <MoveEntityModal
+      entity="Page"
+      isOpen
+      onClose={jest.fn()}
+      sectionId={currentSection.id}
+      selected={currentPage}
+      onMove={onMove}
+      {...props}
+    />
+  );
+  return { ...utils, onMove };
+}
 
 describe("MovePageModal", () => {
-  let wrapper;
-  beforeEach(() => {
-    wrapper = shallow(
-      <MovePageModal
-        isOpen
-        onClose={jest.fn()}
-        sectionId={currentSection.id}
-        page={currentPage}
-        onMovePage={jest.fn()}
-      />
-    );
+  beforeEach(() => setup());
+
+  it("should render rtl", () => {
+    expect(screen.getByTestId("move-modal")).toBeVisible();
   });
 
-  it("should render", () => {
-    expect(wrapper).toMatchSnapshot();
+  it("should open section select modal", () => {
+    expect(screen.queryByTestId("section-item-select")).toBeNull();
+    fireEvent.click(screen.getByText(/Section 1/));
+    expect(screen.queryByTestId("section-item-select")).toBeVisible();
   });
 
-  it("opens section select Modals when correct button is clicked", () => {
-    wrapper.find("MovePageModal__Trigger").first().simulate("click");
+  it("should close select modal on select", async () => {
+    fireEvent.click(screen.getByText(/Section 1/));
 
-    expect(getSectionModal(wrapper).prop("isOpen")).toBe(true);
+    fireEvent.click(screen.getByText(/Select/));
+
+    await waitForElementToBeRemoved(() => screen.queryByText(/Select/i));
+    expect(screen.queryByText(/Select/)).toBeNull();
   });
 
-  it("should close section select Modals on confirm", () => {
-    wrapper.find("MovePageModal__Trigger").simulate("click");
+  it("should close select modal on cancel", async () => {
+    fireEvent.click(screen.getByText(/Section 1/));
 
-    getSectionModal(wrapper).simulate("confirm", {
-      preventDefault: jest.fn(),
-    });
+    fireEvent.click(screen.getByText(/Cancel/));
 
-    expect(getSectionModal(wrapper).prop("isOpen")).toBe(false);
+    await waitForElementToBeRemoved(() => screen.queryByText(/Cancel/i));
+    expect(screen.queryByText(/Cancel/)).toBeNull();
   });
 
-  it("should close section select Modals on close", () => {
-    wrapper.find("MovePageModal__Trigger").simulate("click");
+  it("should update selection on change", async () => {
+    fireEvent.click(screen.getByText(/Section 1/));
 
-    expect(getSectionModal(wrapper).prop("isOpen")).toBe(true);
-
-    getSectionModal(wrapper).simulate("close");
-
-    expect(getSectionModal(wrapper).prop("isOpen")).toBe(false);
-  });
-
-  it("should update selected section on change", () => {
-    const selectedSection = mockQuestionnaire.sections[1];
-    getSectionItem(wrapper).simulate("change", {
-      value: mockQuestionnaire.sections[1].id,
-    });
-
-    expect(wrapper.find("PositionModal").prop("options")).toMatchObject(
-      selectedSection.folders.flatMap(({ pages }) => pages)
-    );
+    fireEvent.click(screen.getByText(/Section 2/));
+    fireEvent.click(screen.getByText(/Select/));
+    await waitForElementToBeRemoved(() => screen.queryByText(/Select/i));
+    expect(screen.queryByText(/Section 1/)).toBeNull();
+    expect(screen.queryByText(/Section 2/)).toBeVisible();
   });
 });
 
@@ -88,17 +85,9 @@ describe("MovePageModal: questionnaire not loaded", () => {
       questionnaire: undefined,
     }));
 
-    const wrapper = shallow(
-      <MovePageModal
-        isOpen
-        onClose={jest.fn()}
-        sectionId="1"
-        page={null}
-        onMovePage={jest.fn()}
-      />
-    );
+    setup({ selected: null });
 
-    expect(wrapper.isEmptyRender()).toBe(true);
+    expect(screen.queryByTestId("move-modal")).toBeNull();
   });
 });
 describe("MovePageModal: buildPageList", () => {
