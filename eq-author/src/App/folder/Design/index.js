@@ -189,7 +189,7 @@ const FolderDesignPage = ({ history, match }) => {
           shortCode={alias}
           pageType={FOLDER}
           shortCodeOnUpdate={shortCodeOnUpdate}
-          data={data}
+          data={data.folder}
           onMove={({ from, to }) => {
             moveFolder({
               variables: {
