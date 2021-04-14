@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { uniqueId } from "lodash";
 import styled from "styled-components";
@@ -98,7 +98,7 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
   };
 
   return (
-    <Fragment data-test={`${title.toLowerCase()}-position-modal`}>
+    <div data-test={`${title.toLowerCase()}-position-modal`}>
       <Label htmlFor={positionButtonId}>{title}</Label>
       <Trigger id={positionButtonId} onClick={() => setIsOpen(true)}>
         <Truncated>{selected.displayName || "Select"}</Truncated>
@@ -128,7 +128,7 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
           ))}
         </ItemSelect>
       </ItemSelectModal>
-    </Fragment>
+    </div>
   );
 };
 
