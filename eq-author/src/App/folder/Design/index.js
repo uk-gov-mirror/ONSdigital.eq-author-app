@@ -196,21 +196,23 @@ const FolderDesignPage = ({ history, match }) => {
                 input: {
                   id,
                   position: to.position,
-                  sectionId: to.selectedSectionId,
+                  sectionId: to.sectionId,
                 },
-              },
-              // this works
-              // but I need to conditional it
-              refetchQueries: [
-                {
-                  query: GET_SECTION,
-                  variables: {
-                    input: {
-                      sectionId: from.sectionId,
-                    },
-                  },
-                },
-              ],
+              }, // conditional refetch to check when last folder in section
+              ...(from.sectionId !== to.sectionId
+                ? {
+                    refetchQueries: [
+                      {
+                        query: GET_SECTION,
+                        variables: {
+                          input: {
+                            sectionId: from.sectionId,
+                          },
+                        },
+                      },
+                    ],
+                  }
+                : {}),
             });
           }}
           onDuplicate={() =>

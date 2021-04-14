@@ -6,7 +6,10 @@ import {
   fireEvent,
   waitForElementToBeRemoved,
 } from "tests/utils/rtl";
-import { buildQuestionnaire } from "tests/utils/createMockQuestionnaire";
+import {
+  buildQuestionnaire,
+  buildFolders,
+} from "tests/utils/createMockQuestionnaire";
 import { useQuestionnaire } from "components/QuestionnaireContext";
 
 jest.mock("components/QuestionnaireContext", () => ({
@@ -15,14 +18,21 @@ jest.mock("components/QuestionnaireContext", () => ({
 }));
 
 const mockQuestionnaire = buildQuestionnaire({ sectionCount: 2 });
+const mockFolders = buildFolders({ folderCount: 3 }).map((item, index) => {
+  item.displayName = `Folder ${index + 1}`;
+  return item;
+});
 const currentSection = mockQuestionnaire.sections[0];
+currentSection.folders = mockFolders;
+const currentFolder = currentSection.folders[1];
 const currentPage = currentSection.folders[0].pages[0];
 
 useQuestionnaire.mockImplementation(() => ({
   questionnaire: mockQuestionnaire,
 }));
-const onMove = jest.fn();
+
 function setup(props) {
+  const onMove = jest.fn();
   const utils = render(
     <MoveEntityModal
       entity="Page"
@@ -37,7 +47,7 @@ function setup(props) {
   return { ...utils, onMove };
 }
 
-describe("MovePageModal", () => {
+describe("MoveEntityModal: entity === 'Page'", () => {
   beforeEach(() => setup());
 
   it("should render rtl", () => {
@@ -79,9 +89,49 @@ describe("MovePageModal", () => {
   });
 });
 
-describe("MovePageModal: questionnaire not loaded", () => {
+describe("MoveEntityModal: onMove'", () => {
+  it("should show correct title", async () => {
+    const { onMove } = setup({ entity: "Folder", selected: currentFolder });
+    fireEvent.click(screen.getByText(/Folder 2/));
+
+    fireEvent.click(screen.getByText(/Folder 3/));
+    fireEvent.click(screen.getByText(/Select/));
+    expect(onMove).toHaveBeenCalledWith({
+      to: {
+        id: expect.any(String),
+        position: expect.any(Number),
+        sectionId: expect.any(String),
+        folderId: null,
+      },
+      from: {
+        id: expect.any(String),
+        position: expect.any(Number),
+        sectionId: expect.any(String),
+      },
+    });
+  });
+});
+
+describe("MoveEntityModal: entity === 'Folder'", () => {
+  beforeEach(() => setup({ entity: "Folder", selected: currentFolder }));
+
+  it("should show correct title", () => {
+    expect(screen.getByText("Move folder")).toBeInTheDocument();
+  });
+
+  it("should only list folders and disabled folder pages", () => {
+    fireEvent.click(screen.getByText(/Folder 2/));
+    const options = screen.getAllByTestId("options");
+    expect(options).toHaveLength(3);
+    expect(options[0].textContent).toEqual("Page 1.1.1");
+    expect(options[1].textContent).toEqual("Folder 2");
+    expect(options[2].textContent).toEqual("Folder 3");
+  });
+});
+
+describe("MoveEntityModal: questionnaire not loaded", () => {
   it("shouldn't render if questionnaire not yet available", () => {
-    useQuestionnaire.mockImplementation(() => ({
+    useQuestionnaire.mockImplementationOnce(() => ({
       questionnaire: undefined,
     }));
 
@@ -90,6 +140,7 @@ describe("MovePageModal: questionnaire not loaded", () => {
     expect(screen.queryByTestId("move-modal")).not.toBeInTheDocument();
   });
 });
+
 describe("MovePageModal: buildPageList", () => {
   let output, folders;
 

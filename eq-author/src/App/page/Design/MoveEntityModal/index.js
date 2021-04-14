@@ -36,27 +36,20 @@ const propTypes = {
   entity: PropTypes.string.isRequired,
 };
 
-const entityData = {
-  Folder: {
-    options: (folders) =>
-      folders.map((item) => (!item.enabled ? item.pages[0] : item)),
-    move: ({ selected, sectionId, selectedSectionId, folderId, position }) => ({
-      from: {
-        id: selected.id,
-        sectionId,
-        position: selected.position,
-      },
-      to: {
-        id: selected.id,
-        selectedSectionId,
-        folderId,
-        position: position,
-      },
-    }),
-  },
-  Page: {
-    options: (folders) => buildPageList(folders),
-    move: ({ selected, sectionId, selectedSectionId, folderId, position }) => ({
+const MoveEntityModal = ({
+  sectionId,
+  selected,
+  isOpen,
+  onClose,
+  onMove,
+  entity,
+}) => {
+  const { questionnaire } = useQuestionnaire();
+
+  const [selectedSectionId, setSelectedSectionId] = useState(sectionId);
+
+  const handleMove = ({ position, folderId }) =>
+    onMove({
       from: {
         id: selected.id,
         sectionId,
@@ -68,33 +61,17 @@ const entityData = {
         folderId,
         position: position,
       },
-    }),
-  },
-};
-
-const MoveEntityModal = ({
-  sectionId,
-  selected,
-  isOpen,
-  onClose,
-  onMove,
-  entity,
-}) => {
-  const { questionnaire } = useQuestionnaire();
-  const { options, move } = entityData[entity];
-
-  const [selectedSectionId, setSelectedSectionId] = useState(sectionId);
-
-  const handleMove = (result) => {
-    const { position, folderId } = result;
-    onMove(
-      move({ selected, sectionId, selectedSectionId, folderId, position })
-    );
-  };
+    });
 
   const selectedSection =
     questionnaire &&
     questionnaire.sections.find(({ id }) => id === selectedSectionId);
+
+  const options =
+    entity === "Page"
+      ? (folders) => buildPageList(folders)
+      : (folders) =>
+          folders.map((item) => (!item.enabled ? item.pages[0] : item));
 
   return useMemo(
     () =>
