@@ -170,11 +170,6 @@ const FolderDesignPage = ({ history, match }) => {
     folder: { id, position, section, alias, displayName, validationErrorInfo },
   } = data;
 
-  const shortCodeOnUpdate = (alias) =>
-    saveShortCode({
-      variables: { input: { folderId: id, alias } },
-    });
-
   return (
     <EditorPage
       title={displayName}
@@ -188,7 +183,11 @@ const FolderDesignPage = ({ history, match }) => {
           title={alias}
           shortCode={alias}
           pageType={FOLDER}
-          shortCodeOnUpdate={shortCodeOnUpdate}
+          shortCodeOnUpdate={(alias) =>
+            saveShortCode({
+              variables: { input: { folderId: id, alias } },
+            })
+          }
           data={data.folder}
           onMove={({ from, to }) => {
             moveFolder({

@@ -54,6 +54,18 @@ describe("Question Page Editor", () => {
     wrapper = render({});
   });
 
+  it("should open delete dialog", () => {
+    wrapper = render({ questionnaire });
+    wrapper.find("[data-test='btn-delete']").simulate("click");
+    expect(wrapper.state("showDeleteConfirmDialog")).toEqual(true);
+  });
+
+  it("should open move dialog", () => {
+    wrapper = render({ questionnaire });
+    wrapper.find("[data-test='btn-move']").simulate("click");
+    expect(wrapper.state("showMovePageDialog")).toEqual(true);
+  });
+
   describe("DeleteConfirmDialog", () => {
     let deleteConfirmDialog;
 
