@@ -142,6 +142,18 @@ describe("PositionModal", () => {
       expect(screen.getAllByTestId("options")[3].textContent).toEqual(first);
     });
 
+    it("should move inside a folder into the correct position", () => {
+      fireEvent.click(screen.getByText(/question 2/));
+      fireEvent.click(screen.getByText(/Select/));
+      // await waitForElementToBeRemoved(() => screen.getByText(/Select/));
+
+      expect(onMove).toHaveBeenCalledWith(
+        expect.objectContaining({
+          position: 1,
+        })
+      );
+    });
+
     // should test parentId here
 
     // it("should go into the correct position in folder going down", () => {

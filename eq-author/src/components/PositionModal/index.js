@@ -80,7 +80,7 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
 
     let positionCalculation = parentId
       ? orderedOptions // only show contents of selected folder
-          .filter((i) => parentId === i.itemId || i.id === selected.id)
+          .filter((i) => parentId === i.id || i.id === selected.id)
           .findIndex(({ id }) => id === selected.id)
       : orderedOptions // remove all questions inside enabled folders
           .filter(({ parentId }) => !parentId)
