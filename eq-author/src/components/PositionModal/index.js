@@ -1,9 +1,38 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import PropTypes from "prop-types";
 import { uniqueId } from "lodash";
 import styled from "styled-components";
-import { InnerModal } from "./InnerModal";
-import { Option } from "components/ItemSelectModal/ItemSelect";
+import ItemSelect, { Option } from "components/ItemSelectModal/ItemSelect";
+import ItemSelectModal from "components/ItemSelectModal";
+import Truncated from "components/Truncated";
+import Icon from "assets/icon-select.svg";
+
+import { colors, radius } from "constants/theme";
+
+const Label = styled.label`
+  display: block;
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+  margin-top: 1.25rem;
+`;
+
+const Trigger = styled.button.attrs({ type: "button" })`
+  width: 100%;
+  font-size: 1em;
+  padding: 0.5rem;
+  padding-right: 2em;
+  background: ${colors.white} url("${Icon}") no-repeat right center;
+  border: solid 1px ${colors.borders};
+  text-align: left;
+  border-radius: ${radius};
+  color: ${colors.black};
+
+  &:focus {
+    box-shadow: 0 0 0 3px ${colors.tertiary}, inset 0 0 0 1px ${colors.primary};
+    outline: none;
+  }
+`;
 
 const Indent = styled(Option)`
   margin-left: ${({ indent }) => (indent ? 1 : 0)}em;
@@ -40,16 +69,15 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
     });
   };
 
-  const handleChange = (value) => {
+  const handleChange = ({ value }) => {
+    const option = orderedOptions[value];
     const count =
-      orderedOptions[value]?.__typename === "Folder" && value - position >= 0
-        ? orderedOptions.filter(
-            ({ parentId }) => parentId === orderedOptions[value].id
-          ).length
+      option?.__typename === "Folder" && value - position >= 0
+        ? orderedOptions.filter(({ parentId }) => parentId === option.id).length
         : 0;
     setOption({
       position: parseInt(value, 10) + count,
-      item: orderedOptions[value],
+      item: option,
     });
   };
 
@@ -87,30 +115,37 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
   };
 
   return (
-    <div data-test={`${title.toLowerCase()}-position-modal`}>
-      <InnerModal
-        id={positionButtonId}
+    <Fragment data-test={`${title.toLowerCase()}-position-modal`}>
+      <Label htmlFor={positionButtonId}>{title}</Label>
+      <Trigger id={positionButtonId} onClick={() => setIsOpen(true)}>
+        <Truncated>{selected.displayName || "Select"}</Truncated>
+      </Trigger>
+      <ItemSelectModal
         title={title}
+        data-test={`${title.toLowerCase()}-select-modal`}
         isOpen={isOpen}
-        onClick={() => setIsOpen(true)}
         onClose={handleClose}
         onConfirm={handleConfirm}
-        onChange={onChange || handleChange}
-        selected={String(position)}
-        displayName={selected.displayName}
       >
-        {orderedOptions.map(({ displayName, parentEnabled }, i) => (
-          <Indent
-            data-test="options"
-            key={i}
-            value={String(i)}
-            indent={parentEnabled ? parentEnabled.toString() : undefined}
-          >
-            {displayName}
-          </Indent>
-        ))}
-      </InnerModal>
-    </div>
+        <ItemSelect
+          data-test="section-item-select"
+          name={title.toLowerCase()}
+          value={String(position)}
+          onChange={onChange || handleChange}
+        >
+          {orderedOptions.map(({ displayName, parentEnabled }, i) => (
+            <Indent
+              data-test="options"
+              key={i}
+              value={String(i)}
+              indent={parentEnabled ? parentEnabled.toString() : undefined}
+            >
+              {displayName}
+            </Indent>
+          ))}
+        </ItemSelect>
+      </ItemSelectModal>
+    </Fragment>
   );
 };
 

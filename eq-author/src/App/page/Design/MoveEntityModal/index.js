@@ -109,7 +109,7 @@ const MoveEntityModal = ({
             title={"Section"}
             options={questionnaire.sections}
             selected={selectedSection}
-            onChange={(value) =>
+            onChange={({ value }) =>
               setSelectedSectionId(questionnaire.sections[value].id)
             }
           />
