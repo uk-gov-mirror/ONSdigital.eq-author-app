@@ -53,6 +53,7 @@ const EditorToolbar = ({
             onClick={onDuplicate}
           />
           <DeleteButton
+            data-test="btn-delete-folder"
             disabled={disableDelete}
             onClick={() => setShowDeleteModal(true)}
           />
