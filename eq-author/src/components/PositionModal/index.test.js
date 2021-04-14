@@ -74,13 +74,15 @@ describe("PositionModal", () => {
   describe("Positioning behaviours", () => {
     let options;
     function openModalState(selected = 0) {
+      const onMoveMock = jest.fn();
       const utils = setup({
         title: "Page",
         options,
         selected: options[selected],
+        onMove: onMoveMock,
       });
-      fireEvent.click(screen.getByText(/question 1/));
-      return { ...utils };
+      fireEvent.click(screen.getByTestId("page-modal-trigger"));
+      return { ...utils, onMoveMock };
     }
     beforeEach(() => {
       options = [
@@ -129,10 +131,10 @@ describe("PositionModal", () => {
           parentId: "Folder-2",
         },
       ];
-      openModalState();
     });
 
     it("should jump length of folder when clicking on a folder", () => {
+      openModalState();
       const first = screen.getAllByText(/question 1/)[1].textContent;
       const firstOption = screen.getAllByTestId("options")[0].textContent;
       expect(first).toEqual(firstOption);
@@ -142,79 +144,85 @@ describe("PositionModal", () => {
       expect(screen.getAllByTestId("options")[3].textContent).toEqual(first);
     });
 
-    it("should move inside a folder into the correct position", () => {
+    it("should move inside a folder into the correct position going down", () => {
+      const { onMoveMock } = openModalState();
       fireEvent.click(screen.getByText(/question 2/));
       fireEvent.click(screen.getByText(/Select/));
-      // await waitForElementToBeRemoved(() => screen.getByText(/Select/));
 
-      expect(onMove).toHaveBeenCalledWith(
+      expect(onMoveMock).toHaveBeenCalledWith(
         expect.objectContaining({
           position: 1,
         })
       );
     });
 
-    // should test parentId here
+    it("should move inside a folder into the correct position going up", () => {
+      const { onMoveMock } = openModalState(4);
+      fireEvent.click(screen.getByText(/question 2/));
+      fireEvent.click(screen.getByText(/Select/));
 
-    // it("should go into the correct position in folder going down", () => {
-    //   const wrapper = openModalState();
-    //   const value = 2;
-    //   getItemSelect(wrapper).simulate("change", { value });
-    //   expect(getItemSelect(wrapper).prop("value")).toBe(value.toString());
-    //   expect(
-    //     wrapper.find("PositionModal__Indent").getElements()[value].props
-    //       .children
-    //   ).toEqual(options[0].displayName);
-    //   expect(
-    //     wrapper.find("PositionModal__Indent").getElements()[value].props.indent
-    //   ).toBeTruthy();
-    // });
+      expect(onMoveMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          position: 0,
+        })
+      );
+    });
 
-    // it("should go into the correct position in folder going up", () => {
-    //   const selected = 4;
-    //   const wrapper = openModalState(selected);
-    //   const value = 2;
-    //   getItemSelect(wrapper).simulate("change", { value });
-    //   expect(getItemSelect(wrapper).prop("value")).toBe(value.toString());
+    it("should move between questions going down", () => {
+      const { onMoveMock } = openModalState();
+      fireEvent.click(screen.getByText(/question 4/));
+      fireEvent.click(screen.getByText(/Select/));
 
-    //   expect(
-    //     wrapper.find("PositionModal__Indent").getElements()[value].props
-    //       .children
-    //   ).toEqual(options[selected].displayName);
-    // });
+      expect(onMoveMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          position: 2,
+        })
+      );
+    });
 
-    // it("should go to the correct position when selecting the same value twice", () => {
-    //   const wrapper = openModalState();
-    //   const value = 1;
-    //   getItemSelect(wrapper).simulate("change", { value });
+    it("should move between questions going up", () => {
+      const { onMoveMock } = openModalState(4);
+      fireEvent.click(screen.getByText(/question 1/));
+      fireEvent.click(screen.getByText(/Select/));
 
-    //   getItemSelect(wrapper).simulate("change", { value: 0 });
+      expect(onMoveMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          position: 0,
+        })
+      );
+    });
 
-    //   expect(getItemSelect(wrapper).prop("value")).toBe((0).toString());
+    it("should go to the correct position when selecting the same value twice", () => {
+      openModalState();
+      fireEvent.click(screen.getByText(/Folder 1/));
+      expect(screen.getAllByTestId("options")[3].textContent).toEqual(
+        "question 1"
+      );
 
-    //   expect(
-    //     wrapper.find("PositionModal__Indent").getElements()[0].props.children
-    //   ).toEqual(options[0].displayName);
-    // });
+      fireEvent.click(screen.getByText(/Folder 1/));
+      expect(screen.getAllByTestId("options")[0].textContent).toEqual(
+        "question 1"
+      );
+    });
 
-    // it("should move between folders correctly", () => {
-    //   const initial = 2;
-    //   const wrapper = openModalState(initial);
-    //   const after = 6;
-    //   getItemSelect(wrapper).simulate("change", { value: after });
+    it("should move between folders", () => {
+      const { onMoveMock } = openModalState(2);
+      fireEvent.click(screen.getByText(/question 5/));
+      fireEvent.click(screen.getByText(/Select/));
 
-    //   expect(getItemSelect(wrapper).prop("value")).toBe(after.toString());
+      expect(onMoveMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          position: 1,
+        })
+      );
+    });
 
-    //   expect(
-    //     wrapper.find("PositionModal__Indent").getElements()[after].props
-    //       .children
-    //   ).toEqual(options[initial].displayName);
-    // });
-
-    it("should display the correct styling", () =>
+    it("should display the correct styling", () => {
+      openModalState();
       expect(screen.getAllByTestId("options")[3]).toHaveStyleRule(
         "margin-left",
         "1em"
-      ));
+      );
+    });
   });
 });

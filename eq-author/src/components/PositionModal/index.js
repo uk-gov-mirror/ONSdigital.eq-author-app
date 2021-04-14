@@ -65,7 +65,8 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
     const option = orderedOptions[value];
     const count =
       option?.__typename === "Folder" && value - position >= 0 // check if folder and going down
-        ? orderedOptions.filter(({ parentId }) => parentId === option.id).length
+        ? orderedOptions.filter(({ parentId }) => parentId === option?.id)
+            .length
         : 0;
     setOption({
       position: parseInt(value, 10) + count,
@@ -80,11 +81,11 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
 
     let positionCalculation = parentId
       ? orderedOptions // only show contents of selected folder
-          .filter((i) => parentId === i.id || i.id === selected.id)
-          .findIndex(({ id }) => id === selected.id)
+          .filter((i) => parentId === i.parentId || i.id === selected.id)
+          .findIndex((item) => item.id === selected.id)
       : orderedOptions // remove all questions inside enabled folders
           .filter(({ parentId }) => !parentId)
-          .findIndex(({ id }) => id === selected.id);
+          .findIndex((item) => item.id === selected.id);
 
     // onMove is conditional so it can be used as a section selector
     onMove &&
@@ -100,8 +101,12 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
   return (
     <div data-test={`${title.toLowerCase()}-position-modal`}>
       <Label htmlFor={positionButtonId}>{title}</Label>
-      <Trigger id={positionButtonId} onClick={() => setIsOpen(true)}>
-        <Truncated>{selected.displayName || "Select"}</Truncated>
+      <Trigger
+        id={positionButtonId}
+        onClick={() => setIsOpen(true)}
+        data-test={`${title.toLowerCase()}-modal-trigger`}
+      >
+        <Truncated>{selected?.displayName || "Select"}</Truncated>
       </Trigger>
       <ItemSelectModal
         title={title}
@@ -111,7 +116,7 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
         onConfirm={handleConfirm}
       >
         <ItemSelect
-          data-test="section-item-select"
+          data-test={`${title.toLowerCase()}-item-select`}
           name={title.toLowerCase()}
           value={String(position)}
           onChange={onChange || handleChange} // onChange supplied for section selector
