@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useRef, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import PropTypes from "prop-types";
 import { uniqueId } from "lodash";
 import styled from "styled-components";
+
+import { usePosition } from "./usePosition";
+
 import ItemSelect, { Option } from "components/ItemSelectModal/ItemSelect";
 import ItemSelectModal from "components/ItemSelectModal";
 import Truncated from "components/Truncated";
@@ -41,21 +44,10 @@ const Indent = styled(Option)`
 const PositionModal = ({ title, options, onMove, selected, onChange }) => {
   const positionButtonId = uniqueId("PositionModal");
   const [isOpen, setIsOpen] = useState(false);
-
-  const previousIndex = options.findIndex(({ id }) => id === selected?.id);
-  const previousPosition = useRef(previousIndex > -1 ? previousIndex : 0);
-
-  const [{ position, item }, setOption] = useState({
-    position: previousPosition.current,
-    item: options[previousPosition.current],
+  const [{ position, item }, previous, setOption] = usePosition({
+    options,
+    selected,
   });
-
-  useEffect(() => {
-    // resets the position of the selected item when changing sections
-    const previousIndex = options.findIndex(({ id }) => id === selected?.id);
-    previousPosition.current = previousIndex > -1 ? previousIndex : 0;
-    setOption((prev) => ({ ...prev, position: previousPosition.current }));
-  }, [options, selected]);
 
   const orderedOptions = options.filter(({ id }) => id !== selected?.id);
   selected.parentEnabled = item?.parentEnabled;
@@ -64,15 +56,15 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
   const handleClose = () => {
     setIsOpen(false);
     setOption({
-      position: previousPosition.current,
-      item: orderedOptions[previousPosition.current],
+      position: previous,
+      item: orderedOptions[previous],
     });
   };
 
   const handleChange = ({ value }) => {
     const option = orderedOptions[value];
     const count =
-      option?.__typename === "Folder" && value - position >= 0
+      option?.__typename === "Folder" && value - position >= 0 // check if folder and going down
         ? orderedOptions.filter(({ parentId }) => parentId === option.id).length
         : 0;
     setOption({
@@ -86,30 +78,21 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
     // item is the element in the modal you just clicked
     const { parentId = null } = item;
 
-    let positionCalculation;
+    let positionCalculation = parentId
+      ? orderedOptions // only show contents of selected folder
+          .filter((i) => parentId === i.itemId || i.id === selected.id)
+          .findIndex(({ id }) => id === selected.id)
+      : orderedOptions // remove all questions inside enabled folders
+          .filter(({ parentId }) => !parentId)
+          .findIndex(({ id }) => id === selected.id);
 
-    if (parentId) {
-      // get pages in target folder + selected item
-      positionCalculation = orderedOptions
-        .filter(
-          ({ parentId: itemId, id }) =>
-            parentId === itemId || id === selected.id
-        )
-        .findIndex(({ id }) => id === selected.id);
-    } else {
-      // remove all nested pages
-      positionCalculation = orderedOptions
-        .filter(({ parentId }) => !parentId)
-        .findIndex(({ id }) => id === selected.id);
-    }
-
-    if (onMove) {
+    // onMove is conditional so it can be used as a section selector
+    onMove &&
       onMove({
         ...item,
         folderId: parentId,
         position: positionCalculation,
       });
-    }
 
     setIsOpen(false);
   };
@@ -131,7 +114,7 @@ const PositionModal = ({ title, options, onMove, selected, onChange }) => {
           data-test="section-item-select"
           name={title.toLowerCase()}
           value={String(position)}
-          onChange={onChange || handleChange}
+          onChange={onChange || handleChange} // onChange supplied for section selector
         >
           {orderedOptions.map(({ displayName, parentEnabled }, i) => (
             <Indent
