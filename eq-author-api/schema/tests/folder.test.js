@@ -13,6 +13,8 @@ const {
   moveFolder,
 } = require("../../tests/utils/contextBuilder/folder");
 
+const { createSection } = require("../../tests/utils/contextBuilder/section");
+
 const folderProperties = ["id", "alias", "enabled", "pages", "skipConditions"];
 
 describe("Folders", () => {
@@ -66,8 +68,13 @@ describe("Folders", () => {
     });
 
     describe("MoveFolder", () => {
-      let folderOne;
+      let folderOne, sectionTwo;
       beforeEach(async () => {
+        sectionTwo = await createSection(ctx, {
+          title: "Section 2",
+          alias: "Alias",
+          questionnaireId: questionnaire.id,
+        });
         folderOne = await createFolder(ctx, {
           sectionId: questionnaire.sections[0].id,
           enabled: true,
@@ -78,6 +85,16 @@ describe("Folders", () => {
         expect(folderOne.position).toEqual(0);
         const folder = await moveFolder(ctx, { id: folderOne.id, position: 1 });
         expect(folder.position).toEqual(1);
+      });
+
+      it("should move a between sections", async () => {
+        expect(folderOne.section.id).toEqual(questionnaire.sections[0].id);
+        const folder = await moveFolder(ctx, {
+          id: folderOne.id,
+          position: 1,
+          sectionId: sectionTwo.id,
+        });
+        expect(folder.section.id).toEqual(sectionTwo.id);
       });
     });
   });

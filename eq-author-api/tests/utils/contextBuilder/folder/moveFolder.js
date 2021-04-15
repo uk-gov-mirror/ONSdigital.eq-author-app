@@ -12,6 +12,9 @@ const moveFolderMutation = `
             title
             position
         }
+        section {
+            id
+        }
         position
         }
   }
