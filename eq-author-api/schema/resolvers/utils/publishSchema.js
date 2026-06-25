@@ -77,7 +77,7 @@ const postSchema = async (
   publishResult
 ) => {
   await authorisedRequest(
-    `${gateway}publish_collection_instrument?${query}`,
+    `${gateway}collection_instrument?${query}`,
     audience,
     {
       method: "POST",
