@@ -80,7 +80,7 @@ const {
   setDataVersion,
   authorisedRequest,
   returnAllValidationErrors,
-  publishSchema
+  publishSchema,
 } = require("./utils");
 
 const createAnswer = require("../../src/businessLogic/createAnswer");
@@ -305,7 +305,7 @@ const Resolvers = {
       find(ctx.questionnaire.collectionLists.lists, { id: listId }),
     supplementaryDataVersions: async (_, args) => {
       const { id } = args;
-      const url = `${process.env.SUPPLEMENTARY_DATA_GATEWAY}schema_metadata?survey_id=${id}`;
+      const url = `${process.env.SUPPLEMENTARY_DATA_GATEWAY}schemas/metadata?survey_id=${id}`;
 
       try {
         const response = await authorisedRequest(
@@ -331,7 +331,7 @@ const Resolvers = {
       }
     },
     supplementaryDataSurveyIdList: async () => {
-      const url = `${process.env.SUPPLEMENTARY_DATA_GATEWAY}survey_list`;
+      const url = `${process.env.SUPPLEMENTARY_DATA_GATEWAY}surveys`;
 
       try {
         const response = await authorisedRequest(
@@ -1594,7 +1594,7 @@ const Resolvers = {
     },
     updateSupplementaryData: createMutation(async (root, { input }, ctx) => {
       const { id, surveyId, version } = input;
-      const url = `${process.env.SUPPLEMENTARY_DATA_GATEWAY}schema?survey_id=${surveyId}&version=${version}`;
+      const url = `${process.env.SUPPLEMENTARY_DATA_GATEWAY}schemas?survey_id=${surveyId}&version=${version}`;
 
       try {
         const response = await authorisedRequest(
