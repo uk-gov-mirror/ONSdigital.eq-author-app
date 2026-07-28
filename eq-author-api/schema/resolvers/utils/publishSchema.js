@@ -67,8 +67,9 @@ const validateQuestionnaire = async (convertedQuestionnaire, publishResult) => {
     publishResult.displayErrorMessage = "Contact eQ services team";
     throw new Error(`Validator returned non-200 error`);
   }
-
-  return validatedResponse.data.validator_version;
+  
+  const validatorVersion = validatedResponse.data.validator_version || "0.0.0";
+  return validatorVersion;
 };
 
 const postSchema = async (
