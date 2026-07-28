@@ -67,7 +67,7 @@ const validateQuestionnaire = async (convertedQuestionnaire, publishResult) => {
     publishResult.displayErrorMessage = "Contact eQ services team";
     throw new Error(`Validator returned non-200 error`);
   }
-  
+
   const validatorVersion = validatedResponse.data.validator_version || "0.0.0";
   return validatorVersion;
 };
@@ -75,6 +75,7 @@ const validateQuestionnaire = async (convertedQuestionnaire, publishResult) => {
 const postSchema = async (
   validatedQuestionnaire,
   endpoint,
+  method,
   gateway,
   audience,
   query,
@@ -84,7 +85,7 @@ const postSchema = async (
     `${gateway}${endpoint}?${query}`,
     audience,
     {
-      method: "POST",
+      method: method,
       body: JSON.stringify(validatedQuestionnaire),
       headers: { "Content-Type": "application/json" },
     }
@@ -150,6 +151,7 @@ const publishSchema = async (ctx) => {
     await postSchema(
       convertedQuestionnaire,
       "collection-instruments",
+      "POST",
       process.env.CIR_PUBLISH_SCHEMA_GATEWAY_FIRST,
       process.env.CIR_PUBLISH_SCHEMA_GATEWAY_AUDIENCE_FIRST,
       `guid=${ctx.questionnaire.questionnaireVersionId}&validator_version=${validatorVersion}`,
@@ -177,6 +179,7 @@ const publishSchema = async (ctx) => {
       await postSchema(
         convertedQuestionnaire,
         "collection-instruments",
+        "POST",
         process.env.CIR_PUBLISH_SCHEMA_GATEWAY_SECOND,
         process.env.CIR_PUBLISH_SCHEMA_GATEWAY_AUDIENCE_SECOND,
         `guid=${ctx.questionnaire.questionnaireVersionId}&validator_version=${validatorVersion}&&ci_version=${publishResult.cirVersion}`,
@@ -261,6 +264,7 @@ const republishSchema = async (questionnaireVersionId, cirVersion) => {
     await postSchema(
       convertedQuestionnaire,
       "collection-instruments/validator-version",
+      "PUT",
       process.env.CIR_PUBLISH_SCHEMA_GATEWAY_FIRST,
       process.env.CIR_PUBLISH_SCHEMA_GATEWAY_AUDIENCE_FIRST,
       `guid=${questionnaire.questionnaireVersionId}&validator_version=${validatorVersion}`,
@@ -278,6 +282,7 @@ const republishSchema = async (questionnaireVersionId, cirVersion) => {
       await postSchema(
         convertedQuestionnaire,
         "collection-instruments/validator-version",
+        "PUT",
         process.env.CIR_PUBLISH_SCHEMA_GATEWAY_SECOND,
         process.env.CIR_PUBLISH_SCHEMA_GATEWAY_AUDIENCE_SECOND,
         `guid=${questionnaire.questionnaireVersionId}&validator_version=${validatorVersion}`,
