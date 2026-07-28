@@ -182,7 +182,7 @@ const publishSchema = async (ctx) => {
         "POST",
         process.env.CIR_PUBLISH_SCHEMA_GATEWAY_SECOND,
         process.env.CIR_PUBLISH_SCHEMA_GATEWAY_AUDIENCE_SECOND,
-        `guid=${ctx.questionnaire.questionnaireVersionId}&validator_version=${validatorVersion}&&ci_version=${publishResult.cirVersion}`,
+        `guid=${ctx.questionnaire.questionnaireVersionId}&validator_version=${validatorVersion}&ci_version=${publishResult.cirVersion}`,
         publishResult
       );
 
