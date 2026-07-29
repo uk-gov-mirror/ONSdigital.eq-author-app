@@ -85,7 +85,7 @@ const postSchema = async (
     `${gateway}${endpoint}?${query}`,
     audience,
     {
-      method: method,
+      method,
       body: JSON.stringify(validatedQuestionnaire),
       headers: { "Content-Type": "application/json" },
     }
