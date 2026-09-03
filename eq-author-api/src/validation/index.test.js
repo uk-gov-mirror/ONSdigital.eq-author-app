@@ -1938,7 +1938,7 @@ describe("schema validation", () => {
       expect(validation(questionnaire)).toHaveLength(0);
     });
 
-    it("should validate date routing offsets with more than 9 digits", () => {
+    it("should validate date routing offsets with more than 15 digits", () => {
       questionnaire.sections[0].folders[0].pages[0].routing = defaultRouting;
       questionnaire.sections[0].folders[0].pages[0].routing.rules[0].expressionGroup.expressions[0] =
         {
@@ -1951,7 +1951,7 @@ describe("schema validation", () => {
           right: {
             type: "DateValue",
             dateValue: {
-              offset: 1000000000,
+              offset: 1000000000000000,
               offsetDirection: "Before",
             },
           },

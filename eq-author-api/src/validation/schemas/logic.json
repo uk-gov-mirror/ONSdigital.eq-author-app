@@ -186,8 +186,8 @@
                   "offset": {
                     "type": "number",
                     "nullable": false,
-                    "minimum": -999999999,
-                    "maximum": 999999999,
+                    "minimum": -999999999999999,
+                    "maximum": 999999999999999,
                     "errorMessage": {
                       "type": "ERR_RIGHTSIDE_NO_VALUE",
                       "minimum": "ERR_RIGHTSIDE_VALUE_TOO_MANY_DIGITS",

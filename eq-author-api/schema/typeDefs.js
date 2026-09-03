@@ -765,7 +765,7 @@ type SelectedOptions2 {
 }
 
 type DateValue {
-  offset: Int
+  offset: Float
   offsetDirection: String
 }
 
@@ -1331,7 +1331,7 @@ input UpdateRightSide2Input {
 }
 
 input DateValueInput {
-  offset: Int
+  offset: Float
   offsetDirection: String
 }
 
