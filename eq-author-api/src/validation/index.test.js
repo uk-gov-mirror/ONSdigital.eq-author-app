@@ -1890,7 +1890,7 @@ describe("schema validation", () => {
       );
     });
 
-    it("should validate routing custom values with more than 9 digits", () => {
+    it("should validate routing custom values with more than 15 digits", () => {
       questionnaire.sections[0].folders[0].pages[0].routing = defaultRouting;
       questionnaire.sections[0].folders[0].pages[0].routing.rules[0].expressionGroup.expressions[0] =
         {
@@ -1903,7 +1903,7 @@ describe("schema validation", () => {
           right: {
             type: "Custom",
             customValue: {
-              number: 1000000000,
+              number: 1000000000000000,
             },
           },
         };
@@ -1917,7 +1917,7 @@ describe("schema validation", () => {
       expect(routingErrors[0].field).toBe("number");
     });
 
-    it("should allow routing custom values with up to 9 digits", () => {
+    it("should allow routing custom values with up to 15 digits", () => {
       questionnaire.sections[0].folders[0].pages[0].routing = defaultRouting;
       questionnaire.sections[0].folders[0].pages[0].routing.rules[0].expressionGroup.expressions[0] =
         {
@@ -1930,7 +1930,7 @@ describe("schema validation", () => {
           right: {
             type: "Custom",
             customValue: {
-              number: 999999999,
+              number: 999999999999999,
             },
           },
         };
@@ -1966,7 +1966,7 @@ describe("schema validation", () => {
       expect(routingErrors[0].field).toBe("offset");
     });
 
-    it("should validate checkbox CountOf custom values with more than 9 digits", () => {
+    it("should validate checkbox CountOf custom values with more than 15 digits", () => {
       questionnaire.sections[0].folders[0].pages[0].routing = defaultRouting;
       questionnaire.sections[0].folders[0].pages[0].answers[0] = {
         id: "answer_1",
@@ -1989,7 +1989,7 @@ describe("schema validation", () => {
           right: {
             type: "Custom",
             customValue: {
-              number: -1000000000,
+              number: -1000000000000000,
             },
           },
         };

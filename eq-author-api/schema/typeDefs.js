@@ -756,7 +756,7 @@ union LeftSide2 = BasicAnswer | MultipleChoiceAnswer | NoLeftSide | Metadata
 union RightSide2 = SelectedOptions2 | CustomValue2 | DateValue
 
 type CustomValue2 {
-  number: Int
+  number: Float
   text: String
 }
 
@@ -1340,7 +1340,7 @@ input DeleteBinaryExpression2Input {
 }
 
 input CustomRightSideInput {
-  number: Int
+  number: Float
   text: String
 }
 
