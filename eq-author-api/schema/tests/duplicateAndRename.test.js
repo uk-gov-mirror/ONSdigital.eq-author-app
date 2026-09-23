@@ -301,11 +301,7 @@ describe("duplicateAndRenameQuestionnaire", () => {
         duplicatedQuestionnaireId: duplicatedQuestionnaire.id,
         hasCustomShortTitle: false,
       }),
-      expect.stringMatching(
-        new RegExp(
-          `^Duplicated questionnaire - source: ".*", new: "${duplicatedQuestionnaire.title}"$`
-        )
-      )
+        `Duplicated questionnaire - source: "${sourceQuestionnaire.title}", new: "${duplicatedQuestionnaire.title}"`
     );
 
     infoLoggerSpy.mockRestore();
@@ -326,9 +322,7 @@ describe("duplicateAndRenameQuestionnaire", () => {
         sourceQuestionnaireId: context.questionnaire.id,
         hasCustomShortTitle: false,
       }),
-      expect.stringMatching(
-        new RegExp(`^Failed to duplicate questionnaire - source: ".*"$`)
-      )
+    `Failed to duplicate questionnaire - source: "${sourceQuestionnaire.title}"`
     );
 
     errorLoggerSpy.mockRestore();
